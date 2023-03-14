@@ -38,10 +38,8 @@ const authDescriptions = {
       }
       if (!values.password) {
         errors.password = "비밀번호를 입력하세요";
-      } 
-      // else if (!"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$".test(values.password)) {
-      //   errors.password = "소/대문자, 숫자, 특수문자가 포함되어야합니다."
-      // }
+      }
+      
 
       return errors;
     },
@@ -60,7 +58,7 @@ const authDescriptions = {
     formPlaceHolder: {
       phoneNumber: "'-'을 제외하고 입력해주세요",
       id: "5~20자 사이로 입력해주세요",
-      password: "영 대문자/소문자/숫자/특수문자 포함 10~20자 사이로 입력해주세요",
+      password: "대문자/소문자/숫자/특수문자 포함 8~20자",
     },
     formMaxLength: {
       phoneNumber: 13,
@@ -82,19 +80,21 @@ const authDescriptions = {
       }
       if (!values.password) {
         errors.password = "비밀번호를 입력하세요";
+      } else if (!RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/).test(values.password)) {
+        errors.password = "소/대문자, 숫자, 특수문자가 포함되어야합니다."
       }
       if (values.password !== values.passwordcheck) {
         errors.passwordcheck = "동일한 비밀번호를 입력하세요";
-      }
+      } 
       if (!values.nickname) {
         errors.nickname = "닉네임을 입력하세요";
       }
       if (!values.phoneNumber) {
-        errors.phoneNumber = "휴대폰을 입력하세요";
+        errors.phoneNumber = "전화번호를 입력하세요";
       }
       if (!values.email) {
         errors.email = "이메일을 입력하세요";
-      }
+      } 
 
       return errors;
     },

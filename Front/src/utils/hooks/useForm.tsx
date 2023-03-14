@@ -89,6 +89,8 @@ function useForm({
 
   // 전화번호 자동 하이픈 생성
   useEffect(() => {
+    if (!values.phoneNumber) return;
+    
     if (values.phoneNumber.length === 11) {
       setValues((prev) => {
         return {
@@ -115,9 +117,9 @@ function useForm({
   // 필드 속성으로 사용할 값을 조회한다
   const getFieldProps = (name: string) => {
     // password값이 DOM에 보여서...제외
-    const value = name === "password" ? null : values[name];
+    const value = name === "password" ? undefined : values[name];
 
-    const maxlength = formMaxLength[name];
+    const maxLength = formMaxLength[name];
     const placeholder = formPlaceHolder[name];
 
     const onBlur = handleBlur;
@@ -126,7 +128,7 @@ function useForm({
     return {
       name,
       value,
-      maxlength,
+      maxLength,
       placeholder,
       onBlur,
       onChange,

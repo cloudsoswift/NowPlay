@@ -18,4 +18,5 @@ const NavbarBox = styled.div`
     background-color: #bb2649;
     font-size: 30px;
     color: white;
+    z-index: 100;
 `;

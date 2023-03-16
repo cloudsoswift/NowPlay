@@ -7,72 +7,53 @@ import { BiSearch, BiStar, BiHome, BiMapPin, BiUser } from "react-icons/bi";
 const Navbar = () => {
   const [navActive, setNavActive] = useState<number>(0);
 
+  const navLocation = useLocation();
+
+  const moveIndicator = () => {
+    switch (true) {
+      case /^\/search/.test(navLocation.pathname):
+        setNavActive(0);
+        break;
+      case /^\/signup/.test(navLocation.pathname):
+        setNavActive(1);
+        break;
+      case /^\/around/.test(navLocation.pathname):
+        setNavActive(3);
+        break;
+      case /^\/mypage/.test(navLocation.pathname):
+        setNavActive(4);
+        break;
+      case /^\/$/.test(navLocation.pathname):
+        setNavActive(2);
+        break;
+      default:
+        setNavActive(-1);
+    }
+  };
+
+  useEffect(moveIndicator, [navLocation.pathname]);
+
   return (
     <NavBox>
-      <NavStyle to="/">
-        {({ isActive }) => {
-          if (isActive) {
-            setNavActive(0);
-          }
-          return (
-            <>
-              <BiSearch />
-              <span>검색</span>
-            </>
-          );
-        }}
+      <NavStyle to='/search'>
+        <BiSearch />
+        <span>검색</span>
       </NavStyle>
-      <NavStyle to="/signup">
-        {({ isActive }) => {
-          if (isActive) {
-            setNavActive(1);
-          }
-          return (
-            <>
-              <BiStar />
-              <span>즐겨찾기</span>
-            </>
-          );
-        }}
+      <NavStyle to='/signup'>
+        <BiStar />
+        <span>즐겨찾기</span>
       </NavStyle>
-      <NavStyle to="/404">
-        {({ isActive }) => {
-          if (isActive) {
-            setNavActive(2);
-          }
-          return (
-            <>
-              <BiHome />
-              <span>홈</span>
-            </>
-          );
-        }}
+      <NavStyle to='/'>
+        <BiHome />
+        <span>홈</span>
       </NavStyle>
-      <NavStyle to="/unknown">
-        {({ isActive }) => {
-          if (isActive) {
-            setNavActive(3);
-          }
-          return (
-            <>
-              <BiMapPin />
-              <span>주변</span>
-            </>
-          );
-        }}
+      <NavStyle to='/around'>
+        <BiMapPin />
+        <span>주변</span>
       </NavStyle>
-      <NavStyle to="/wtf">
-        {({ isActive }) => {
-          if (isActive) {
-            setNavActive(4);
-          }
-          return (
-            <>
-              <BiUser />
-              <span>마이페이지</span>
-            </>
-          );
-        }}
+      <NavStyle to='/mypage'>
+        <BiUser />
+        <span>마이페이지</span>
       </NavStyle>
       <Indicatior movement={navActive}></Indicatior>
     </NavBox>

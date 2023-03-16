@@ -1,10 +1,10 @@
 import { createGlobalStyle } from "styled-components";
 
-import SpoqaHanSansNeoBold from "./fonts/SpoqaHanSansNeo-Bold.ttf"
-import SpoqaHanSansNeoRegular from "./fonts/SpoqaHanSansNeo-Regular.ttf"
-import SpoqaHanSansNeoThin from "./fonts/SpoqaHanSansNeo-Thin.ttf"
-import SpoqaHanSansNeoMedium from "./fonts/SpoqaHanSansNeo-Medium.ttf"
-import SpoqaHanSansNeoLight from "./fonts/SpoqaHanSansNeo-Light.ttf"
+import SpoqaHanSansNeoBold from "./fonts/SpoqaHanSansNeo-Bold.ttf";
+import SpoqaHanSansNeoRegular from "./fonts/SpoqaHanSansNeo-Regular.ttf";
+import SpoqaHanSansNeoThin from "./fonts/SpoqaHanSansNeo-Thin.ttf";
+import SpoqaHanSansNeoMedium from "./fonts/SpoqaHanSansNeo-Medium.ttf";
+import SpoqaHanSansNeoLight from "./fonts/SpoqaHanSansNeo-Light.ttf";
 
 const GlobalStyle = createGlobalStyle`
     @font-face {
@@ -14,28 +14,28 @@ const GlobalStyle = createGlobalStyle`
         src: url(${SpoqaHanSansNeoBold}) format('truetype');
     }
     @font-face {
-            font-family: 'SpoqaHanSansNeoMedium';
-            src: local('SpoqaHanSansNeoMedium'), local('SpoqaHanSansNeoMedium');
-            font-style: normal;
-            src: url(${SpoqaHanSansNeoMedium}) format('truetype');
+        font-family: 'SpoqaHanSansNeoMedium';
+        src: local('SpoqaHanSansNeoMedium'), local('SpoqaHanSansNeoMedium');
+        font-style: normal;
+        src: url(${SpoqaHanSansNeoMedium}) format('truetype');
     }
     @font-face {
-            font-family: 'SpoqaHanSansNeoLight';
-            src: local('SpoqaHanSansNeoLight'), local('SpoqaHanSansNeoLight');
-            font-style: normal;
-            src: url(${SpoqaHanSansNeoLight}) format('truetype');
+        font-family: 'SpoqaHanSansNeoLight';
+        src: local('SpoqaHanSansNeoLight'), local('SpoqaHanSansNeoLight');
+        font-style: normal;
+        src: url(${SpoqaHanSansNeoLight}) format('truetype');
     }
     @font-face {
-            font-family: 'SpoqaHanSansNeoRegular';
-            src: local('SpoqaHanSansNeoRegular'), local('SpoqaHanSansNeoRegular');
-            font-style: normal;
-            src: url(${SpoqaHanSansNeoRegular}) format('truetype');
+        font-family: 'SpoqaHanSansNeoRegular';
+        src: local('SpoqaHanSansNeoRegular'), local('SpoqaHanSansNeoRegular');
+        font-style: normal;
+        src: url(${SpoqaHanSansNeoRegular}) format('truetype');
     }
     @font-face {
-            font-family: 'SpoqaHanSansNeoThin';
-            src: local('SpoqaHanSansNeoThin'), local('SpoqaHanSansNeoThin');
-            font-style: normal;
-            src: url(${SpoqaHanSansNeoThin}) format('truetype');
+        font-family: 'SpoqaHanSansNeoThin';
+        src: local('SpoqaHanSansNeoThin'), local('SpoqaHanSansNeoThin');
+        font-style: normal;
+        src: url(${SpoqaHanSansNeoThin}) format('truetype');
     }
 
       * {
@@ -43,7 +43,6 @@ const GlobalStyle = createGlobalStyle`
           padding: 0;
           box-sizing: border-box;
           font-size: 16px;
-          height: 100%;
           font-family: 'SpoqaHanSansNeoRegular';
       }
   

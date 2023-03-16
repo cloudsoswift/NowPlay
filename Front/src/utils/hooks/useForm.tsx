@@ -1,7 +1,6 @@
-import PreviousMap from "postcss/lib/previous-map";
 import React, { useState, useEffect, useCallback } from "react";
 
-export type useFormParams = {
+export type TuseFormParams = {
   initialValues: { [key: string]: string };
   formPlaceHolder: { [key: string]: string };
   formMaxLength: { [key: string]: number };
@@ -9,7 +8,7 @@ export type useFormParams = {
   onSubmit(values: object): void;
 };
 
-export type useFormReturn = {
+export type TuseFormReturn = {
   values: {
     [key: string]: string;
   };
@@ -36,7 +35,7 @@ function useForm({
   formMaxLength,
   validate,
   onSubmit,
-}: useFormParams) {
+}: TuseFormParams) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});

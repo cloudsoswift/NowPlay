@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { atom } from "recoil";
-import { Categories } from "./Filter/Categories";
 import { Filter } from "./Filter/Filter";
 import { PlaceCards } from "./PlaceCard";
-
+import type { TFilter } from "./Types";
 declare global {
   interface Window {
     naver: naver.maps.Map;
@@ -11,10 +10,12 @@ declare global {
 }
 
 type Props = {};
+
+export const filterState = atom<TFilter>({
+  key: 'filterState',
+  default: { categories: [], selectedCategories: [], businessTime: new Date(), distance: 0 },
+})
 export const Map = (props: Props) => {
-  const filterState = atom({
-    
-  })
   const [isFilterShown, setIsFilterShown] = useState(false);
   const [isCardlistShown, setIsCardlistShown] = useState(false);
 
@@ -33,10 +34,10 @@ export const Map = (props: Props) => {
   return (
     <>
       <div id="map" className="w-screen h-[calc(100vh-160px)] my-20">
-      {isCardlistShown && <PlaceCards />}
+      {isCardlistShown && <PlaceCards onClose={setIsCardlistShown}/>}
       </div>
       <button className="absolute top-24 left-1/2 -translate-x-1/2 border-2 border-black" onClick={handleFilterToggle}>필터 호출 버튼</button>
-      {isFilterShown && <Filter className=""/>}
+      {isFilterShown && <Filter className="w-screen h-96 bg-white border-4 absolute top-20 left-0" style={{zIndex: "100"}} onClose={setIsFilterShown}/>}
       <button className="absolute bottom-24 left-1/2 -translate-x-1/2 border-2 border-black" onClick={handleCardListToggle}>카드리스트 호출 버튼</button>
     </>
   );

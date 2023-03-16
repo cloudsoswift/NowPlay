@@ -10,13 +10,15 @@ export const PlaceCard = (props: PlaceCardProps) => {
 };
 
 type PlaceCardsProps = {
-  
+  onClose:  React.Dispatch<React.SetStateAction<boolean>>
 };
+
 export const PlaceCards = (props: PlaceCardsProps) => {
+  
   return (
-    <div className="w-screen h-96 bg-white border-4 relative top-1/2 left-0" style={{zIndex: "100"}}>
-      ㅎㅇ
-      <button onClick={}>X</button>
+    <div className="w-screen h-[80vh] bg-white border-4 relative top-5 left-0" style={{zIndex: "100"}}>
+      <button onClick={()=>{props.onClose(false)}} className="absolute top-2 right-2">X</button>
+      <PlaceCard />
     </div>
   );
 };

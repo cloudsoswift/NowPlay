@@ -1,10 +1,16 @@
+import { useRecoilValue } from "recoil";
+import { filterState } from "../Map";
+import type { TMainCategory } from "../Map";
 type sCategoryProps = {
-  
+  category: TMainCategory,
 };
-export const selectableCategory = (props: sCategoryProps) => {
+export const SelectableCategory = (props: sCategoryProps) => {
+  const handleSelectCategory = () => {
+
+  }
   return (
     <div>
-      
+
     </div>
   );
 };
@@ -12,10 +18,13 @@ export const selectableCategory = (props: sCategoryProps) => {
 type sCategoriesProps = {
   
 };
-export const selectableCategories = (props: sCategoriesProps) => {
+export const SelectableCategories = (props: sCategoriesProps) => {
+  const { categories } = useRecoilValue(filterState);
   return (
     <div className="bg-white border-4">
-      
+      {categories.map((category)=>{
+        return <SelectableCategories category={category}/>
+      })}
     </div>
   );
 };

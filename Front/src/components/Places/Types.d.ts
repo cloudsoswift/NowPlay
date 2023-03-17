@@ -1,32 +1,47 @@
 type TFilter = {
   categories: Array<TMainCategory>,
   selectedCategories: Array<TSubCategory>,
-  businessTime: Date,
+  businessTime: string,
   distance: Number,
 }
 type TMainCategory = {
-  id: number,
+  // id: number,
   category: string,
-  imageUrl: string,
+  imageURL: string,
   subCategory: Array<TSubCategory>
 }
 type TSubCategory = {
-  id: number,
-  TMainCategory: string,
+  // id: number,
+  // TMainCategory: string,
   category: string,
-  imageUrl: string
+  imageURL: string
 }
+
+type TBusinessTime = {
+    day: number,
+    openTime: string,
+    closeTime: string,
+    reservationInterval: string
+    holiday: boolean,
+  }
+  
+  type TReview = {
+    content: string,
+    rate: number,
+    created_at: Date,
+    images_url: Array<string>
+  }
 
 type TPlaceCard = {
   name: string,
   address: string,
   contact_number: string,
   homepage: string,
-  image_url: string,
+  imageURL: string,
   latitude: number,
   longtitude: number,
   explanation: string,
   closeOnHolidays: boolean,
 }
 
-export type { TFilter, TMainCategory, TSubCategory };
+export type { TFilter, TMainCategory, TSubCategory, TBusinessTime, TReview, TPlaceCard };

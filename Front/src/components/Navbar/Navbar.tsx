@@ -87,7 +87,7 @@ const NavStyle = styled(NavLink)`
   svg {
     transition: 0.1s;
     font-size: var(--title-1);
-    height: 35px;
+    margin-bottom: 8px;
   }
 
   &.active > svg {

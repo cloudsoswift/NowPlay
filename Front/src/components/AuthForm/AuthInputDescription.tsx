@@ -1,23 +1,23 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import { createContext, useContext } from "react";
 import useForm from "../../utils/hooks/useForm";
 import { TuseFormParams, TuseFormReturn } from "../../utils/hooks/useForm";
 
-export { authInputDescription, Form }
+export { Form, Field, SubmitButton };
 
 interface IFormParams extends TuseFormParams {
   children: React.ReactNode;
 }
 
-const labelText: {[key: string]: string} = {
+const labelText: { [key: string]: string } = {
   userId: "아이디",
   password: "비밀번호",
   phoneNumber: "휴대전화 번호",
   email: "이메일",
   nickname: "닉네임",
-  passwordcheck: "비밀번호 확인"
-}
+  passwordcheck: "비밀번호 확인",
+  agree: "약관에 동의하시겠습니까?",
+};
 
 const FormContext = createContext<TuseFormReturn>({
   values: {},
@@ -32,37 +32,38 @@ const FormContext = createContext<TuseFormReturn>({
 });
 FormContext.displayName = "FormContext";
 
-const authInputDescription = (formType: string) => {
-  if (formType === "login") {
-    return (
-      <>
-        <Field type='text' name='userId' />
-        <Field type='password' name='password' />
-        <SubmitButton type='submit'>로그인</SubmitButton>
-        <span>
-          아직 회원이 아니신가요? <Link to='/signup'>회원가입</Link>
-        </span>
-        <span>
-          <Link to='/signup'>아이디 찾기</Link> /{" "}
-          <Link to='/signup'>비밀번호 찾기</Link>
-        </span>
-      </>
-    );
-  }
-  if (formType === "registration") {
-    return (
-      <>
-        <Field type='text' name='userId' />
-        <Field type='password' name='password' />
-        <Field type='password' name='passwordcheck' />
-        <Field type='text' name='nickname' />
-        <Field type='text' name='phoneNumber' />
-        <Field type='text' name='email' />
-        <SubmitButton type='submit'>회원가입</SubmitButton>
-      </>
-    );
-  }
-};
+// const authInputDescription = (formType: string) => {
+//   if (formType === "login") {
+//     return (
+//       <>
+//         <Field type="text" name="userId" />
+//         <Field type="password" name="password" />
+//         <SubmitButton type="submit">로그인</SubmitButton>
+//         <span>
+//           아직 회원이 아니신가요? <Link to="/signup">회원가입</Link>
+//         </span>
+//         <span>
+//           <Link to="/signup">아이디 찾기</Link> /{" "}
+//           <Link to="/signup">비밀번호 찾기</Link>
+//         </span>
+//       </>
+//     );
+//   }
+//   if (formType === "registration") {
+//     return (
+//       <>
+//         <Field type="text" name="userId" />
+//         <Field type="password" name="password" />
+//         <Field type="password" name="passwordcheck" />
+//         <Field type="text" name="nickname" />
+//         <Field type="text" name="phoneNumber" />
+//         <Field type="text" name="email" />
+//         <Field type="checkbox" name="agree" />
+//         <SubmitButton type="submit">회원가입</SubmitButton>
+//       </>
+//     );
+//   }
+// };
 
 const Form = ({
   children,
@@ -89,16 +90,27 @@ const Form = ({
 
 const Field = ({ type, name }: { type: string; name: string }) => {
   const { getFieldProps, touched, errors } = useContext(FormContext);
+  if (name === "agree") {
+    return (
+      <InputBox>
+        <div className="check-box">
+          <label htmlFor={name}>{labelText[name]}</label>
+          <input type={type} id={name} {...getFieldProps(name)} />
+        </div>
+        {!touched[name] || !errors[name] ? null : <span>{errors[name]}</span>}
+      </InputBox>
+    );
+  }
+
   return (
     <InputBox>
       <label htmlFor={name}>{labelText[name]}</label>
       <input type={type} id={name} {...getFieldProps(name)} />
-      <div className='bar'></div>
+      <div className="bar"></div>
       {!touched[name] || !errors[name] ? null : <span>{errors[name]}</span>}
     </InputBox>
   );
 };
-
 
 // ===== styled-components =====
 
@@ -136,6 +148,22 @@ const InputBox = styled.div`
     border-bottom: 1px solid var(--gray-color);
   }
 
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    border: 1px solid var(--gray-color);
+    appearance: none;
+    transition: background 0.2s;
+    content: "";
+  }
+
+  input[type="checkbox"]:checked {
+    background: var(--primary-color-light);
+    border: 2px solid var(--gray-color-light);
+    border-radius: 100%;
+  }
+
   > span {
     position: absolute;
     color: red;
@@ -160,9 +188,8 @@ const InputBox = styled.div`
     content: "";
     height: 2px;
     width: 0;
-    bottom: 1px;
     position: absolute;
-    background: var(--primary-color-light);
+    background: var(--primary-color);
     transition: all 0.2s ease;
   }
 
@@ -179,6 +206,19 @@ const InputBox = styled.div`
   input:focus ~ .bar:before,
   input:focus ~ .bar:after {
     width: 50%;
+  }
+
+  /* check-box */
+  > .check-box {
+    display: flex;
+    justify-content: space-between;
+  }
+
+
+  > .check-box ~ span {
+    top: 25px;
+    color: red;
+    font-size: var(--caption);
   }
 `;
 

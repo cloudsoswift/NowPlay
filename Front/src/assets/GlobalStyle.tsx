@@ -70,6 +70,8 @@ const GlobalStyle = createGlobalStyle`
           --body-text: 17px;
           --caption: 12px;
           --navigation-text: 12px;
+
+          height: 100%;
       }
   
       a {

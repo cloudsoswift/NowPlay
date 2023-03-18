@@ -5,7 +5,7 @@ import { Cookies } from "react-cookie";
 const cookie = new Cookies();
 
 const api = axios.create({
-  baseURL: "http://j8d110.p.ssafy.io:8085/",
+  baseURL: "http://172.30.1.90:8085/",
   withCredentials: true,
 });
 

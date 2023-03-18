@@ -1,9 +1,15 @@
 import {FaArrowRight} from 'react-icons/fa'
 import styled from 'styled-components';
+import api from '../../utils/api';
 
 const CustomerService = () => {
     const noContentAlert = () => {
         alert("아직 구현중입니다...")
+        api({
+            method: "POST",
+            url: "api/users/tomtom"
+        }).then(res => console.log(res))
+        .catch(err => console.log(err))
     }
 
   return (
@@ -27,6 +33,7 @@ const ServiceList = styled.div`
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        align-items: center;
     }
 
     span {

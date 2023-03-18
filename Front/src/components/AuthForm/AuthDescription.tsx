@@ -50,7 +50,7 @@ const authDescriptions = {
           userId: values.userId,
           userPassword: values.password
         }
-      }).then(res => console.log(res.data))
+      }).then(res => console.log(res))
       .catch(err => console.log(err))
     },
   },

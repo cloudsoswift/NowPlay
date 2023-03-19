@@ -4,13 +4,16 @@ type TFilter = {
   businessTime: string,
   distance: Number,
 }
+type TCategoryType = TMainCategory | TSubCategory;
 type TMainCategory = {
+  type: "Main"
   // id: number,
   category: string,
   imageURL: string,
   subCategory: Array<TSubCategory>
 }
 type TSubCategory = {
+  type: "Sub"
   // id: number,
   // TMainCategory: string,
   category: string,

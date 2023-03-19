@@ -14,7 +14,18 @@ type Props = {};
 
 export const filterState = atom<TFilter>({
   key: 'filterState',
-  default: { categories: json.categories, selectedCategories: [], businessTime: "", distance: 0 },
+  default: { categories: json.categories.map((C)=>{
+    return {
+      ...C,
+      type: "Main",
+      subCategory: C.subCategory.map((subC)=>{
+        return {
+          ...subC,
+          type: "Sub",
+        }
+      })
+    }
+  }), selectedCategories: [], businessTime: "", distance: 0 },
 })
 export const Map = (props: Props) => {
   const [isFilterShown, setIsFilterShown] = useState(false);

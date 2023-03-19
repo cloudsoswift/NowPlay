@@ -5,6 +5,9 @@ import SpoqaHanSansNeoRegular from "./fonts/SpoqaHanSansNeo-Regular.ttf";
 import SpoqaHanSansNeoThin from "./fonts/SpoqaHanSansNeo-Thin.ttf";
 import SpoqaHanSansNeoMedium from "./fonts/SpoqaHanSansNeo-Medium.ttf";
 import SpoqaHanSansNeoLight from "./fonts/SpoqaHanSansNeo-Light.ttf";
+import LINESeedKRBd from "./fonts/LINESeedKR-Bd.woff2"
+import LINESeedKRRg from "./fonts/LINESeedKR-Rg.woff2"
+import LINESeedKRTh from "./fonts/LINESeedKR-Th.woff2"
 
 const GlobalStyle = createGlobalStyle`
     @font-face {
@@ -37,13 +40,31 @@ const GlobalStyle = createGlobalStyle`
         font-style: normal;
         src: url(${SpoqaHanSansNeoThin}) format('truetype');
     }
+    @font-face {
+        font-family: 'LINESeedKRBd';
+        src: local('LINESeedKR-Bd'), local('LINESeedKR-Bd');
+        font-style: normal;
+        src: url(${LINESeedKRBd}) format('woff2');
+    }
+    @font-face {
+        font-family: 'LINESeedKRRg';
+        src: local('LINESeedKR-Rg'), local('LINESeedKR-Rg');
+        font-style: normal;
+        src: url(${LINESeedKRRg}) format('woff2');
+    }
+    @font-face {
+        font-family: 'LINESeedKRTh';
+        src: local('LINESeedKR-Th'), local('LINESeedKR-Th');
+        font-style: normal;
+        src: url(${LINESeedKRTh}) format('woff2');
+    }
 
       * {
           margin: 0;
           padding: 0;
           box-sizing: border-box;
           font-size: 16px;
-          font-family: 'SpoqaHanSansNeoRegular';
+          font-family: 'LINESeedKRRg';
       }
   
       :root {

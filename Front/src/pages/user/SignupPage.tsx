@@ -3,7 +3,7 @@ import AuthForm from "../../components/AuthForm/AuthForm";
 const SignupPage = () => {
   return (
     <>
-      <AuthForm formType="registration" />
+      <AuthForm formType="signup" />
     </>
   );
 };

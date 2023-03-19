@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import PrivateRoute from "./utils/PrivateRouter";
 import Navbar from "./components/Navbar/Navbar";
 import LoginPage from "./pages/user/LoginPage";
 import SignupPage from "./pages/user/SignupPage";
@@ -14,9 +15,15 @@ function App() {
       <Router>
         <MainContainer>
           <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/mypage/*" element={<MyPage />} />
+            <Route element={<PrivateRoute authentication={false} />}>
+              <Route path='/mypage/login' element={<LoginPage />} />
+            </Route>
+            <Route element={<PrivateRoute authentication={false} />}>
+              <Route path='/mypage/signup' element={<SignupPage />} />
+            </Route>
+            <Route element={<PrivateRoute authentication={true} />}>
+              <Route path='/mypage/*' element={<MyPage />} />
+            </Route>
           </Routes>
         </MainContainer>
         <Navbar />
@@ -29,4 +36,4 @@ export default App;
 
 const MainContainer = styled.div`
   padding-bottom: 80px;
-`
+`;

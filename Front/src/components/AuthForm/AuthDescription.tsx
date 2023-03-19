@@ -1,12 +1,13 @@
-import api from "../../utils/api";
+import api from "../../utils/api/api";
+import { useMutation } from "@tanstack/react-query";
 
 // 새로운 폼 타입을 추가 시키려면
 // {key: {initialValues 폼 값, formPlaceHolder 플레이스 홀더,
 //        formMaxLength 인풋 최대길이, validate 인증함수,
 
-
 //        handleSubmit 제출 함수}}
 const authDescriptions = {
+  // ===== login =====
   login: {
     initialValues: { userId: "", password: "" },
     formPlaceHolder: {
@@ -31,7 +32,7 @@ const authDescriptions = {
       }
       if (!values.password) {
         errors.password = "비밀번호를 입력하세요";
-      } 
+      }
       // else if (
       //   !RegExp(
       //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/
@@ -43,18 +44,28 @@ const authDescriptions = {
       return errors;
     },
     handleSubmit: (values: { [key: string]: string }) => {
-      api({
-        url: "api/users/login",
-        method: "POST",
-        data: {
-          userId: values.userId,
-          userPassword: values.password
-        }
-      }).then(res => console.log(res))
-      .catch(err => console.log(err))
+      const data = "";
+      const loginAPI = async () =>
+        await api({
+          url: "api/users/login",
+          method: "POST",
+          data: {
+            userId: values.userId,
+            userPassword: values.password,
+          },
+        })
+          .then((res) => console.log(res.data))
+          .catch((err) => console.log(err));
+      loginAPI();
+      // const {data, isLoading, isError} = useMutation(loginAPI)
+
+      return data;
     },
   },
-  registration: {
+
+  // ==== signup =====
+
+  signup: {
     initialValues: {
       userId: "",
       password: "",

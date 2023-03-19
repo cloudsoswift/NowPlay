@@ -1,14 +1,20 @@
 import styled from "styled-components";
-import { Link, NavLink, Routes, Route } from "react-router-dom";
-
+import { Link, NavLink, Routes, Route, useNavigate } from "react-router-dom";
 
 import { GrUserSettings } from "react-icons/gr";
 import MyRecent from "../../components/MyPage/MyRecent";
 import MyReview from "../../components/MyPage/MyReview";
 import MyReservation from "../../components/MyPage/MyReservation";
 import CustomerService from "../../components/MyPage/CustomerService";
+// import { usePushLogin } from '../../utils/hooks/usePushLogin';
+
+import { useRecoilValue } from "recoil";
+import { userInfoAtom } from "../../recoil/userAtom";
+import { useEffect } from "react";
 
 const MyPage = () => {
+  const userInfo = useRecoilValue(userInfoAtom);
+
   return (
     <>
       <UserInfoCard>
@@ -125,7 +131,8 @@ const MyPageCategory = styled.ul`
 const MyPageContent = styled.div`
     display: flex;
     flex-direction: column;
-
+    align-items: center;
+    justify-content: center;
     margin-left: 10px;
     margin-right: 10px;
 `;

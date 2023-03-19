@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { createContext, useContext } from "react";
 import useForm from "../../utils/hooks/useForm";
 import { TuseFormParams, TuseFormReturn } from "../../utils/hooks/useForm";
@@ -32,39 +32,6 @@ const FormContext = createContext<TuseFormReturn>({
 });
 FormContext.displayName = "FormContext";
 
-// const authInputDescription = (formType: string) => {
-//   if (formType === "login") {
-//     return (
-//       <>
-//         <Field type="text" name="userId" />
-//         <Field type="password" name="password" />
-//         <SubmitButton type="submit">로그인</SubmitButton>
-//         <span>
-//           아직 회원이 아니신가요? <Link to="/signup">회원가입</Link>
-//         </span>
-//         <span>
-//           <Link to="/signup">아이디 찾기</Link> /{" "}
-//           <Link to="/signup">비밀번호 찾기</Link>
-//         </span>
-//       </>
-//     );
-//   }
-//   if (formType === "registration") {
-//     return (
-//       <>
-//         <Field type="text" name="userId" />
-//         <Field type="password" name="password" />
-//         <Field type="password" name="passwordcheck" />
-//         <Field type="text" name="nickname" />
-//         <Field type="text" name="phoneNumber" />
-//         <Field type="text" name="email" />
-//         <Field type="checkbox" name="agree" />
-//         <SubmitButton type="submit">회원가입</SubmitButton>
-//       </>
-//     );
-//   }
-// };
-
 const Form = ({
   children,
   initialValues,
@@ -93,7 +60,7 @@ const Field = ({ type, name }: { type: string; name: string }) => {
   if (name === "agree") {
     return (
       <InputBox>
-        <div className="check-box">
+        <div className='check-box'>
           <label htmlFor={name}>{labelText[name]}</label>
           <input type={type} id={name} {...getFieldProps(name)} />
         </div>
@@ -106,7 +73,7 @@ const Field = ({ type, name }: { type: string; name: string }) => {
     <InputBox>
       <label htmlFor={name}>{labelText[name]}</label>
       <input type={type} id={name} {...getFieldProps(name)} />
-      <div className="bar"></div>
+      <div className='bar'></div>
       {!touched[name] || !errors[name] ? null : <span>{errors[name]}</span>}
     </InputBox>
   );
@@ -126,7 +93,7 @@ const FormBox = styled.form`
 
   a {
     color: var(--primary-color);
-    font-family: "SpoqaHanSansNeoBold";
+    font-family: "LINESeedKRBd";
   }
 `;
 
@@ -214,7 +181,6 @@ const InputBox = styled.div`
     justify-content: space-between;
   }
 
-
   > .check-box ~ span {
     top: 25px;
     color: red;
@@ -222,7 +188,15 @@ const InputBox = styled.div`
   }
 `;
 
+const spinAnimation = keyframes`
+  0% {transform: rotate(0deg);}
+  100% {transform: rotate(365deg);}
+`
+
 const SubmitButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: var(--primary-color);
   border-radius: 20px;
   height: 50px;
@@ -230,9 +204,20 @@ const SubmitButton = styled.button`
   margin-bottom: 10px;
   color: var(--body-color);
   transition: var(--trans-02);
-  font-family: "SpoqaHanSansNeoBold";
+  font-family: "LINESeedKRBd";
 
   &:active {
     background-color: var(--primary-color-light);
   }
+
+  #spinner {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border: 4px solid var(--gray-color-light);
+    border-radius: 50%;
+    border-top-color: var(--primary-color-light);
+    animation: ${spinAnimation} 1s ease-out infinite;
+  }
 `;
+

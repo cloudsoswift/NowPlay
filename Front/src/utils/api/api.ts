@@ -5,9 +5,13 @@ import { Cookies } from "react-cookie";
 const cookie = new Cookies();
 
 const api = axios.create({
-  baseURL: "http://172.30.1.90:8085/",
+  baseURL: "https://j8d110.p.ssafy.io/spring/",
+  // baseURL: "http://192.168.99.231:8085/spring/",
   withCredentials: true,
 });
+
+// timeout 설정 4초
+api.defaults.timeout = 4000;
 
 // axios interceptor로 헤더에 Authorization 설정
 api.interceptors.request.use(function (config) {

@@ -86,6 +86,8 @@ const FormBox = styled.form`
   flex-direction: column;
   align-items: stretch;
   height: auto;
+  width: 50vw;
+  max-width: 500px;
   padding: 40px;
   margin: 20px;
   border-radius: 10px;

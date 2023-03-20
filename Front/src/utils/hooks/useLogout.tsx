@@ -3,7 +3,7 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { userInfoAtom } from "../recoil/userAtom";
-import { loginAPI } from "../api/apiFunctions";
+import { logoutAPI } from "../api/apiFunctions";
 import { TAxoisUserInfo } from "../api/apiFunctions";
 
 export const useLogout = () => {
@@ -11,11 +11,9 @@ export const useLogout = () => {
   const [cookies, setCookies, removeCookie] = useCookies(["accessToken"]);
   const navigation = useNavigate();
 
-  return useMutation((values: { [key: string]: string }) => loginAPI(values), {
-    onSuccess: (data: TAxoisUserInfo) => {
-      if (data.access_token) {
-        removeCookie("accessToken");
-      }
+  return useMutation((values: { [key: string]: string }) => logoutAPI(values), {
+    onSuccess: () => {
+      removeCookie("accessToken");
       setUserInfo({
         userNickname: "",
         userAddress: "",

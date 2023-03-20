@@ -13,8 +13,8 @@ export const useLogin = () => {
 
   return useMutation((values: { [key: string]: string }) => loginAPI(values), {
     onSuccess: (data: TAxoisUserInfo) => {
-      if (data.access_token) {
-        setCookies("accessToken", data.access_token);
+      if (data.accessToken) {
+        setCookies("accessToken", data.accessToken);
       }
       setUserInfo({
         userNickname: data.userNickname,

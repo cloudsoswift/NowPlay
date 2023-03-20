@@ -1,7 +1,7 @@
 import api from "./api";
 
 export type TAxoisUserInfo = {
-  access_token: string;
+  accessToken: string;
   userName: string;
   userNickname: string;
   userAddress: string;
@@ -10,19 +10,20 @@ export type TAxoisUserInfo = {
 
 export const loginAPI = async (values: { [key: string]: string }) => {
   const { data } = await api<TAxoisUserInfo>({
-    url: "api/users/login",
+    url: "accounts/login",
     method: "POST",
     data: {
       userId: values.userId,
       userPassword: values.password,
     },
   });
+  console.log(data)
   return data;
 };
 
 export const signupAPI = async (values: { [key: string]: string }) => {
   const { data } = await api<TAxoisUserInfo>({
-    url: "api/users/login",
+    url: "accounts",
     method: "POST",
     data: {
       userId: values.userId,
@@ -31,6 +32,14 @@ export const signupAPI = async (values: { [key: string]: string }) => {
       userPhoneNumber: values.phoneNumber,
       userEmail: values.email,
     },
+  });
+  return data;
+};
+
+export const logoutAPI = async (values: { [key: string]: string }) => {
+  const { data } = await api({
+    url: "accounts/logout",
+    method: "POST",
   });
   return data;
 };

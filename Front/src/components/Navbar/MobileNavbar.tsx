@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 
 import { BiSearch, BiStar, BiHome, BiMapPin, BiUser } from "react-icons/bi";
 
-const Navbar = () => {
+const MobileNavbar = () => {
   const [navActive, setNavActive] = useState<number>(0);
 
   const navLocation = useLocation();
@@ -60,7 +60,7 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default MobileNavbar;
 
 const NavBox = styled.nav`
   position: fixed;

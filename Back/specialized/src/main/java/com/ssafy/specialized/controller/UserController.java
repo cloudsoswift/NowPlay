@@ -7,18 +7,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"https://j8d110.p.ssafy.io", "http://127.0.0.1:5173", "http://localhost:5173", "http://172.30.1.95"}, allowCredentials = "true")
-@RequestMapping("spring/api/users")
+@RequestMapping("spring/accounts")
 public class UserController {
 
     @Autowired
@@ -27,8 +27,15 @@ public class UserController {
     // 회원가입
     // Postman 사용 시 @RequestBody 를 제거해야 form-data 로 확인 가능
     @PostMapping
-    public void signUp(@Validated @RequestBody UserDTO userDto) throws Exception {
+    public ResponseEntity<LoginResponseDto> join(@Validated @RequestBody UserDTO userDto, HttpServletResponse response) throws Exception {
         userService.join(userDto);
+        UserLoginDTO login = new UserLoginDTO();
+        login.setUserId(userDto.getUserId());
+        login.setUserPassword(userDto.getUserPassword());
+        LoginResponseDto loginResponseDto = userService.login(login);
+        response.addHeader("Set-Cookie", loginResponseDto.getRefreshToken().toString());
+        loginResponseDto.setRefreshToken(null);
+        return ResponseEntity.ok(loginResponseDto);
     }
 
     // 로그인
@@ -40,52 +47,15 @@ public class UserController {
         loginResponseDto.setRefreshToken(null);
         return ResponseEntity.ok(loginResponseDto);
     }
-//
-//    // 로그인
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@Validated @RequestBody UserLoginDTO login,HttpServletResponse response) throws Exception {
-//        TokenDTO token = userService.login(login);
-//        log.info("=============================================================================");
-//        log.info(token.getRefreshToken());
-//        log.info("=============================================================================");
-//        Cookie cookie  = new Cookie("refresh", token.getRefreshToken());
-//        cookie.setPath("/api/users/login");
-////         response.addCookie(cookie);
-//        return ResponseEntity.ok().header("set-cookie", token.getRefreshToken()).body(token.getAccessToken());
-////        return ResponseEntity.ok(token);
-//    }
-
-    @PostMapping("/tomtom")
-    public void tomtom(RequestHeader coc) {
-
-//        Cookie[] cookies = req.getCookies();
-//        log.info("=============================================================================");
-//        log.info(String.valueOf(cookies.length));
-//        log.info("=============================================================================");
-//        Cookie cookie = req.getCookies()[0];
-//        log.info("=============================================================================");
-//        log.info(cookie.getValue());
-//        log.info("=============================================================================");
-
-        log.info("=============================================================================");
-        log.info("df");
-        log.info("=============================================================================");
-
-    }
-//    @PostMapping("/tomtom")
-//    public void tomtom(@CookieValue("refresh") String refresh) {
-//
-//        log.info("=============================================================================");
-//        log.info(refresh);
-//        log.info("=============================================================================");
-//
-//    }
 
     // 로그아웃
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
-    public void logout(@Validated @RequestBody UserLogoutDTO logout) throws Exception {
+    public void logout(@RequestBody UserLogoutDTO logout, HttpServletResponse response, HttpServletRequest request) throws Exception {
+        String token = request.getHeader("Authorization");
+//        log.info("token: "+token);
         userService.logout(logout);
+        response.addHeader("Set-Cookie", "refresh_token:max-age=0");
     }
 
     // 회원 탈퇴

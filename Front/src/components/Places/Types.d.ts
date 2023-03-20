@@ -36,15 +36,19 @@ type TBusinessTime = {
   }
 
 type TPlaceCard = {
-  name: string,
-  address: string,
-  contact_number: string,
-  homepage: string,
   imageURL: string,
-  latitude: number,
-  longtitude: number,
-  explanation: string,
-  closeOnHolidays: boolean,
+  name: string,
+  subCategory: string,
+  address: string,
+  distance: number,
+  averageRating: number,
+  reviewCount: number,
+  isBookmark: boolean,
+}
+
+type TPlaceDetail = TPlaceCard & {
+  businessTimes: Array<TBusinessTime>,
+  description: string,
 }
 
 export type { TFilter, TMainCategory, TSubCategory, TBusinessTime, TReview, TPlaceCard };

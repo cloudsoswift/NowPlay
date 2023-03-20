@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { userInfoAtom } from "../../recoil/userAtom";
+import { userInfoAtom } from "../recoil/userAtom";
 import { loginAPI } from "../api/apiFunctions";
 import { TAxoisUserInfo } from "../api/apiFunctions";
 

@@ -1,17 +1,16 @@
-import PreviousMap from "postcss/lib/previous-map";
 import React, { useState, useEffect, useCallback } from "react";
 
-export type useFormParams = {
-  initialValues: { [key: string]: string };
+export type TuseFormParams = {
+  initialValues: { [key: string]: string | boolean };
   formPlaceHolder: { [key: string]: string };
   formMaxLength: { [key: string]: number };
   validate(values: object): object;
   onSubmit(values: object): void;
 };
 
-export type useFormReturn = {
+export type TuseFormReturn = {
   values: {
-    [key: string]: string;
+    [key: string]: string | boolean;
   };
   errors: {
     [key: string]: string;
@@ -36,12 +35,19 @@ function useForm({
   formMaxLength,
   validate,
   onSubmit,
-}: useFormParams) {
+}: TuseFormParams) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.type === 'checkbox') {
+      setValues({
+        ...values,
+        [e.target.name]: e.target.checked,
+      });
+      return ;
+    }
     setValues({
       ...values,
       [e.target.name]: e.target.value,
@@ -90,27 +96,29 @@ function useForm({
   // 전화번호 자동 하이픈 생성
   useEffect(() => {
     if (!values.phoneNumber) return;
-    
-    if (values.phoneNumber.length === 11) {
-      setValues((prev) => {
-        return {
-          ...prev,
-          phoneNumber: values.phoneNumber.replace(
-            /(\d{3})(\d{4})(\d{4})/,
-            "$1-$2-$3"
-          ),
-        };
-      });
-    } else if (values.phoneNumber.length === 13) {
-      setValues((prev) => {
-        return {
-          ...prev,
-          phoneNumber: values.phoneNumber
-            //하이픈이 입력되면 공백으로 변경되고 하이픈이 다시 생성됨
-            .replace(/-/g, "")
-            .replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"),
-        };
-      });
+    if (typeof values.phoneNumber === 'string') {
+      const pNumber = values.phoneNumber
+      if (pNumber.length === 11) {
+        setValues((prev) => {
+          return {
+            ...prev,
+            phoneNumber: pNumber.replace(
+              /(\d{3})(\d{4})(\d{4})/,
+              "$1-$2-$3"
+            ),
+          };
+        });
+      } else if (pNumber.length === 13) {
+        setValues((prev) => {
+          return {
+            ...prev,
+            phoneNumber: pNumber
+              //하이픈이 입력되면 공백으로 변경되고 하이픈이 다시 생성됨
+              .replace(/-/g, "")
+              .replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"),
+          };
+        });
+      }
     }
   }, [values.phoneNumber]);
 

@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
     public void logout(UserLogoutDTO logout) {
         // 토큰 유효성 검사
         if (!jwtTokenProvider.validateToken(logout.getAccessToken())) {
-            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+            throw new CustomException(ErrorCode.USER_LOGIN_INFO_INVALID);
         }
         // 토큰이 유효하다면 Access 토큰을 받아옴
         Authentication authentication = jwtTokenProvider.getAuthentication(logout.getAccessToken());

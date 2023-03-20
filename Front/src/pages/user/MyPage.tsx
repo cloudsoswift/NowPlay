@@ -14,7 +14,7 @@ import { useEffect } from "react";
 
 const MyPage = () => {
   const userInfo = useRecoilValue(userInfoAtom);
-
+  
   return (
     <>
       <UserInfoCard>

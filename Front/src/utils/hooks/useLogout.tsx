@@ -11,7 +11,7 @@ export const useLogout = () => {
   const [cookies, setCookies, removeCookie] = useCookies(["accessToken"]);
   const navigation = useNavigate();
 
-  return useMutation((values: { [key: string]: string }) => logoutAPI(values), {
+  return useMutation(() => logoutAPI(), {
     onSuccess: () => {
       removeCookie("accessToken");
       setUserInfo({

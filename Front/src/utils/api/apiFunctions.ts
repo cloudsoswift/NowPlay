@@ -36,7 +36,7 @@ export const signupAPI = async (values: { [key: string]: string }) => {
   return data;
 };
 
-export const logoutAPI = async (values: { [key: string]: string }) => {
+export const logoutAPI = async () => {
   const { data } = await api({
     url: "accounts/logout",
     method: "POST",

@@ -20,8 +20,8 @@ const MyPage = () => {
       <UserInfoCard>
         <NameCard>
           <div>
-            <span className="user-name">이름</span>
-            <span className="user-id">아이디</span>
+            <span className="user-name">{userInfo.userName}</span>
+            <span className="user-id">{userInfo.userNickname}</span>
           </div>
           <Link to="/signup">
             <GrUserSettings />

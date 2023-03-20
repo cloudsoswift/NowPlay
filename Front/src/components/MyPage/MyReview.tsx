@@ -61,7 +61,7 @@ const SwiperBody = styled.div`
 `;
 
 const Swiper = styled.div`
-  height: 70vh;
+  height: 500px;
   aspect-ratio: 2 / 3;
   perspective: 1000px;
   perspective-origin: center 50%;

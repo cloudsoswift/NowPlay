@@ -1,4 +1,4 @@
-import { useState, useReducer,  } from "react";
+import React, { useState, useReducer,  } from "react";
 import styled from "styled-components";
 
 const initialState = {
@@ -58,15 +58,7 @@ function reducer(state, action) {
 export const MyReviewCard = ({ idx, url, removeCard }: { idx: number; url: string; removeCard: (url: string) => void }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const [xyInfo, setxyInfo] = useState({ clientX: 0, clientY: 0 });
-  const [offsetXY, setOffsetXY] = useState({
-    offsetX: 0,
-    offsetY: 0,
-    mMove: "",
-  });
-
-  const mouseDownHandler = (e) => {
-    // console.log(e.touches[0].clientX)
+  const mouseDownHandler = (e: React.MouseEvent) => {
     if (state.eventOver) return;
     dispatch({ type: "mouseOnOff", value: false });
     const { clientX, clientY } = e;
@@ -75,7 +67,7 @@ export const MyReviewCard = ({ idx, url, removeCard }: { idx: number; url: strin
     dispatch({ type: "mouseOnOff", value: true });
   };
 
-  const mouseMoveHandler = (e) => {
+  const mouseMoveHandler = (e: React.MouseEvent) => {
     if (state.eventOver) return;
     if (!state.mouseOnOff) return;
     if (state.client.X === 0 && state.client.Y === 0) return;
@@ -95,7 +87,7 @@ export const MyReviewCard = ({ idx, url, removeCard }: { idx: number; url: strin
     }
   };
 
-  const mouseUpHandler = (e) => {
+  const mouseUpHandler = (e: React.MouseEvent) => {
     if (state.eventOver) return;
     dispatch({ type: "mouseOnOff", value: false });
     dispatch({ type: "client", X: 0, Y: 0 });
@@ -103,7 +95,7 @@ export const MyReviewCard = ({ idx, url, removeCard }: { idx: number; url: strin
     dispatch({ type: "transform", reset: true });
   };
 
-  const mouseLeaveHandler = (e) => {
+  const mouseLeaveHandler = (e: React.MouseEvent) => {
     if (state.eventOver) return;
     dispatch({ type: "mouseOnOff", value: false });
     dispatch({ type: "client", X: 0, Y: 0 });
@@ -116,6 +108,46 @@ export const MyReviewCard = ({ idx, url, removeCard }: { idx: number; url: strin
     e.preventDefault();
   };
 
+  const touchStartHandler = (e: React.TouchEvent) => {
+    
+    if (state.eventOver) return;
+    dispatch({ type: "mouseOnOff", value: false });
+    const { clientX, clientY } = e.changedTouches[0];
+    dispatch({ type: "client", X: clientX, Y: clientY });
+    dispatch({ type: "transition", value: "" });
+    dispatch({ type: "mouseOnOff", value: true });
+  }
+
+  const touchMoveHandler = (e: React.TouchEvent) => {
+    
+    if (state.eventOver) return;
+    if (!state.mouseOnOff) return;
+    if (state.client.X === 0 && state.client.Y === 0) return;
+    const { clientX, clientY } = e.changedTouches[0];
+    dispatch({ type: "offset", X: clientX, Y: clientY });
+    dispatch({ type: "transform" });
+
+    if (Math.abs(state.offset.X) > e.currentTarget.clientWidth * 0.7) {
+      const direction = state.offset.X > 0 ? 1 : -1;
+      dispatch({ type: "eventOver"});
+      dispatch({ type: "transition", value: "transform 1s" });
+      dispatch({ type: "transform", over: direction});
+
+      setTimeout(() => {
+        removeCard(url)
+      }, 1000)
+    }
+  }
+
+  const touchEndHandler = (e: React.TouchEvent) => {
+    
+    if (state.eventOver) return;
+    dispatch({ type: "mouseOnOff", value: false });
+    dispatch({ type: "client", X: 0, Y: 0 });
+    dispatch({ type: "transition", value: "transform 0.5s" });
+    dispatch({ type: "transform", reset: true });
+  }
+
   return (
     <Card
       i={idx}
@@ -125,9 +157,9 @@ export const MyReviewCard = ({ idx, url, removeCard }: { idx: number; url: strin
       onMouseUp={mouseUpHandler}
       onMouseLeave={mouseLeaveHandler}
       onDragStart={dragStartHandler}
-      onTouchStart={mouseDownHandler}
-      onTouchMove={mouseMoveHandler}
-      onTouchCancel={mouseUpHandler}
+      onTouchStart={touchStartHandler}
+      onTouchMove={touchMoveHandler}
+      onTouchEnd={touchEndHandler}
       url={url}
     >
       {/* <img src={url} alt='' /> */}

@@ -1,23 +1,23 @@
 import { TPlaceCard } from "./Types";
 
 type PlaceCardProps = {
-  data: TPlaceCard;
+  place: TPlaceCard;
 };
-export const PlaceCard = ({ data }: PlaceCardProps) => {
+export const PlaceCard = ({ place }: PlaceCardProps) => {
   return (
     <div className="w-[90vw] h-[40vh] grid justify-self-center">
-      <img src={`pics/${data.imageURL}`} alt="" />
+      <img src={`pics/${place.imageURL}`} alt="" />
       <div className="grid grid-cols-2">
-        <div>{data.name}</div>
-        <div>{data.subCategory}</div>
+        <div>{place.name}</div>
+        <div>{place.subCategory}</div>
       </div>
-      <div>{data.address}</div>
+      <div>{place.address}</div>
       <div className="grid grid-cols-3">
-        <div>{data.distance}</div>
-        <div>{data.reviewCount}</div>
-        <div>{data.averageRating}</div>
+        <div>{place.distance}</div>
+        <div>{place.reviewCount}</div>
+        <div>{place.averageRating}</div>
       </div>
-      <div>{data.isBookmark}</div>
+      <div>{place.isBookmark}</div>
     </div>
   );
 };
@@ -83,7 +83,7 @@ export const PlaceCards = (props: PlaceCardsProps) => {
         X
       </button>
       {TEST_DATA.map((data) => (
-        <PlaceCard data={data} />
+        <PlaceCard place={data} />
       ))}
     </div>
   );

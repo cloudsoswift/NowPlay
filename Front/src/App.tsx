@@ -13,7 +13,15 @@ import MyPage from "./pages/user/MyPage";
 import GlobalStyle from "./assets/GlobalStyle";
 import styled from "styled-components";
 import DeskNavbar from "./components/Navbar/DeskNavBar";
-
+import { PlaceDetailPage } from "./pages/places/PlaceDetailPage";
+import { PlacesPage } from "./pages/places/PlacesPage";
+declare global {
+  interface Window {
+    naver: { LoginWithNaverId: any; map: naver.maps.Map };
+    Kakao: any;
+    google: any;
+  }
+}
 function App() {
   const location = useLocation();
 
@@ -22,8 +30,7 @@ function App() {
       <>
         오너페이지입니당
         <GlobalStyle />
-        <Routes>
-        </Routes>
+        <Routes></Routes>
         <DeskNavbar />
       </>
     );
@@ -42,6 +49,8 @@ function App() {
             <Route element={<PrivateRoute authentication={true} />}>
               <Route path="/mypage/*" element={<MyPage />} />
             </Route>
+            <Route path="/places" element={<PlacesPage />} />
+            <Route path="/places/:id" element={<PlaceDetailPage />} />
           </Routes>
         </MobileContainer>
         <MobileNavbar />

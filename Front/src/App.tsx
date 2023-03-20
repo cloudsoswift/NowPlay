@@ -17,7 +17,7 @@ import { PlaceDetailPage } from "./pages/places/PlaceDetailPage";
 import { PlacesPage } from "./pages/places/PlacesPage";
 declare global {
   interface Window {
-    naver: { LoginWithNaverId: any; map: naver.maps.Map };
+    naver: { map: naver.maps.Map; LoginWithNaverId: any };
     Kakao: any;
     google: any;
   }

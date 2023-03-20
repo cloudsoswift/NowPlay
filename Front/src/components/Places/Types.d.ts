@@ -48,7 +48,13 @@ type TPlaceCard = {
 
 type TPlaceDetail = TPlaceCard & {
   businessTimes: Array<TBusinessTime>,
+  contactNumber: string,
+  homepage: string,
+  imageURLs: Array<string>,
+  latitude: number,
+  longitude: number,
   description: string,
+  isClosedOnHolidays: boolean,
 }
 
-export type { TFilter, TMainCategory, TSubCategory, TBusinessTime, TReview, TPlaceCard };
+export type { TFilter, TMainCategory, TSubCategory, TBusinessTime, TReview, TPlaceCard, TPlaceDetail };

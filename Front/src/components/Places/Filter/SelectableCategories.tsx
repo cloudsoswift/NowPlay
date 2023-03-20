@@ -37,7 +37,7 @@ export const SelectableCategory = ({
             (subC) => subC.category === category.category
           )
             ? prevFilter.selectedCategories.filter(
-                (subC) => subC.category === category.category
+                (subC) => subC.category !== category.category
               )
             : [...prevFilter.selectedCategories, category],
         };

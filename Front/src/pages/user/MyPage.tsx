@@ -9,7 +9,7 @@ import CustomerService from "../../components/MyPage/CustomerService";
 // import { usePushLogin } from '../../utils/hooks/usePushLogin';
 
 import { useRecoilValue } from "recoil";
-import { userInfoAtom } from "../../recoil/userAtom";
+import { userInfoAtom } from "../../utils/recoil/userAtom";
 import { useEffect } from "react";
 
 const MyPage = () => {

@@ -14,7 +14,7 @@ const CustomerService = () => {
   };
 
   const logout = () => {
-    
+    alert("로그아웃!")
   }
 
   return (
@@ -44,6 +44,7 @@ export default CustomerService;
 const ServiceList = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 
   > div {
     margin: 20px;

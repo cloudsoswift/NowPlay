@@ -5,11 +5,13 @@ export type TuseBusinessHour = {
   values: TinitialValues
 };
 
-const useBusinessHour = ({ e, values }: TuseBusinessHour) => {
+const useBusinessHour = () => {
+  function updateHour({ e, values }: TuseBusinessHour) {
+
     const newBus = values.businessHour;
 
     const eInfo = e.target.id.split("-");
-    console.log(eInfo);
+
 
     if (eInfo[0] === "monday") {
       if (eInfo[1] === "open" && eInfo[2] === "hour" && newBus) {
@@ -34,50 +36,50 @@ const useBusinessHour = ({ e, values }: TuseBusinessHour) => {
         newBus.monday.storeHoliday = e.currentTarget.checked;
       }
     }
-    if (eInfo[0] === "tuseday") {
+    if (eInfo[0] === "tuesday") {
       if (eInfo[1] === "open" && eInfo[2] === "hour" && newBus) {
-        newBus.tuseday.open =
-          e.currentTarget.value + newBus.tuseday.open.slice(2);
+        newBus.tuesday.open =
+          e.currentTarget.value + newBus.tuesday.open.slice(2);
       } else if (eInfo[1] === "open" && eInfo[2] === "min" && newBus) {
-        newBus.tuseday.open =
-          newBus.tuseday.open.slice(0, 3) + e.currentTarget.value;
+        newBus.tuesday.open =
+          newBus.tuesday.open.slice(0, 3) + e.currentTarget.value;
       } else if (eInfo[1] === "close" && eInfo[2] === "hour" && newBus) {
-        newBus.tuseday.close =
-          newBus.tuseday.close.slice(0, 3) + e.currentTarget.value;
+        newBus.tuesday.close =
+          newBus.tuesday.close.slice(0, 3) + e.currentTarget.value;
       } else if (eInfo[1] === "close" && eInfo[2] === "min" && newBus) {
-        newBus.tuseday.close =
-          newBus.tuseday.close.slice(0, 3) + e.currentTarget.value;
+        newBus.tuesday.close =
+          newBus.tuesday.close.slice(0, 3) + e.currentTarget.value;
       } else if (eInfo[1] === "reservationInterval" && newBus) {
-        newBus.tuseday.reservationInterval = e.currentTarget.value;
+        newBus.tuesday.reservationInterval = e.currentTarget.value;
       } else if (
         eInfo[1] === "storeHoliday" &&
         newBus &&
         e.currentTarget instanceof HTMLInputElement
       ) {
-        newBus.tuseday.storeHoliday = e.currentTarget.checked;
+        newBus.tuesday.storeHoliday = e.currentTarget.checked;
       }
     }
-    if (eInfo[0] === "wendsday") {
+    if (eInfo[0] === "wendesday") {
       if (eInfo[1] === "open" && eInfo[2] === "hour" && newBus) {
-        newBus.wendsday.open =
-          e.currentTarget.value + newBus.wendsday.open.slice(2);
+        newBus.wendesday.open =
+          e.currentTarget.value + newBus.wendesday.open.slice(2);
       } else if (eInfo[1] === "open" && eInfo[2] === "min" && newBus) {
-        newBus.wendsday.open =
-          newBus.wendsday.open.slice(0, 3) + e.currentTarget.value;
+        newBus.wendesday.open =
+          newBus.wendesday.open.slice(0, 3) + e.currentTarget.value;
       } else if (eInfo[1] === "close" && eInfo[2] === "hour" && newBus) {
-        newBus.wendsday.close =
-          newBus.wendsday.close.slice(0, 3) + e.currentTarget.value;
+        newBus.wendesday.close =
+          newBus.wendesday.close.slice(0, 3) + e.currentTarget.value;
       } else if (eInfo[1] === "close" && eInfo[2] === "min" && newBus) {
-        newBus.wendsday.close =
-          newBus.wendsday.close.slice(0, 3) + e.currentTarget.value;
+        newBus.wendesday.close =
+          newBus.wendesday.close.slice(0, 3) + e.currentTarget.value;
       } else if (eInfo[1] === "reservationInterval" && newBus) {
-        newBus.wendsday.reservationInterval = e.currentTarget.value;
+        newBus.wendesday.reservationInterval = e.currentTarget.value;
       } else if (
         eInfo[1] === "storeHoliday" &&
         newBus &&
         e.currentTarget instanceof HTMLInputElement
       ) {
-        newBus.wendsday.storeHoliday = e.currentTarget.checked;
+        newBus.wendesday.storeHoliday = e.currentTarget.checked;
       }
     }
     if (eInfo[0] === "thursday") {
@@ -172,5 +174,9 @@ const useBusinessHour = ({ e, values }: TuseBusinessHour) => {
         newBus.sunday.storeHoliday = e.currentTarget.checked;
       }
     }
-
+    return newBus
+  }
+  return updateHour
 };
+
+export default useBusinessHour

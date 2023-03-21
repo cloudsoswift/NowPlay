@@ -8,6 +8,7 @@ type Props = {
 };
 export const PlaceDetailPage = (props: Props) => {
   const TEST_DATA:TPlaceDetail = {
+    id: 1,
     imageURL: "place_test_image.png",
     name: "스파크 노래타운",
     subCategory: "노래방",
@@ -30,14 +31,17 @@ export const PlaceDetailPage = (props: Props) => {
   const selectedTabButton = `${tabButton} bg-[var(--primary-color)] text-white`
   return (
     <div>
-      <div className="space-x-2">
+      <div>
+        
+      </div>
+      <div className="space-x-2 flex justify-center">
         <button className={tabIndex === 0 ? selectedTabButton : tabButton} onClick={()=>{setTabIndex(0)}}>가게 정보</button>
         <button className={tabIndex === 1 ? selectedTabButton : tabButton} onClick={()=>{setTabIndex(1)}}>위치 / 주차</button>
         <button className={tabIndex === 2 ? selectedTabButton : tabButton} onClick={()=>{setTabIndex(2)}}>리뷰</button>
       </div>
       <div>
         {tabIndex === 0 && <PlaceDetailInfo placeDetail={TEST_DATA}/>}
-        {tabIndex === 1 && <PlaceMapInfo />}
+        {tabIndex === 1 && <PlaceMapInfo address={TEST_DATA.address} latitude={TEST_DATA.latitude} longitude={TEST_DATA.longitude}/>}
         {tabIndex === 2 && <ReviewInfo />}
       </div>
     </div>

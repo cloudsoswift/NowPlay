@@ -201,6 +201,7 @@ const authDescriptions = {
         nickname: "",
         phoneNumber: "",
         email: "",
+        hobbyMajorCategory: "",
         brcImage: "",
         agree: "",
       };
@@ -238,6 +239,9 @@ const authDescriptions = {
       }
       if (!values.agree) {
         errors.agree = "약관에 동의해주세요";
+      }
+      if (values.hobbyMajorCategory === "" || !values.hobbyMajorCategory) {
+        errors.hobbyMajorCategory = "카테고리를 골라주세요"
       }
 
       return errors;

@@ -28,3 +28,13 @@ export const userInfoAtom = atom<TRecoilUserInfo>({
     localStorageEffect('userinfo')
   ]
 });
+
+export const ownerInfoAtion = atom({
+  key: "ownerInfo",
+  default: { userName: "", userNickname: ""},
+  effects: [
+    localStorageEffect('ownerinfo')
+  ]
+})
+
+

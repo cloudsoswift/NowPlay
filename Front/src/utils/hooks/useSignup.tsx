@@ -16,7 +16,7 @@ export const useSignup = () => {
     (values: TinitialValues) => signupAPI(values),
     {
       onSuccess: (data: TAxoisUserInfo) => {
-        setCookies("accessToken", data.accessToken);
+        setCookies("accessToken", data.accessToken, {path: "/mobile"});
         setUserInfo({
           userNickname: data.userNickname,
           userAddress: data.userAddress,

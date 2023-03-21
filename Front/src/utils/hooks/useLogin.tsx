@@ -11,12 +11,12 @@ export const useLogin = () => {
   const setUserInfo = useSetRecoilState(userInfoAtom);
   const [cookies, setCookies, removeCooke] = useCookies(["accessToken"]);
   const navigation = useNavigate();
-  const location = useLocation();
+
 
   return useMutation((values: TinitialValues) => loginAPI(values), {
     onSuccess: (data: TAxoisUserInfo) => {
       if (data.accessToken) {
-        setCookies("accessToken", data.accessToken);
+        setCookies("accessToken", data.accessToken, {path: "/mobile"});
       }
       setUserInfo({
         userNickname: data.userNickname,
@@ -24,7 +24,7 @@ export const useLogin = () => {
         userName: data.userName,
         userDistance: data.userDistance,
       });
-      location.pathname.includes("owner") ? navigation("/owner") : navigation("/mypage");
+      navigation("/mypage");
     },
   });
 };

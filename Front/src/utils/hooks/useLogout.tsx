@@ -13,7 +13,7 @@ export const useLogout = () => {
 
   return useMutation(() => logoutAPI(), {
     onSuccess: () => {
-      removeCookie("accessToken");
+      removeCookie("accessToken", {path: "/mobile"});
       setUserInfo({
         userNickname: "",
         userAddress: "",

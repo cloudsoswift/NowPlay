@@ -65,6 +65,13 @@ public class UserController {
         userService.updateUserHobby(updateUserHobbyRequestDto);
     }
 
+    //Id 중복 검사
+    @GetMapping("/id")
+    public ResponseEntity<?> checkIdDuplication(@RequestParam String userId) {
+        int statusCode = userService.checkIdDuplication(userId);
+        return ResponseEntity.status(statusCode).build();
+    }
+
     // 내 정보 조회
     @GetMapping("")
     public ResponseEntity<?> getMyUserInfo(HttpServletResponse response) throws Exception {

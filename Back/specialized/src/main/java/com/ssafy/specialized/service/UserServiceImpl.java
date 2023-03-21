@@ -79,6 +79,13 @@ public class UserServiceImpl implements UserService {
             userHobbyRepository.save(userHobby);
         }
     }
+
+    @Override
+    public int checkIdDuplication(String userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        return user == null ? 200 : 403;
+    }
+
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
         // 회원 중복 확인

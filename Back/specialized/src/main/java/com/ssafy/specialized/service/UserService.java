@@ -11,6 +11,7 @@ public interface UserService {
     LoginResponseDto login(UserLoginDTO login) throws Exception;
 
     void logout(UserLogoutDTO logout) throws Exception;
+    int checkIdDuplication(String userId);
 
     void update(UserUpdateDTO userUpdateDto) throws Exception;
 

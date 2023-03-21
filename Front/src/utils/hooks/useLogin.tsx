@@ -1,17 +1,19 @@
 import { useMutation } from "@tanstack/react-query";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { userInfoAtom } from "../recoil/userAtom";
 import { loginAPI } from "../api/apiFunctions";
 import { TAxoisUserInfo } from "../api/apiFunctions";
+import { TinitialValues } from "./useForm";
 
 export const useLogin = () => {
   const setUserInfo = useSetRecoilState(userInfoAtom);
   const [cookies, setCookies, removeCooke] = useCookies(["accessToken"]);
   const navigation = useNavigate();
+  const location = useLocation();
 
-  return useMutation((values: { [key: string]: string }) => loginAPI(values), {
+  return useMutation((values: TinitialValues) => loginAPI(values), {
     onSuccess: (data: TAxoisUserInfo) => {
       if (data.accessToken) {
         setCookies("accessToken", data.accessToken);
@@ -22,7 +24,7 @@ export const useLogin = () => {
         userName: data.userName,
         userDistance: data.userDistance,
       });
-      navigation("/mypage");
+      location.pathname.includes("owner") ? navigation("/owner") : navigation("/mypage");
     },
   });
 };

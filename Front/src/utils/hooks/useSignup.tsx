@@ -5,6 +5,7 @@ import { useSetRecoilState } from 'recoil'
 import { userInfoAtom } from '../recoil/userAtom'
 import { signupAPI } from '../api/apiFunctions'
 import { TAxoisUserInfo } from '../api/apiFunctions'
+import { TinitialValues } from './useForm'
 
 export const useSignup = () => {
   const setUserInfo = useSetRecoilState(userInfoAtom)
@@ -12,7 +13,7 @@ export const useSignup = () => {
   const navigation = useNavigate()
 
   return useMutation(
-    (values: { [key: string]: string }) => signupAPI(values),
+    (values: TinitialValues) => signupAPI(values),
     {
       onSuccess: (data: TAxoisUserInfo) => {
         setCookies("accessToken", data.accessToken);

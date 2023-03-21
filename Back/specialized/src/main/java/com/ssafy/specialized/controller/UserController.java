@@ -72,6 +72,20 @@ public class UserController {
         return ResponseEntity.status(statusCode).build();
     }
 
+    //이메일 확인 및 코드 전송
+    @PostMapping("validate-email")
+    public void validateEmail(@RequestBody String userEmail) {
+
+    }
+
+
+    //입력 받은 코드 일치 여부 확인
+    @PostMapping("code-confirm")
+    public void confirmCode(@RequestBody ConfirmCodeRequestDto confirmCodeRequestDto) {
+//        confirmCodeRequestDto
+    }
+
+
     // 내 정보 조회
     @GetMapping("")
     public ResponseEntity<?> getMyUserInfo(HttpServletResponse response) throws Exception {

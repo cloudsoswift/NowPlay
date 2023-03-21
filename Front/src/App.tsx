@@ -15,6 +15,7 @@ import styled from "styled-components";
 import DeskNavbar from "./components/Navbar/DeskNavBar";
 import { PlaceDetailPage } from "./pages/places/PlaceDetailPage";
 import { PlacesPage } from "./pages/places/PlacesPage";
+import { PlaceReviewWritePage } from "./pages/places/PlaceReviewWritePage";
 declare global {
   interface Window {
     naver: { map: naver.maps.Map; LoginWithNaverId: any };
@@ -51,6 +52,7 @@ function App() {
             </Route>
             <Route path="/places" element={<PlacesPage />} />
             <Route path="/places/:id" element={<PlaceDetailPage />} />
+            <Route path="/places/:id/review" element={<PlaceReviewWritePage />} />
           </Routes>
         </MobileContainer>
         <MobileNavbar />

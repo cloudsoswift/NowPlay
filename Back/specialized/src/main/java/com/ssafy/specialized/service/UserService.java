@@ -22,6 +22,8 @@ public interface UserService {
     UserInfoDTO getInfo(String userId) throws Exception;
 
     UserInfoDTO getMyInfo() throws Exception;
+
+    void delete(UserLogoutDTO logout) throws Exception;
     void updateUserHobby(UpdateUserHobbyRequestDto updateUserHobbyRequestDto);
 
 

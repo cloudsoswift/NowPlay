@@ -85,7 +85,20 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElse(null);
         return user == null ? 200 : 403;
     }
-
+    @Override
+    public void delete(UserLogoutDTO logout) throws Exception {
+        if (!jwtTokenProvider.validateToken(logout.getAccessToken())) {
+            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+        }
+        Authentication authentication = jwtTokenProvider.getAuthentication(logout.getAccessToken());
+        String userId = authentication.getName();
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        if (!user.matchPassword(passwordEncoder, logout.getCheckPassword())) {
+            throw new CustomException(ErrorCode.NOT_MY_CONTENTS);
+        }
+        userRepository.delete(user);
+        logout(logout);
+    }
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
         // 회원 중복 확인

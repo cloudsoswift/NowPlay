@@ -85,6 +85,12 @@ public class UserController {
 //        confirmCodeRequestDto
     }
 
+    // 회원 탈퇴
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@Validated @RequestBody UserLogoutDTO logout) throws Exception {
+        userService.delete(logout);
+    }
 
     // 내 정보 조회
     @GetMapping("")

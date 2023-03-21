@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import com.ssafy.specialized.common.security.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -137,6 +138,12 @@ public class UserController {
         return ResponseEntity.ok("Password Changed");
     }
 
+    //위치 검색 기록
+    @GetMapping("/logs")
+    public void GetSearchLogs() {
+        log.info(SecurityUtil.getLoginUsername());
+//        String token = request.getHeader("Authorization");
+    }
 
     // 토큰 만료시 재발급
     @PostMapping("reissue")

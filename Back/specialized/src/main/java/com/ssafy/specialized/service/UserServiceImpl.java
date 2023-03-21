@@ -6,8 +6,10 @@ import com.ssafy.specialized.common.exception.ErrorCode;
 import com.ssafy.specialized.common.jwt.JwtTokenProvider;
 import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.user.*;
+import com.ssafy.specialized.domain.entity.HobbySubcategory;
 import com.ssafy.specialized.domain.entity.User;
-import com.ssafy.specialized.repository.UserRepository;
+import com.ssafy.specialized.domain.entity.UserHobby;
+import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -33,6 +36,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserRepository userRepository;
     @Autowired
+    private final UserHobbyRepository userHobbyRepository;
+    @Autowired
+    private final HobbyMainRepository hobbyMainRepository;
+    @Autowired
+    private final ReviewRepository reviewRepository;
+    @Autowired
+    private final HobbySubcategoryRepository hobbySubcategoryRepository;
+    @Autowired
+    private final BookmarkRepository bookmarkRepository;
+    @Autowired
     private final PasswordEncoder passwordEncoder;
     @Autowired
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -41,7 +54,31 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final RedisTemplate redisTemplate;
 
-
+    @Override
+    public void updateUserHobby(UpdateUserHobbyRequestDto updateUserHobbyRequestDto) {
+        log.info(SecurityUtil.getLoginUsername());
+        User user = userRepository.findByName(SecurityUtil.getLoginUsername());
+//                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        List<UserHobby> list = userHobbyRepository.findAllByUser(user);
+        for (int i = 0; i < list.size(); i++) {
+            userHobbyRepository.delete(list.get(i));
+        }
+        for (int i = 0; i < updateUserHobbyRequestDto.getHobbies().length; i++) {
+            Optional<HobbySubcategory> optionalHobbySubcategory = hobbySubcategoryRepository.findBySubcategory(updateUserHobbyRequestDto.getHobbies()[i]);
+            HobbySubcategory hobbySubcategory = null;
+            if (optionalHobbySubcategory.isPresent()) {
+                hobbySubcategory = optionalHobbySubcategory.get();
+            } else {
+                //TODO: exception 던지기
+            }
+            UserHobby userHobby = UserHobby.builder()
+                    .mainCategory(hobbySubcategory.getMainCategory())
+                    .user(user)
+                    .subcategory(hobbySubcategory)
+                    .build();
+            userHobbyRepository.save(userHobby);
+        }
+    }
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
         // 회원 중복 확인

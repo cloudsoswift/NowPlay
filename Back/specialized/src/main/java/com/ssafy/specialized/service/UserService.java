@@ -21,6 +21,8 @@ public interface UserService {
     UserInfoDTO getInfo(String userId) throws Exception;
 
     UserInfoDTO getMyInfo() throws Exception;
+    void updateUserHobby(UpdateUserHobbyRequestDto updateUserHobbyRequestDto);
+
 
 
     List<?> findMyUserId(String name);

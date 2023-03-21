@@ -58,6 +58,12 @@ public class UserController {
         response.addHeader("Set-Cookie", "refresh_token:max-age=0");
     }
 
+    // 사용자 선호 취미 등록/수정
+    @PostMapping("/user-hobbies")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateUserHobby(@Validated @RequestBody UpdateUserHobbyRequestDto updateUserHobbyRequestDto, HttpServletRequest request, HttpServletResponse response) {
+        userService.updateUserHobby(updateUserHobbyRequestDto);
+    }
 
     // 내 정보 조회
     @GetMapping("")

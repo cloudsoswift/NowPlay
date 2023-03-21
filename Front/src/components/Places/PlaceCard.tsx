@@ -81,7 +81,7 @@ export const PlaceCards = (props: PlaceCardsProps) => {
   ];
   return (
     <div
-      className="w-screen h-[79vh] bg-white border-4 relative top-5 left-0 grid overflow-y-scroll"
+      className="w-screen h-[79vh] bg-white border-4 absolute bottom-20 left-0 grid overflow-y-scroll"
       style={{ zIndex: "100" }}
     >
       <div className="sticky top-1 text-end">

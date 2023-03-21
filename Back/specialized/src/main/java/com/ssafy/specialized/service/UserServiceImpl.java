@@ -6,6 +6,7 @@ import com.ssafy.specialized.common.exception.ErrorCode;
 import com.ssafy.specialized.common.jwt.JwtTokenProvider;
 import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.user.*;
+import com.ssafy.specialized.domain.entity.Bookmark;
 import com.ssafy.specialized.domain.entity.HobbySubcategory;
 import com.ssafy.specialized.domain.entity.User;
 import com.ssafy.specialized.domain.entity.UserHobby;
@@ -84,6 +85,12 @@ public class UserServiceImpl implements UserService {
     public int checkIdDuplication(String userId) {
         User user = userRepository.findById(userId).orElse(null);
         return user == null ? 200 : 403;
+    }
+    @Override
+    public List<Bookmark> getMyBookmarkList() {
+        User user = userRepository.findByName(SecurityUtil.getLoginUsername());
+        List<Bookmark> list = bookmarkRepository.findAllByUser(user);
+        return list;
     }
     @Override
     public void delete(UserLogoutDTO logout) throws Exception {

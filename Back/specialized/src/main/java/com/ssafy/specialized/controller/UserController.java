@@ -2,6 +2,7 @@ package com.ssafy.specialized.controller;
 
 
 import com.ssafy.specialized.domain.dto.user.*;
+import com.ssafy.specialized.domain.entity.Bookmark;
 import com.ssafy.specialized.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import com.ssafy.specialized.common.security.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -143,6 +145,12 @@ public class UserController {
     public void GetSearchLogs() {
         log.info(SecurityUtil.getLoginUsername());
 //        String token = request.getHeader("Authorization");
+    }
+
+    @GetMapping("/bookmarks")
+    public ResponseEntity<?> getMyBookmarkList(@RequestParam String pageNo, HttpServletRequest request) {
+        List<Bookmark> list = userService.getMyBookmarkList();
+        return ResponseEntity.ok(list);
     }
 
     // 토큰 만료시 재발급

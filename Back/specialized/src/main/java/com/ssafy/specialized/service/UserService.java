@@ -2,6 +2,7 @@ package com.ssafy.specialized.service;
 
 
 import com.ssafy.specialized.domain.dto.user.*;
+import com.ssafy.specialized.domain.entity.Bookmark;
 
 import java.util.List;
 
@@ -22,6 +23,8 @@ public interface UserService {
     UserInfoDTO getInfo(String userId) throws Exception;
 
     UserInfoDTO getMyInfo() throws Exception;
+
+    List<Bookmark> getMyBookmarkList();
 
     void delete(UserLogoutDTO logout) throws Exception;
     void updateUserHobby(UpdateUserHobbyRequestDto updateUserHobbyRequestDto);

@@ -1,7 +1,10 @@
 package com.ssafy.specialized.controller;
 
 
-import com.ssafy.specialized.domain.userDTO.*;
+import com.ssafy.specialized.common.security.SecurityUtil;
+import com.ssafy.specialized.domain.dto.user.*;
+import com.ssafy.specialized.domain.entity.Bookmark;
+import com.ssafy.specialized.domain.entity.Review;
 import com.ssafy.specialized.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -27,11 +31,11 @@ public class UserController {
     // 회원가입
     // Postman 사용 시 @RequestBody 를 제거해야 form-data 로 확인 가능
     @PostMapping
-    public ResponseEntity<LoginResponseDto> join(@Validated @RequestBody UserDTO userDto, HttpServletResponse response) throws Exception {
-        userService.join(userDto);
+    public ResponseEntity<LoginResponseDto> signUp(@Validated @RequestBody SignUpRequestDto signUpRequestDto, HttpServletResponse response) throws Exception {
+        userService.signUp(signUpRequestDto);
         UserLoginDTO login = new UserLoginDTO();
-        login.setUserId(userDto.getUserId());
-        login.setUserPassword(userDto.getUserPassword());
+        login.setUserId(signUpRequestDto.getUserId());
+        login.setUserPassword(signUpRequestDto.getUserPassword());
         LoginResponseDto loginResponseDto = userService.login(login);
         response.addHeader("Set-Cookie", loginResponseDto.getRefreshToken().toString());
         loginResponseDto.setRefreshToken(null);
@@ -58,6 +62,33 @@ public class UserController {
         response.addHeader("Set-Cookie", "refresh_token:max-age=0");
     }
 
+    // 사용자 선호 취미 등록/수정
+    @PostMapping("/user-hobbies")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateUserHobby(@Validated @RequestBody UpdateUserHobbyRequestDto updateUserHobbyRequestDto, HttpServletRequest request, HttpServletResponse response) {
+        userService.updateUserHobby(updateUserHobbyRequestDto);
+    }
+
+    //아이디 중복 검사
+    @GetMapping("/id")
+    public ResponseEntity<?> checkIdDuplication(@RequestParam String userId) {
+        int statusCode = userService.checkIdDuplication(userId);
+        return ResponseEntity.status(statusCode).build();
+    }
+
+    //사용자 이메일 확인
+    @PostMapping("validate-email")
+    public void validateEmail(@RequestBody String userEmail) {
+
+    }
+
+    //코드 일치 여부 확인
+    @PostMapping("code-confirm")
+    public void confirmCode(@RequestBody ConfirmCodeRequestDto confirmCodeRequestDto) {
+//        confirmCodeRequestDto
+    }
+
+
     // 회원 탈퇴
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
@@ -78,7 +109,7 @@ public class UserController {
     }
 
     // 내 정보 수정
-    @PutMapping("")
+    @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public void updateInfo(@Validated @RequestBody UserUpdateDTO userUpdateDto) throws Exception {
         userService.update(userUpdateDto);
@@ -98,16 +129,37 @@ public class UserController {
     }
 
     // 아이디 찾기
-    @PostMapping("find/id")
-    public ResponseEntity<?> findMyUserId(@Validated @RequestBody FindIdDTO findIdDTO) {
-        return ResponseEntity.ok(userService.findMyUserId(findIdDTO.getUserName()));
+    @PostMapping("/find/id")
+    public ResponseEntity<?> findMyId(@RequestBody String userEmail) {
+        return ResponseEntity.ok(userService.findMyUserId(userEmail));
     }
 
     // 비밀번호 찾기
-    @PostMapping("find/password")
-    public ResponseEntity<?> findMyPassword(@Validated @RequestBody FindPasswordDTO findPasswordDTO) throws Exception {
-        userService.findMyPassword(findPasswordDTO);
+    @PostMapping("/find/password")
+    public ResponseEntity<?> findMyPassword(@RequestBody FindMyPasswordRequestDTO findMyPasswordRequestDTO) throws Exception {
+        userService.findMyPassword(findMyPasswordRequestDTO);
         return ResponseEntity.ok("Password Changed");
+    }
+
+    //사용자 위치 검색 내역
+    @GetMapping("/logs")
+    public void GetSearchLogs() {
+        log.info(SecurityUtil.getLoginUsername());
+//        String token = request.getHeader("Authorization");
+    }
+
+    //내 즐겨찾기 목록
+    @GetMapping("/bookmarks")
+    public ResponseEntity<?> getMyBookmarkList(@RequestParam String pageNo, HttpServletRequest request) {
+        List<Bookmark> list = userService.getMyBookmarkList();
+        return ResponseEntity.ok(list);
+    }
+
+    //내 리뷰 목록
+    @GetMapping("/reviews")
+    public ResponseEntity<?> getMyReviewList(@RequestParam String pageNo, HttpServletRequest request) {
+        List<Review> list = userService.getMyReviewList();
+        return ResponseEntity.ok(list);
     }
 
     // 토큰 만료시 재발급

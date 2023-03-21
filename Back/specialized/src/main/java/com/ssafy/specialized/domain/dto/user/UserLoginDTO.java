@@ -1,4 +1,4 @@
-package com.ssafy.specialized.domain.userDTO;
+package com.ssafy.specialized.domain.dto.user;
 
 import lombok.Data;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

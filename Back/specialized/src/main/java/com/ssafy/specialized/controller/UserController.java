@@ -1,7 +1,7 @@
 package com.ssafy.specialized.controller;
 
 
-import com.ssafy.specialized.domain.userDTO.*;
+import com.ssafy.specialized.domain.dto.user.*;
 import com.ssafy.specialized.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +27,11 @@ public class UserController {
     // 회원가입
     // Postman 사용 시 @RequestBody 를 제거해야 form-data 로 확인 가능
     @PostMapping
-    public ResponseEntity<LoginResponseDto> join(@Validated @RequestBody UserDTO userDto, HttpServletResponse response) throws Exception {
-        userService.join(userDto);
+    public ResponseEntity<LoginResponseDto> signUp(@Validated @RequestBody SignUpRequestDto signUpRequestDto, HttpServletResponse response) throws Exception {
+        userService.signUp(signUpRequestDto);
         UserLoginDTO login = new UserLoginDTO();
-        login.setUserId(userDto.getUserId());
-        login.setUserPassword(userDto.getUserPassword());
+        login.setUserId(signUpRequestDto.getUserId());
+        login.setUserPassword(signUpRequestDto.getUserPassword());
         LoginResponseDto loginResponseDto = userService.login(login);
         response.addHeader("Set-Cookie", loginResponseDto.getRefreshToken().toString());
         loginResponseDto.setRefreshToken(null);
@@ -58,12 +58,6 @@ public class UserController {
         response.addHeader("Set-Cookie", "refresh_token:max-age=0");
     }
 
-    // 회원 탈퇴
-    @DeleteMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void delete(@Validated @RequestBody UserLogoutDTO logout) throws Exception {
-        userService.delete(logout);
-    }
 
     // 내 정보 조회
     @GetMapping("")
@@ -78,7 +72,7 @@ public class UserController {
     }
 
     // 내 정보 수정
-    @PutMapping("")
+    @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public void updateInfo(@Validated @RequestBody UserUpdateDTO userUpdateDto) throws Exception {
         userService.update(userUpdateDto);
@@ -98,17 +92,18 @@ public class UserController {
     }
 
     // 아이디 찾기
-    @PostMapping("find/id")
-    public ResponseEntity<?> findMyUserId(@Validated @RequestBody FindIdDTO findIdDTO) {
-        return ResponseEntity.ok(userService.findMyUserId(findIdDTO.getUserName()));
+    @PostMapping("/find/id")
+    public ResponseEntity<?> findMyId(@RequestBody String userEmail) {
+        return ResponseEntity.ok(userService.findMyUserId(userEmail));
     }
 
     // 비밀번호 찾기
-    @PostMapping("find/password")
-    public ResponseEntity<?> findMyPassword(@Validated @RequestBody FindPasswordDTO findPasswordDTO) throws Exception {
-        userService.findMyPassword(findPasswordDTO);
+    @PostMapping("/find/password")
+    public ResponseEntity<?> findMyPassword(@RequestBody FindMyPasswordRequestDTO findMyPasswordRequestDTO) throws Exception {
+        userService.findMyPassword(findMyPasswordRequestDTO);
         return ResponseEntity.ok("Password Changed");
     }
+
 
     // 토큰 만료시 재발급
     @PostMapping("reissue")

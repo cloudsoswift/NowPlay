@@ -1,6 +1,6 @@
 package com.ssafy.specialized.common.jwt;
 
-import com.ssafy.specialized.domain.userDTO.TokenDTO;
+import com.ssafy.specialized.domain.dto.user.TokenDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

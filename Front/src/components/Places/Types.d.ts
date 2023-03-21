@@ -29,13 +29,16 @@ type TBusinessTime = {
   }
   
   type TReview = {
+    id: number,
+    nickname: string,
     content: string,
     rate: number,
     created_at: Date,
-    images_url: Array<string>
+    imageURL: string
   }
 
 type TPlaceCard = {
+  id: number,
   imageURL: string,
   name: string,
   subCategory: string,

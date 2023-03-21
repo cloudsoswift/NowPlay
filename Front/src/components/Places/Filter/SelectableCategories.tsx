@@ -11,10 +11,6 @@ type subCategoryList = {
   id: number;
   subCategories: Array<TSubCategory>;
 };
-// SubCategory인지 MainCategory인지 판별하는 Type Guard
-const instanceOfMainCategory = (arg: any): arg is TMainCategory => {
-  return arg.subCategory !== undefined;
-};
 export const SelectableCategory = ({
   category,
   id,

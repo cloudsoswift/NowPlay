@@ -45,7 +45,7 @@ export const Map = (props: Props) => {
   }, []);
   return (
     <>
-      <div id="map" className="w-screen h-[calc(100vh-160px)] my-20">
+      <div id="map" className="w-screen h-[calc(100vh-160px)] mt-20">
         {isCardlistShown && <PlaceCards onClose={setIsCardlistShown} />}
       </div>
       <button

@@ -8,13 +8,15 @@ import com.ssafy.specialized.domain.entity.Review;
 import java.util.List;
 
 public interface UserService {
+    void updateUserHobby(UpdateUserHobbyRequestDto updateUserHobbyRequestDto);
     void signUp(SignUpRequestDto signUpRequestDto);
+    int checkIdDuplication(String userId);
+    List<Bookmark> getMyBookmarkList();
+    List<Review> getMyReviewList();
 
     LoginResponseDto login(UserLoginDTO login) throws Exception;
 
     void logout(UserLogoutDTO logout) throws Exception;
-    List<Review> getMyReviewList();
-    int checkIdDuplication(String userId);
 
     void update(UserUpdateDTO userUpdateDto) throws Exception;
 
@@ -26,12 +28,7 @@ public interface UserService {
 
     UserInfoDTO getMyInfo() throws Exception;
 
-    List<Bookmark> getMyBookmarkList();
-
     void delete(UserLogoutDTO logout) throws Exception;
-    void updateUserHobby(UpdateUserHobbyRequestDto updateUserHobbyRequestDto);
-
-
 
     List<?> findMyUserId(String name);
 

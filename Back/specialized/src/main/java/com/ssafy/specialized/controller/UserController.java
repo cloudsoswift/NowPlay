@@ -1,6 +1,7 @@
 package com.ssafy.specialized.controller;
 
 
+import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.user.*;
 import com.ssafy.specialized.domain.entity.Bookmark;
 import com.ssafy.specialized.domain.entity.Review;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.ssafy.specialized.common.security.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,25 +69,25 @@ public class UserController {
         userService.updateUserHobby(updateUserHobbyRequestDto);
     }
 
-    //Id 중복 검사
+    //아이디 중복 검사
     @GetMapping("/id")
     public ResponseEntity<?> checkIdDuplication(@RequestParam String userId) {
         int statusCode = userService.checkIdDuplication(userId);
         return ResponseEntity.status(statusCode).build();
     }
 
-    //이메일 확인 및 코드 전송
+    //사용자 이메일 확인
     @PostMapping("validate-email")
     public void validateEmail(@RequestBody String userEmail) {
 
     }
 
-
-    //입력 받은 코드 일치 여부 확인
+    //코드 일치 여부 확인
     @PostMapping("code-confirm")
     public void confirmCode(@RequestBody ConfirmCodeRequestDto confirmCodeRequestDto) {
 //        confirmCodeRequestDto
     }
+
 
     // 회원 탈퇴
     @DeleteMapping
@@ -141,7 +141,7 @@ public class UserController {
         return ResponseEntity.ok("Password Changed");
     }
 
-    //위치 검색 기록
+    //사용자 위치 검색 내역
     @GetMapping("/logs")
     public void GetSearchLogs() {
         log.info(SecurityUtil.getLoginUsername());

@@ -79,37 +79,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int checkIdDuplication(String userId) {
-        User user = userRepository.findById(userId).orElse(null);
-        return user == null ? 200 : 403;
-    }
-    @Override
-    public List<Bookmark> getMyBookmarkList() {
-        User user = userRepository.findByName(SecurityUtil.getLoginUsername());
-        List<Bookmark> list = bookmarkRepository.findAllByUser(user);
-        return list;
-    }
-    @Override
-    public List<Review> getMyReviewList() {
-        User user = userRepository.findByName(SecurityUtil.getLoginUsername());
-        List<Review> list = reviewRepository.findAllByUser(user);
-        return list;
-    }
-    @Override
-    public void delete(UserLogoutDTO logout) throws Exception {
-        if (!jwtTokenProvider.validateToken(logout.getAccessToken())) {
-            throw new CustomException(ErrorCode.NOT_FOUND_USER);
-        }
-        Authentication authentication = jwtTokenProvider.getAuthentication(logout.getAccessToken());
-        String userId = authentication.getName();
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
-        if (!user.matchPassword(passwordEncoder, logout.getCheckPassword())) {
-            throw new CustomException(ErrorCode.NOT_MY_CONTENTS);
-        }
-        userRepository.delete(user);
-        logout(logout);
-    }
-    @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
         // 회원 중복 확인
         if (userRepository.existsById(signUpRequestDto.getUserId())) {
@@ -129,6 +98,25 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public int checkIdDuplication(String userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        return user == null ? 200 : 403;
+    }
+
+    @Override
+    public List<Bookmark> getMyBookmarkList() {
+        User user = userRepository.findByName(SecurityUtil.getLoginUsername());
+        List<Bookmark> list = bookmarkRepository.findAllByUser(user);
+        return list;
+    }
+
+    @Override
+    public List<Review> getMyReviewList() {
+        User user = userRepository.findByName(SecurityUtil.getLoginUsername());
+        List<Review> list = reviewRepository.findAllByWriter(user);
+        return list;
+    }
 
     // 로그인 서비스
     @Override
@@ -219,6 +207,22 @@ public class UserServiceImpl implements UserService {
     public UserInfoDTO getMyInfo() {
         User user = userRepository.findById(SecurityUtil.getLoginUsername()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
         return new UserInfoDTO(user);
+    }
+
+    // 회원 탈퇴
+    @Override
+    public void delete(UserLogoutDTO logout) throws Exception {
+        if (!jwtTokenProvider.validateToken(logout.getAccessToken())) {
+            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+        }
+        Authentication authentication = jwtTokenProvider.getAuthentication(logout.getAccessToken());
+        String userId = authentication.getName();
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        if (!user.matchPassword(passwordEncoder, logout.getCheckPassword())) {
+            throw new CustomException(ErrorCode.NOT_MY_CONTENTS);
+        }
+        userRepository.delete(user);
+        logout(logout);
     }
 
     // 아이디 찾기

@@ -5,9 +5,9 @@ import com.ssafy.specialized.common.exception.CustomException;
 import com.ssafy.specialized.common.exception.ErrorCode;
 import com.ssafy.specialized.common.jwt.JwtTokenProvider;
 import com.ssafy.specialized.common.security.SecurityUtil;
-import com.ssafy.specialized.domain.entity.User;
-import com.ssafy.specialized.domain.userDTO.*;
-import com.ssafy.specialized.repository.UserRepository;
+import com.ssafy.specialized.domain.dto.user.*;
+import com.ssafy.specialized.domain.entity.*;
+import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -33,6 +34,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserRepository userRepository;
     @Autowired
+    private final UserHobbyRepository userHobbyRepository;
+    @Autowired
+    private final HobbyMainRepository hobbyMainRepository;
+    @Autowired
+    private final ReviewRepository reviewRepository;
+    @Autowired
+    private final HobbySubcategoryRepository hobbySubcategoryRepository;
+    @Autowired
+    private final BookmarkRepository bookmarkRepository;
+    @Autowired
     private final PasswordEncoder passwordEncoder;
     @Autowired
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -41,29 +52,76 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final RedisTemplate redisTemplate;
 
-    // 회원가입 서비스
     @Override
-    public void join(UserDTO userDto) {
+    public void updateUserHobby(UpdateUserHobbyRequestDto updateUserHobbyRequestDto) {
+        log.info(SecurityUtil.getLoginUsername());
+        User user = userRepository.findByName(SecurityUtil.getLoginUsername());
+//                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        List<UserHobby> list = userHobbyRepository.findAllByUser(user);
+        for (int i = 0; i < list.size(); i++) {
+            userHobbyRepository.delete(list.get(i));
+        }
+        for (int i = 0; i < updateUserHobbyRequestDto.getHobbies().length; i++) {
+            Optional<HobbySubcategory> optionalHobbySubcategory = hobbySubcategoryRepository.findBySubcategory(updateUserHobbyRequestDto.getHobbies()[i]);
+            HobbySubcategory hobbySubcategory = null;
+            if (optionalHobbySubcategory.isPresent()) {
+                hobbySubcategory = optionalHobbySubcategory.get();
+            } else {
+                //TODO: exception 던지기
+            }
+            UserHobby userHobby = UserHobby.builder()
+                    .mainCategory(hobbySubcategory.getMainCategory())
+                    .user(user)
+                    .subcategory(hobbySubcategory)
+                    .build();
+            userHobbyRepository.save(userHobby);
+        }
+    }
+
+    @Override
+    public void signUp(SignUpRequestDto signUpRequestDto) {
         // 회원 중복 확인
-        if (userRepository.existsByUserId(userDto.getUserId())) {
+        if (userRepository.existsById(signUpRequestDto.getUserId())) {
             throw new CustomException(ErrorCode.DUPLICATED_VALUE);
         }
         // DB에 저장
         User user = User.builder()
-                .userId(userDto.getUserId())
-                .userPassword(passwordEncoder.encode(userDto.getUserPassword()))
-                .userPhoneNumber(userDto.getUserPhone())
-                .userName(userDto.getUserName())
-                .userAddress(userDto.getUserAddress())
+                .id(signUpRequestDto.getUserId())
+                .name(signUpRequestDto.getUserName())
+                .password(passwordEncoder.encode(signUpRequestDto.getUserPassword()))
+                .phoneNumber(signUpRequestDto.getUserPhoneNumber())
+                .nickname(signUpRequestDto.getUserNickname())
+                .email(signUpRequestDto.getUserEmail())
                 .roles(Collections.singletonList(Authority.USER.name()))
                 .build();
         userRepository.save(user);
+
+    }
+
+    @Override
+    public int checkIdDuplication(String userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        return user == null ? 200 : 403;
+    }
+
+    @Override
+    public List<Bookmark> getMyBookmarkList() {
+        User user = userRepository.findByName(SecurityUtil.getLoginUsername());
+        List<Bookmark> list = bookmarkRepository.findAllByUser(user);
+        return list;
+    }
+
+    @Override
+    public List<Review> getMyReviewList() {
+        User user = userRepository.findByName(SecurityUtil.getLoginUsername());
+        List<Review> list = reviewRepository.findAllByWriter(user);
+        return list;
     }
 
     // 로그인 서비스
     @Override
     public LoginResponseDto login(UserLoginDTO login) {
-        User user = userRepository.findByUserId(login.getUserId()).orElse(null);
+        User user = userRepository.findById(login.getUserId()).orElse(null);
         // 회원 정보 조회
         if (user == null) {
             throw new CustomException(ErrorCode.USER_LOGIN_INFO_INVALID);
@@ -85,9 +143,9 @@ public class UserServiceImpl implements UserService {
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setAccessToken(tokenDto.getAccessToken());
         loginResponseDto.setUserDistance(null);
-        loginResponseDto.setUserNickname(user.getUserNickname());
-        loginResponseDto.setUserName(user.getUserName());
-        loginResponseDto.setUserAddress(user.getUserAddress());
+        loginResponseDto.setUserNickname(user.getNickname());
+        loginResponseDto.setUserName(user.getName());
+        loginResponseDto.setUserAddress(user.getAddress());
         loginResponseDto.setRefreshToken(tokenDto.getRefreshToken());
         return loginResponseDto;
     }
@@ -113,24 +171,24 @@ public class UserServiceImpl implements UserService {
     // 회원정보 수정 서비스
     @Override
     public void update(UserUpdateDTO userUpdateDto) {
-        User user = userRepository.findByUserId(SecurityUtil.getLoginUsername()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
-        if (userUpdateDto.getUserPhone() != null) user.setUserPhoneNumber(userUpdateDto.getUserPhone());
-        if (userUpdateDto.getUserName() != null) user.setUserName(userUpdateDto.getUserName());
-        if (userUpdateDto.getUserAddress() != null) user.setUserAddress(userUpdateDto.getUserAddress());
+        User user = userRepository.findById(SecurityUtil.getLoginUsername()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        if (userUpdateDto.getUserPhoneNumber() != null) user.setPhoneNumber(userUpdateDto.getUserPhoneNumber());
+        if (userUpdateDto.getUserNickname() != null) user.setName(userUpdateDto.getUserNickname());
+        if (userUpdateDto.getUserAddress() != null) user.setAddress(userUpdateDto.getUserAddress());
         userRepository.save(user);
     }
 
     // 비밀번호 확인
     @Override
     public boolean checkPassword(UpdatePasswordDTO updatePasswordDTO) {
-        User user = userRepository.findByUserId(SecurityUtil.getLoginUsername()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        User user = userRepository.findById(SecurityUtil.getLoginUsername()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
         return user.matchPassword(passwordEncoder, updatePasswordDTO.getCheckPassword());
     }
 
     // 비밀번호 변경 서비스
     @Override
     public void updatePassword(UpdatePasswordDTO updatePasswordDto) {
-        User user = userRepository.findByUserId(SecurityUtil.getLoginUsername()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        User user = userRepository.findById(SecurityUtil.getLoginUsername()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
         user.updatePassword(passwordEncoder, updatePasswordDto.getToBePassword());
         userRepository.save(user);
     }
@@ -139,7 +197,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserInfoDTO getInfo(String userId) {
-        User user = userRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
         return new UserInfoDTO(user);
     }
 
@@ -147,7 +205,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserInfoDTO getMyInfo() {
-        User user = userRepository.findByUserId(SecurityUtil.getLoginUsername()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        User user = userRepository.findById(SecurityUtil.getLoginUsername()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
         return new UserInfoDTO(user);
     }
 
@@ -159,7 +217,7 @@ public class UserServiceImpl implements UserService {
         }
         Authentication authentication = jwtTokenProvider.getAuthentication(logout.getAccessToken());
         String userId = authentication.getName();
-        User user = userRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
         if (!user.matchPassword(passwordEncoder, logout.getCheckPassword())) {
             throw new CustomException(ErrorCode.NOT_MY_CONTENTS);
         }
@@ -170,25 +228,20 @@ public class UserServiceImpl implements UserService {
     // 아이디 찾기
     @Override
     public List<?> findMyUserId(String name) {
-        List<User> userList = userRepository.findAllByUserName(name);
+        List<User> userList = userRepository.findAllByName(name);
         List<String> userIdList = new ArrayList<>();
         for (User user : userList) {
-            userIdList.add(user.getUserId());
+            userIdList.add(user.getId());
         }
         return userIdList;
     }
 
     // 비밀번호 재설정 (암호화로 인해 복호화가 불가능) -> true 를 반환받으면 updatePassword 메소드 실행
     @Override
-    public void findMyPassword(FindPasswordDTO findPasswordDTO) {
-        User user = userRepository.findByUserId(findPasswordDTO.getUserId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
-        if (!user.getUserName().equals(findPasswordDTO.getUserName())) {
-            throw new CustomException(ErrorCode.NOT_MY_CONTENTS);
-        }
-        if (!user.getUserPhoneNumber().equals(findPasswordDTO.getUserPhone())) {
-            throw new CustomException(ErrorCode.NOT_MY_CONTENTS);
-        }
-        user.updatePassword(passwordEncoder, findPasswordDTO.getToBePassword());
+    public void findMyPassword(FindMyPasswordRequestDTO findMyPasswordRequestDTO) {
+        User user = userRepository.findById(findMyPasswordRequestDTO.getUserId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+
+        user.updatePassword(passwordEncoder, findMyPasswordRequestDTO.getToBePassword());
         userRepository.save(user);
     }
 

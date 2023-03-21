@@ -1,7 +1,7 @@
 package com.ssafy.specialized.domain.entity;
 
 
-import com.ssafy.specialized.common.enums.UserLoginType;
+import com.ssafy.specialized.common.enums.UserLoginDomain;
 import com.ssafy.specialized.common.enums.UserType;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "user")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,20 +24,30 @@ import java.util.stream.Collectors;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_index")
-    private Integer userIndex;
-    private String userNickname;
-    private String userId;
-    private String userPassword;
-    private String userPhoneNumber;
-    private String userEmail;
-    private String userAddress;
-    private UserType userType;
-    private UserLoginType userLoginType;
-    private String userBrcImageUrl;
-    private String userName;
-    private boolean userIsActive;
+    @GeneratedValue
+    private int idx;
+
+    private String name;
+
+    private String id;
+
+    private String password;
+
+    private String nickname;
+
+    private String phoneNumber;
+
+    private String email;
+
+    private String address;
+
+    private UserType type;
+
+    private UserLoginDomain loginDomain;
+
+    private String brcImageUrl;
+
+    private boolean isActive;
 
     // 권한 설정을 외래 키로 부여
     @Column
@@ -53,18 +62,14 @@ public class User implements UserDetails {
                 .collect(Collectors.toList());
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
     @Override
     public String getUsername() {
-        return userId;
+        return name;
     }
 
     @Override
     public String getPassword() {
-        return userPassword;
+        return password;
     }
 
     @Override
@@ -89,12 +94,12 @@ public class User implements UserDetails {
 
     // 비밀번호 수정
     public void updatePassword(PasswordEncoder passwordEncoder, String userPassword) {
-        this.userPassword = passwordEncoder.encode(userPassword);
+        this.password = passwordEncoder.encode(userPassword);
     }
 
     // 패스워드 암호화
     public void encodePassword(PasswordEncoder passwordEncoder) {
-        this.userPassword = passwordEncoder.encode(userPassword);
+        this.password = passwordEncoder.encode(password);
     }
 
     // 패스워드 일치 확인

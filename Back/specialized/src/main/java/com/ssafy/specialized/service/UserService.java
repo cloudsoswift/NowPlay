@@ -1,12 +1,18 @@
 package com.ssafy.specialized.service;
 
 
-import com.ssafy.specialized.domain.userDTO.*;
+import com.ssafy.specialized.domain.dto.user.*;
+import com.ssafy.specialized.domain.entity.Bookmark;
+import com.ssafy.specialized.domain.entity.Review;
 
 import java.util.List;
 
 public interface UserService {
-    void join(UserDTO userDto) throws Exception;
+    void updateUserHobby(UpdateUserHobbyRequestDto updateUserHobbyRequestDto);
+    void signUp(SignUpRequestDto signUpRequestDto);
+    int checkIdDuplication(String userId);
+    List<Bookmark> getMyBookmarkList();
+    List<Review> getMyReviewList();
 
     LoginResponseDto login(UserLoginDTO login) throws Exception;
 
@@ -26,7 +32,7 @@ public interface UserService {
 
     List<?> findMyUserId(String name);
 
-    void findMyPassword(FindPasswordDTO findPasswordDTO) throws Exception;
+    void findMyPassword(FindMyPasswordRequestDTO findPasswordDTO) throws Exception;
 
     TokenDTO reissue(TokenDTO tokenDTO) throws Exception;
 }

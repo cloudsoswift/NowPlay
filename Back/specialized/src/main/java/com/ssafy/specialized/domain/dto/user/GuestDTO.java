@@ -1,4 +1,4 @@
-package com.ssafy.specialized.domain.userDTO;
+package com.ssafy.specialized.domain.dto.user;
 
 import com.ssafy.specialized.domain.entity.User;
 import lombok.Builder;
@@ -10,8 +10,8 @@ public class GuestDTO {
     private String userPhone;
 
     @Builder
-    public GuestDTO (User guest) {
-        this.userName = guest.getUserName();
-        this.userPhone = guest.getUserPhoneNumber();
+    public GuestDTO(User guest) {
+        this.userName = guest.getName();
+        this.userPhone = guest.getPhoneNumber();
     }
 }

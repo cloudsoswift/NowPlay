@@ -3,6 +3,7 @@ package com.ssafy.specialized.service;
 
 import com.ssafy.specialized.domain.dto.user.*;
 import com.ssafy.specialized.domain.entity.Bookmark;
+import com.ssafy.specialized.domain.entity.Review;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public interface UserService {
     LoginResponseDto login(UserLoginDTO login) throws Exception;
 
     void logout(UserLogoutDTO logout) throws Exception;
+    List<Review> getMyReviewList();
     int checkIdDuplication(String userId);
 
     void update(UserUpdateDTO userUpdateDto) throws Exception;

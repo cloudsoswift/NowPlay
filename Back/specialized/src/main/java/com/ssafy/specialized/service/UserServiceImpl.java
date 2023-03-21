@@ -6,10 +6,7 @@ import com.ssafy.specialized.common.exception.ErrorCode;
 import com.ssafy.specialized.common.jwt.JwtTokenProvider;
 import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.user.*;
-import com.ssafy.specialized.domain.entity.Bookmark;
-import com.ssafy.specialized.domain.entity.HobbySubcategory;
-import com.ssafy.specialized.domain.entity.User;
-import com.ssafy.specialized.domain.entity.UserHobby;
+import com.ssafy.specialized.domain.entity.*;
 import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,6 +87,12 @@ public class UserServiceImpl implements UserService {
     public List<Bookmark> getMyBookmarkList() {
         User user = userRepository.findByName(SecurityUtil.getLoginUsername());
         List<Bookmark> list = bookmarkRepository.findAllByUser(user);
+        return list;
+    }
+    @Override
+    public List<Review> getMyReviewList() {
+        User user = userRepository.findByName(SecurityUtil.getLoginUsername());
+        List<Review> list = reviewRepository.findAllByUser(user);
         return list;
     }
     @Override

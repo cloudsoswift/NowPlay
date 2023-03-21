@@ -3,6 +3,7 @@ package com.ssafy.specialized.controller;
 
 import com.ssafy.specialized.domain.dto.user.*;
 import com.ssafy.specialized.domain.entity.Bookmark;
+import com.ssafy.specialized.domain.entity.Review;
 import com.ssafy.specialized.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -147,9 +148,17 @@ public class UserController {
 //        String token = request.getHeader("Authorization");
     }
 
+    //내 즐겨찾기 목록
     @GetMapping("/bookmarks")
     public ResponseEntity<?> getMyBookmarkList(@RequestParam String pageNo, HttpServletRequest request) {
         List<Bookmark> list = userService.getMyBookmarkList();
+        return ResponseEntity.ok(list);
+    }
+
+    //내 리뷰 목록
+    @GetMapping("/reviews")
+    public ResponseEntity<?> getMyReviewList(@RequestParam String pageNo, HttpServletRequest request) {
+        List<Review> list = userService.getMyReviewList();
         return ResponseEntity.ok(list);
     }
 

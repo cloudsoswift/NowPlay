@@ -1,12 +1,12 @@
 package com.ssafy.specialized.service;
 
 
-import com.ssafy.specialized.domain.userDTO.*;
+import com.ssafy.specialized.domain.dto.user.*;
 
 import java.util.List;
 
 public interface UserService {
-    void join(UserDTO userDto) throws Exception;
+    void signUp(SignUpRequestDto signUpRequestDto);
 
     LoginResponseDto login(UserLoginDTO login) throws Exception;
 
@@ -22,11 +22,10 @@ public interface UserService {
 
     UserInfoDTO getMyInfo() throws Exception;
 
-    void delete(UserLogoutDTO logout) throws Exception;
 
     List<?> findMyUserId(String name);
 
-    void findMyPassword(FindPasswordDTO findPasswordDTO) throws Exception;
+    void findMyPassword(FindMyPasswordRequestDTO findPasswordDTO) throws Exception;
 
     TokenDTO reissue(TokenDTO tokenDTO) throws Exception;
 }

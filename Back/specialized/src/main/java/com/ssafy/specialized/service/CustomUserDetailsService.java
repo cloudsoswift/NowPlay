@@ -16,15 +16,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUserId(username)
+        return userRepository.findById(username)
                 .map(this::createUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException("No User Exists"));
     }
 
     private UserDetails createUserDetails(User user) {
         return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUserId())
-                .password(user.getUserPassword())
+                .username(user.getName())
+                .password(user.getPassword())
                 .roles(user.getRoles().toArray(new String[0]))
                 .build();
     }

@@ -1,4 +1,4 @@
-package com.ssafy.specialized.domain.userDTO;
+package com.ssafy.specialized.domain.dto.user;
 
 import com.ssafy.specialized.domain.entity.User;
 import lombok.Builder;
@@ -15,10 +15,10 @@ public class UserInfoDTO {
 
     @Builder
     public UserInfoDTO(User user) {
-        this.userIndex = user.getUserIndex();
-        this.userId = user.getUserId();
-        this.userPhone = user.getUserPhoneNumber();
-        this.userName = user.getUserName();
-        this.userAddress = user.getUserAddress();
+        this.userIndex = user.getIdx();
+        this.userId = user.getId();
+        this.userPhone = user.getPhoneNumber();
+        this.userName = user.getName();
+        this.userAddress = user.getAddress();
     }
 }

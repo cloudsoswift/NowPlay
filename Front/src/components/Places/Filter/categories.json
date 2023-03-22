@@ -1,0 +1,80 @@
+{
+  "categories": [
+    {
+      "category": "culture",
+      "imageURL": "main-culture.svg",
+      "subCategory": [
+        {"category" : "concert", "imageURL": "sub(culture)-concert.svg"},
+        {"category" : "gallery", "imageURL": "sub(culture)-gallery.svg"},
+        {"category" : "museum", "imageURL": "sub(culture)-museum.svg"},
+        {"category" : "theater", "imageURL": "sub(culture)-theater.svg"}
+      ]
+    }
+    , {
+      "category": "game",
+      "imageURL": "main-game.svg",
+      "subCategory": [
+        {"category" : "arcade", "imageURL": "sub(game)-arcade.svg"},
+        {"category" : "boardgame", "imageURL": "sub(game)-boardgame.svg"},
+        {"category" : "coinkaraoke", "imageURL": "sub(game)-coinkaraoke.svg"},
+        {"category" : "dolldrawing", "imageURL": "sub(game)-dolldrawing.svg"},
+        {"category" : "pcroom", "imageURL": "sub(game)-pcroom.svg"},
+        {"category" : "playstation", "imageURL": "sub(game)-playstation.svg"}
+      ]
+    }
+    ,{
+      "category": "healing",
+      "imageURL": "main-healing.svg",
+      "subCategory": [
+        {"category" : "arboretum", "imageURL": "sub(healing)-arboretum.svg"},
+        {"category" : "baths", "imageURL": "sub(healing)-baths.svg"},
+        {"category" : "carwash", "imageURL": "sub(healing)-carwash.svg"},
+        {"category" : "flowergarden", "imageURL": "sub(healing)-flowergarden.svg"},
+        {"category" : "spa", "imageURL": "sub(healing)-spa.svg"}
+      ]
+    }, {
+      "category": "leisure",
+      "imageURL": "main-leisure.svg",
+      "subCategory": [
+        {"category" : "climbing", "imageURL": "sub(leisure)-climbing.svg"},
+        {"category" : "fishing", "imageURL": "sub(leisure)-fishing.svg"},
+        {"category" : "rafting", "imageURL": "sub(leisure)-rafting.svg"},
+        {"category" : "riding", "imageURL": "sub(leisure)-riding.svg"},
+        {"category" : "scubadiving", "imageURL": "sub(leisure)-scubadiving.svg"},
+        {"category" : "skindiving", "imageURL": "sub(leisure)-skindiving.svg"},
+        {"category" : "surfing", "imageURL": "sub(leisure)-surfing.svg"},
+        {"category" : "waterski", "imageURL": "sub(leisure)-waterski.svg"},
+        {"category" : "yacht", "imageURL": "sub(leisure)-yacht.svg"}
+      ]
+    },{
+      "category": "sports",
+      "imageURL": "main-sports.svg",
+      "subCategory": [
+        {"category" : "badminton", "imageURL": "sub(sports)-badminton.svg"},
+        {"category" : "basketball", "imageURL": "sub(sports)-basketball.svg"},
+        {"category" : "billiards", "imageURL": "sub(sports)-billiards.svg"},
+        {"category" : "futsal", "imageURL": "sub(sports)-futsal.svg"},
+        {"category" : "icerink", "imageURL": "sub(sports)-icerink.svg"},
+        {"category" : "pingpong", "imageURL": "sub(sports)-pingpong.svg"},
+        {"category" : "rollerskates", "imageURL": "sub(sports)-rollerskates.svg"},
+        {"category" : "screengolf", "imageURL": "sub(sports)-screengolf.svg"},
+        {"category" : "soccer", "imageURL": "sub(sports)-soccer.svg"},
+        {"category" : "squash", "imageURL": "sub(sports)-squash.svg"},
+        {"category" : "tennis", "imageURL": "sub(sports)-tennis.svg"}
+      ]
+    },{
+      "category": "theme",
+      "imageURL": "main-theme.svg",
+      "subCategory": [
+        {"category" : "amusementpark", "imageURL": "sub(theme)-amusementpark.svg"},
+        {"category" : "escape", "imageURL": "sub(theme)-escape.svg"},
+        {"category" : "folkvillage", "imageURL": "sub(theme)-folkvillage.svg"},
+        {"category" : "glamping", "imageURL": "sub(theme)-glamping.svg"},
+        {"category" : "hiking", "imageURL": "sub(theme)-hiking.svg"},
+        {"category" : "park", "imageURL": "sub(theme)-park.svg"},
+        {"category" : "vrroom", "imageURL": "sub(theme)-vrroom.svg"},
+        {"category" : "zoo", "imageURL": "sub(theme)-zoo.svg"}
+      ]
+    }
+  ]
+}

@@ -17,7 +17,7 @@ const MobileNavbar = () => {
       case /^\/mobile\/like/.test(navLocation.pathname):
         setNavActive(1);
         break;
-      case /^\/mobile\/around/.test(navLocation.pathname):
+      case /^\/mobile\/places/.test(navLocation.pathname):
         setNavActive(3);
         break;
       case /^\/mobile\/mypage/.test(navLocation.pathname):
@@ -47,7 +47,7 @@ const MobileNavbar = () => {
         <BiHome />
         <span>홈</span>
       </NavStyle>
-      <NavStyle to='around'>
+      <NavStyle to='places'>
         <BiMapPin />
         <span>주변</span>
       </NavStyle>

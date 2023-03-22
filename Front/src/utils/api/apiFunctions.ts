@@ -38,6 +38,7 @@ export const signupAPI = async (values: TinitialValues) => {
     data: {
       userId: values.userId,
       userPassword: values.password,
+      userName: values.name,
       userNickname: values.nickname,
       userPhoneNumber: values.phoneNumber,
       userEmail: values.email,
@@ -71,7 +72,7 @@ export const ownerSignupAPI = async (values: TinitialValues) => {
   const formData = new FormData();
   if (
     values.userId &&
-    values.nickname &&
+    values.name &&
     values.password &&
     values.phoneNumber &&
     values.email &&
@@ -83,7 +84,7 @@ export const ownerSignupAPI = async (values: TinitialValues) => {
     // (values.isHoliday === true || values.isHoliday === false)
   ) {
     formData.append("userId", values.userId);
-    formData.append("userName", values.nickname);
+    formData.append("userName", values.name);
     formData.append("userPassword", values.password);
     formData.append("userPhoneNumber", values.phoneNumber);
     formData.append("userEmail", values.email);

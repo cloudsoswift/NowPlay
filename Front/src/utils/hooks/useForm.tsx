@@ -20,11 +20,12 @@ interface TbusinessDay {
 }
 
 export interface TinitialValues {
-  [key: string]: string | undefined | boolean | File | TbusinessDay;
+  [key: string]: string | undefined | boolean | File | string[] | TbusinessDay;
   userId?: string;
   password?: string;
   phoneNumber?: string;
   email?: string;
+  name?: string;
   nickname?: string;
   passwordcheck?: string;
   brcImage?: File;
@@ -33,6 +34,13 @@ export interface TinitialValues {
   businessHour?: TbusinessDay;
   isHoliday?: boolean;
   agree?: boolean;
+
+  storeName?: string;
+  storeAddress?: string;
+  storeContactNumber?: string;
+  storeHompageUrl?: string;
+  storeBrcImages?: string[];
+  storeExplanation?: string;
 }
 
 export type TuseFormParams = {
@@ -62,8 +70,16 @@ export type TuseFormReturn = {
   getFieldProps: (name: string) => {
     name: string;
     // value: string;
-    onBlur: (e: React.FocusEvent<HTMLInputElement> | React.FocusEvent<HTMLSelectElement>) => void;
-    onChange: (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => void;
+    onBlur: (
+      e:
+        | React.FocusEvent<HTMLInputElement>
+        | React.FocusEvent<HTMLSelectElement>
+    ) => void;
+    onChange: (
+      e:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLSelectElement>
+    ) => void;
   };
 };
 
@@ -127,7 +143,9 @@ function useForm({
     });
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement> | React.FocusEvent<HTMLSelectElement>) => {
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement> | React.FocusEvent<HTMLSelectElement>
+  ) => {
     setTouched({
       ...touched,
       [e.target.name]: true,
@@ -195,29 +213,38 @@ function useForm({
   useEffect(() => {
     setValues({
       ...values,
-      hobbyMajorCategory: ""
-    })
-  }, [values.hobbyMainCategory])
+      hobbyMajorCategory: "",
+    });
+  }, [values.hobbyMainCategory]);
 
   // 필드 속성으로 사용할 값을 조회한다
   const getFieldProps = (name: string) => {
     // password값이 DOM에 보여서...제외, HTMLInput에서 File이 values로 존재할 수 없어서 제외
-    const value = name === "password" || "brcImage" ? undefined : values[name];
+    const value = values[name];
 
     const maxLength = formMaxLength[name];
     const placeholder = formPlaceHolder[name];
 
     const onBlur = handleBlur;
     const onChange = handleChange;
-
-    return {
-      name,
-      value,
-      maxLength,
-      placeholder,
-      onBlur,
-      onChange,
-    };
+    if (name === "passwordcheck" || name ===  "brcImage" ||name ===  "storeBrcImages" ||name ===  "password") {
+      return {
+        name,
+        maxLength,
+        placeholder,
+        onBlur,
+        onChange,
+      };
+    } else {
+      return {
+        name,
+        value,
+        maxLength,
+        placeholder,
+        onBlur,
+        onChange,
+      };
+    }
   };
 
   // 훅을 사용하는 쪽에 제공하는 api다

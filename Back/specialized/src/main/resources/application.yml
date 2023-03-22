@@ -2,7 +2,7 @@ server:
   #  host: localhost
   #  port: 8085
   servlet:
-    context-path: /
+    context-path: /spring
 
 spring:
   datasource:

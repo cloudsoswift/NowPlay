@@ -95,6 +95,7 @@ const AuthForm = ({ formType }: IAuthFomrProps) => {
         <Field type="text" name="userId" />
         <Field type="password" name="password" />
         <Field type="password" name="passwordcheck" />
+        <Field type="text" name="name" />
         <Field type="text" name="nickname" />
         <Field type="text" name="phoneNumber" />
         <Field type="text" name="email" />
@@ -114,7 +115,7 @@ const AuthForm = ({ formType }: IAuthFomrProps) => {
         <Field type="text" name="userId" />
         <Field type="password" name="password" />
         <Field type="password" name="passwordcheck" />
-        <Field type="text" name="nickname" />
+        <Field type="text" name="name" />
         <Field type="text" name="phoneNumber" />
         <Field type="text" name="email" />
         <FileField type="file" name="brcImage" />

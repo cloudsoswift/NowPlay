@@ -24,7 +24,7 @@ export const useLogin = () => {
         userName: data.userName,
         userDistance: data.userDistance,
       });
-      navigation("/mypage");
+      navigation("/moblie/mypage");
     },
   });
 };

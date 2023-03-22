@@ -20,7 +20,7 @@ export const useLogout = () => {
         userName: "",
         userDistance: "",
       });
-      navigation("/mypage");
+      navigation("/moblie/mypage");
     },
   });
 };

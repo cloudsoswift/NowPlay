@@ -17,7 +17,7 @@ const MobileNavbar = () => {
       case /^\/mobile\/like/.test(navLocation.pathname):
         setNavActive(1);
         break;
-      case /^\/mobile\/around/.test(navLocation.pathname):
+      case /^\/mobile\/places/.test(navLocation.pathname):
         setNavActive(3);
         break;
       case /^\/mobile\/mypage/.test(navLocation.pathname):
@@ -35,23 +35,23 @@ const MobileNavbar = () => {
 
   return (
     <NavBox>
-      <NavStyle to='/mobile/search'>
+      <NavStyle to='search'>
         <BiSearch />
         <span>검색</span>
       </NavStyle>
-      <NavStyle to='/mobile/like'>
+      <NavStyle to='like'>
         <BiStar />
         <span>즐겨찾기</span>
       </NavStyle>
-      <NavStyle to='/mobile/homepage' end>
+      <NavStyle to='/mobile' end>
         <BiHome />
         <span>홈</span>
       </NavStyle>
-      <NavStyle to='/mobile/around'>
+      <NavStyle to='places'>
         <BiMapPin />
         <span>주변</span>
       </NavStyle>
-      <NavStyle to='/mobile/mypage'>
+      <NavStyle to='mypage'>
         <BiUser />
         <span>마이페이지</span>
       </NavStyle>

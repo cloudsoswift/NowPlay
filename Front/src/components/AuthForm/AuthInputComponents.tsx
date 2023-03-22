@@ -3,8 +3,10 @@ import { createContext, useContext, useState } from "react";
 import useForm, { TinitialValues } from "../../utils/hooks/useForm";
 import { TuseFormParams, TuseFormReturn } from "../../utils/hooks/useForm";
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
+import { DayBusinessHour, weekdays, labelText } from "./AuthDescription";
 
 export {
+  FormContext,
   Form,
   Field,
   CheckBoxField,
@@ -14,22 +16,11 @@ export {
   SubmitButton,
 };
 
-interface IFormParams extends TuseFormParams {
+export interface IFormParams extends TuseFormParams {
   children: React.ReactNode;
 }
-
-const labelText: { [key: string]: string } = {
-  userId: "아이디",
-  password: "비밀번호",
-  phoneNumber: "휴대전화 번호",
-  email: "이메일",
-  nickname: "닉네임",
-  passwordcheck: "비밀번호 확인",
-  brcImage: "사업자 등록증",
-  businessHour: "영업시간 지정",
-  agree: "약관에 동의하시겠습니까?",
-  hobbyMajorCategory: "사업 카테고리",
-  isHoliday: "공휴일 휴무",
+type TselectOptions = {
+  [key: string]: string[];
 };
 
 const FormContext = createContext<TuseFormReturn>({
@@ -68,6 +59,8 @@ const Form = ({
     </FormContext.Provider>
   );
 };
+
+
 
 const Field = ({ type, name }: { type: string; name: string }) => {
   const { getFieldProps, touched, errors } = useContext(FormContext);
@@ -110,9 +103,6 @@ const FileField = ({ type, name }: { type: string; name: string }) => {
   );
 };
 
-type TselectOptions = {
-  [key: string]: string[];
-};
 
 const CategotySelectField = ({
   options,
@@ -157,28 +147,11 @@ const CategotySelectField = ({
   );
 };
 
-const weekdays: { [key: string]: string } = {
-  monday: "월요일",
-  tuesday: "화요일",
-  wendesday: "수요일",
-  thursday: "목요일",
-  friday: "금요일",
-  saturday: "토요일",
-  sunday: "일요일",
-};
-
-const hours = Array.from({ length: 24 }, (_, i) =>
-  (i + 1).toString().padStart(2, "0")
-);
-
-const minutes = Array.from({ length: 6 }, (_, i) =>
-  (i * 10).toString().padStart(2, "0")
-);
 
 const BusinessHourField = () => {
   const { values, handleBusinessHour, getFieldProps } = useContext(FormContext);
 
-  const [hourOpen, setHourOpen] = useState(true);
+  const [hourOpen, setHourOpen] = useState(false);
 
   const hourHandler = () => {
     setHourOpen((prev) => !prev);
@@ -206,128 +179,9 @@ const BusinessHourField = () => {
   );
 };
 
-type TdayBussinessHour = {
-  day: string;
-  hourHandler: (
-    e:
-      | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLInputElement>
-  ) => void;
-  values: TinitialValues;
-};
 
-const DayBusinessHour = ({ day, hourHandler, values }: TdayBussinessHour) => {
-  const defaultOpenHour =
-    values.businessHour && values.businessHour[day]
-      ? values.businessHour[day].open
-      : "09:30";
-  const defaultCloseHour =
-    values.businessHour && values.businessHour[day]
-      ? values.businessHour[day].close
-      : "06:00";
-  const defaultReservationInterval =
-    values.businessHour && values.businessHour[day]
-      ? values.businessHour[day].reservationInterval
-      : "30";
-  const defaultStoreHoliday =
-    values.businessHour && values.businessHour[day]
-      ? values.businessHour[day].storeHoliday
-      : false;
 
-  return (
-    <BusinessHourBox>
-      <Daytitle>{`${weekdays[day]}`}</Daytitle>
-      <HourSetting>
-        오픈시간
-        <label htmlFor={`${day}-open-hour`}>
-          <select
-            name={`${day}-open-hour`}
-            id={`${day}-open-hour`}
-            onChange={hourHandler}
-            defaultValue={defaultOpenHour.slice(0, 2)}
-          >
-            {hours.map((hour, idx) => {
-              return (
-                <option value={hour} key={idx}>
-                  {hour}
-                </option>
-              );
-            })}
-          </select>
-          시
-        </label>
-        <label htmlFor={`${day}-open-min`}>
-          <select
-            name={`${day}-open-min`}
-            id={`${day}-open-min`}
-            onChange={hourHandler}
-            defaultValue={defaultOpenHour.slice(3)}
-          >
-            {minutes.map((minute, idx) => (
-              <option value={minute} key={idx}>
-                {minute}
-              </option>
-            ))}
-          </select>
-          분
-        </label>
-        닫는시간
-        <label htmlFor={`${day}-close-hour`}>
-          <select
-            name=''
-            id={`${day}-close-hour`}
-            onChange={hourHandler}
-            defaultValue={defaultCloseHour.slice(0, 2)}
-          >
-            {hours.map((hour, idx) => (
-              <option value={hour} key={idx}>
-                {hour}
-              </option>
-            ))}
-          </select>
-          시
-        </label>
-        <label htmlFor={`${day}-close-min`}>
-          <select
-            name=''
-            id={`${day}-close-min`}
-            onChange={hourHandler}
-            defaultValue={defaultCloseHour.slice(3)}
-          >
-            {minutes.map((minute, idx) => (
-              <option value={minute} key={idx}>
-                {minute}
-              </option>
-            ))}
-          </select>
-          분
-        </label>
-        예약 간격
-        <label htmlFor={`${day}-reservationInterval`}>
-          <select
-            name=''
-            id={`${day}-reservationInterval`}
-            onChange={hourHandler}
-            defaultValue={defaultReservationInterval}
-          >
-            <option value='30'>30</option>
-            <option value='60'>60</option>
-          </select>
-          분
-        </label>
-      </HourSetting>
-      <HolidaySetting>
-        <label htmlFor={`${day}-storeHoliday`}>휴일인가요?</label>
-        <input
-          type='checkbox'
-          id={`${day}-storeHoliday`}
-          onChange={hourHandler}
-          checked={defaultStoreHoliday}
-        />
-      </HolidaySetting>
-    </BusinessHourBox>
-  );
-};
+
 
 // ===== styled-components =====
 
@@ -474,33 +328,6 @@ const HourDisclosure = styled.div<{open: boolean}>`
   transition: height 0.7s;
 `;
 
-const BusinessHourBox = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Daytitle = styled.div`
-  margin-top: 8px;
-`;
-
-const HourSetting = styled.div`
-  label {
-    margin-right: 10px;
-    
-  }
-  select option {
-    background: var(--gray-color-light);
-  }
-`;
-
-const HolidaySetting = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  label {
-    margin-right: 8px;
-  }
-`;
 
 const spinAnimation = keyframes`
   0% {transform: rotate(0deg);}

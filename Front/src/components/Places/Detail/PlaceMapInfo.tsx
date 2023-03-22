@@ -14,7 +14,7 @@ export const PlaceMapInfo = ({address, latitude, longitude}: Props) => {
   return (
     <div>
       <div>{address}</div>
-      <div id="map" className="w-screen h-[calc(100vh-160px)] mt-20" />
+      <div id="map" className="w-screen h-[calc(100vh-160px)] mt-20 -z-20" />
     </div>
   );
 }; 

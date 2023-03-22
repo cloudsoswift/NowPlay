@@ -14,7 +14,7 @@ export const PlaceReviewWritePage = (props: Props) => {
     e.preventDefault();
   };
   return (
-    <form action="post" className="px-5 grid justify-center space-y-5" onSubmit={handleSubmit}>
+    <form action="post" className="px-4 grid justify-center space-y-5" onSubmit={handleSubmit}>
       <div className="[&>*>*]:text-2xl">
         <button
           onClick={() => {

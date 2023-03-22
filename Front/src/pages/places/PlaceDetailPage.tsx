@@ -30,9 +30,11 @@ export const PlaceDetailPage = (props: Props) => {
   const tabButton = "border rounded-xl p-2"
   const selectedTabButton = `${tabButton} bg-[var(--primary-color)] text-white`
   return (
-    <div>
+    <div className="px-4">
       <div>
-        
+        <div>사진 {TEST_DATA.imageURL}</div>
+        <div>사업장 이름 {TEST_DATA.name}</div>
+        <div>평균 별점 {TEST_DATA.averageRating}</div>
       </div>
       <div className="space-x-2 flex justify-center">
         <button className={tabIndex === 0 ? selectedTabButton : tabButton} onClick={()=>{setTabIndex(0)}}>가게 정보</button>

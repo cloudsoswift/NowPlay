@@ -1,4 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { AiFillStar } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { TReview } from "../Types";
 
@@ -8,13 +9,18 @@ type ReviewProps = {
 type ReviewInfoProps = {};
 
 export const Review = ({ review }: ReviewProps) => {
+  const date = review.created_at;
+  const dateString = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`;
   return (
-    <div className="border rounded-xl">
-      <div>{review.nickname}</div>
+    <div className="border rounded-xl p-4">
+      <div>
+        <span className="text-lg">{review.nickname}</span>{" "}
+        <span className="text-sm">{dateString}</span> <span><AiFillStar className="inline text-[var(--primary-color)]"/>{review.rate}</span>
+      </div>
+      <div className="w-full first-letter">
+        <img src={review.imageURL} alt="" className="max-h-[20vh]" />
+      </div>
       <div>{review.content}</div>
-      <div>{review.created_at.getTime()}</div>
-      <div>{review.rate}</div>
-      <div>{review.imageURL}</div>
     </div>
   );
 };
@@ -50,9 +56,9 @@ export const ReviewInfo = (props: ReviewInfoProps) => {
     },
   ];
   return (
-    <div>
-      <Link to={'review'}>글 등록</Link>
-      <div className="space-y-2">
+    <div className="h-full overflow-y-scroll">
+      <Link to={"review"} className="block h-14 w-full border rounded-sm text-center align-middle">글 등록</Link>
+      <div className="space-y-4">
         {reviews.map((review) => (
           <Review review={review} />
         ))}

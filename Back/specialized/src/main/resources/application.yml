@@ -2,7 +2,8 @@ server:
   #  host: localhost
   #  port: 8085
   servlet:
-    context-path: /
+    context-path:/spring
+
 
 spring:
   datasource:
@@ -13,6 +14,10 @@ spring:
   #    url: jdbc:mysql://127.0.0.1:3306/teukhwa
   #    username: root
   #    password: ssafy
+  servlet:
+    multipart:
+      maxFileSize: 5MB
+      maxRequestSize: 25MB
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect

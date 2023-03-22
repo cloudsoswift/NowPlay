@@ -11,36 +11,6 @@ import LINESeedKRTh from "./fonts/LINESeedKR-Th.woff2"
 
 const GlobalStyle = createGlobalStyle`
     @font-face {
-        font-family: 'SpoqaHanSansNeoBold';
-        src: local('SpoqaHanSansNeoBold'), local('SpoqaHanSansNeoBold');
-        font-style: normal;
-        src: url(${SpoqaHanSansNeoBold}) format('truetype');
-    }
-    @font-face {
-        font-family: 'SpoqaHanSansNeoMedium';
-        src: local('SpoqaHanSansNeoMedium'), local('SpoqaHanSansNeoMedium');
-        font-style: normal;
-        src: url(${SpoqaHanSansNeoMedium}) format('truetype');
-    }
-    @font-face {
-        font-family: 'SpoqaHanSansNeoLight';
-        src: local('SpoqaHanSansNeoLight'), local('SpoqaHanSansNeoLight');
-        font-style: normal;
-        src: url(${SpoqaHanSansNeoLight}) format('truetype');
-    }
-    @font-face {
-        font-family: 'SpoqaHanSansNeoRegular';
-        src: local('SpoqaHanSansNeoRegular'), local('SpoqaHanSansNeoRegular');
-        font-style: normal;
-        src: url(${SpoqaHanSansNeoRegular}) format('truetype');
-    }
-    @font-face {
-        font-family: 'SpoqaHanSansNeoThin';
-        src: local('SpoqaHanSansNeoThin'), local('SpoqaHanSansNeoThin');
-        font-style: normal;
-        src: url(${SpoqaHanSansNeoThin}) format('truetype');
-    }
-    @font-face {
         font-family: 'LINESeedKRBd';
         src: local('LINESeedKR-Bd'), local('LINESeedKR-Bd');
         font-style: normal;

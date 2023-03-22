@@ -23,7 +23,7 @@ export const useSignup = () => {
           userName: data.userName,
           userDistance: data.userDistance,
         });
-        navigation("/mypage")
+        navigation("/moblie/mypage");
       },
     }
   );

@@ -33,7 +33,7 @@ public class Store {
 
     private String homepage;
 
-    //    private String imagesUrl;
+    private String imagesUrl;
 
     private String explanation;
 

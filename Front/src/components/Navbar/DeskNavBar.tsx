@@ -17,7 +17,7 @@ const DeskNavbar = () => {
       case /^\/owner\/review/.test(navLocation.pathname):
         setNavActive(2);
         break;
-      case /^\/owner/.test(navLocation.pathname):
+      case /^\/owner$/.test(navLocation.pathname):
         setNavActive(0);
         break;
       default:
@@ -31,15 +31,15 @@ const DeskNavbar = () => {
     <NavContainer>
       <NavBox>
         <NavHeader>여가어때</NavHeader>
-        <NavStyle to="/owner" end>
+        <NavStyle to="" end>
           <BiHome />
           <span>가게 정보/관리</span>
         </NavStyle>
-        <NavStyle to="/owner/reserve">
+        <NavStyle to="reserve">
           <BiCalendarCheck />
           <span>예약 관리</span>
         </NavStyle>
-        <NavStyle to="/owner/review">
+        <NavStyle to="review">
           <BiHighlight />
           <span>리뷰 관리</span>
         </NavStyle>

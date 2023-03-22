@@ -6,6 +6,9 @@ import MyPage from "./pages/user/MyPage";
 import MobileNavbar from "./components/Navbar/MobileNavbar";
 
 import styled from "styled-components";
+import { PlacesPage } from "./pages/places/PlacesPage";
+import { PlaceDetailPage } from "./pages/places/PlaceDetailPage";
+import { PlaceReviewWritePage } from "./pages/places/PlaceReviewWritePage";
 
 function Mobile() {
   return (
@@ -21,6 +24,11 @@ function Mobile() {
           <Route element={<PrivateRoute authentication={true} type="mobile"/>}>
             <Route path="/mypage/*" element={<MyPage />} />
           </Route>
+          <Route path="/places" element={<PlacesPage />} />
+          <Route path="/places/:id" element={<PlaceDetailPage />} />
+          {/* <Route element={<PrivateRoute authentication={true} type="mobile" />}> */}
+            <Route path="/places/:id/review" element={<PlaceReviewWritePage />} />
+          {/* </Route> */}
         </Routes>
       </MobileContainer>
       <MobileNavbar />

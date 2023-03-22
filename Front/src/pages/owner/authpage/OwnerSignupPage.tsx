@@ -1,7 +1,7 @@
-import AuthForm from "../../../components/AuthForm/AuthForm"
+import { OwnerSignupAuthForm } from '../../../components/OwnerForm/OwnerAuthForm/OwnerAuthForm'
 
 const OwnersignupPage = () => {
-    return <><AuthForm formType="ownerSignup" /></>
+    return <><OwnerSignupAuthForm /></>
 }
 
 export default OwnersignupPage

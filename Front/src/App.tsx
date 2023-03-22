@@ -1,5 +1,6 @@
 import {
   BrowserRouter as Router,
+  Navigate,
   Route,
   Routes,
   useLocation,
@@ -16,8 +17,9 @@ function App() {
     <>
       <GlobalStyle />
       <Routes>
+        <Route path="/mobile/*" element={<Mobile />} />
         <Route path="/owner/*" element={<Desktop />} />
-        <Route path="/*" element={<Mobile />} />
+        <Route path="/" element={<Navigate to={"/mobile"} />} />
       </Routes>
     </>
   );

@@ -14,7 +14,7 @@ import { useEffect } from "react";
 
 const MyPage = () => {
   const userInfo = useRecoilValue(userInfoAtom);
-
+  
   return (
     <>
       <UserInfoCard>
@@ -36,10 +36,10 @@ const MyPage = () => {
       </UserInfoCard>
 
       <MyPageCategory>
-        <NavLink to="/mypage/recent"><li>최근 내역</li></NavLink>
-        <NavLink to="/mypage/my-review"><li>내 리뷰</li></NavLink>
-        <NavLink to="/mypage/my-reservation"><li>예약 내역</li></NavLink>
-        <NavLink to="/mypage/customer-service"><li>고객 센터</li></NavLink>
+        <NavLink to="recent"><li>최근 내역</li></NavLink>
+        <NavLink to="my-review"><li>내 리뷰</li></NavLink>
+        <NavLink to="my-reservation"><li>예약 내역</li></NavLink>
+        <NavLink to="customer-service"><li>고객 센터</li></NavLink>
       </MyPageCategory>
       <MyPageContent>
         <Routes>

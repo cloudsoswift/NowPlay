@@ -1,8 +1,11 @@
 import { FaArrowRight } from "react-icons/fa";
 import styled from "styled-components";
 import api from "../../utils/api/api";
+import { useLogout } from "../../utils/hooks/useLogout";
 
 const CustomerService = () => {
+  const logoutMutatioon = useLogout()
+
   const noContentAlert = () => {
     alert("아직 구현중입니다...");
     api({
@@ -14,6 +17,7 @@ const CustomerService = () => {
   };
 
   const logout = () => {
+    logoutMutatioon.mutate()
     alert("로그아웃!")
   }
 

@@ -8,22 +8,14 @@ import { TAxoisUserInfo } from '../api/apiFunctions'
 import { TinitialValues } from './useForm'
 
 export const useSignup = () => {
-  const setUserInfo = useSetRecoilState(userInfoAtom)
-  const [cookies, setCookies, removeCooke] = useCookies(["accessToken"])
   const navigation = useNavigate()
 
   return useMutation(
     (values: TinitialValues) => signupAPI(values),
     {
       onSuccess: (data: TAxoisUserInfo) => {
-        setCookies("accessToken", data.accessToken, {path: "/mobile"});
-        setUserInfo({
-          userNickname: data.userNickname,
-          userAddress: data.userAddress,
-          userName: data.userName,
-          userDistance: data.userDistance,
-        });
-        navigation("/moblie/mypage");
+        alert("신청이 정상적으로 완료 되었습니다!\n완료까지 대기해주세요!\n심사완료까지 영업일 기준 2~3일 소요됩니다!")
+        navigation("/owner")
       },
     }
   );

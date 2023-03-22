@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("spring/place")
+@RequestMapping("place")
 public class ReviewController {
     @Autowired
     private final ReviewService reviewService;

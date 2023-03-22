@@ -45,7 +45,7 @@ export const Map = (props: Props) => {
   }, []);
   return (
     <>
-      <div id="map" className="w-screen h-[calc(100vh-160px)] mt-20"></div>
+      <div id="map" className="w-screen h-[calc(100vh-160px)] mt-20 -z-20"></div>
       <button
         className="absolute top-24 left-1/2 -translate-x-1/2 border-2 border-black"
         onClick={handleFilterToggle}

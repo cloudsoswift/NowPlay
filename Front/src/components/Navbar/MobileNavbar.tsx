@@ -11,19 +11,19 @@ const MobileNavbar = () => {
 
   const moveIndicator = () => {
     switch (true) {
-      case /^\/search/.test(navLocation.pathname):
+      case /^\/mobile\/search/.test(navLocation.pathname):
         setNavActive(0);
         break;
-      case /^\/signup/.test(navLocation.pathname):
+      case /^\/mobile\/like/.test(navLocation.pathname):
         setNavActive(1);
         break;
-      case /^\/places/.test(navLocation.pathname):
+      case /^\/mobile\/places/.test(navLocation.pathname):
         setNavActive(3);
         break;
-      case /^\/mypage/.test(navLocation.pathname):
+      case /^\/mobile\/mypage/.test(navLocation.pathname):
         setNavActive(4);
         break;
-      case /^\/$/.test(navLocation.pathname):
+      case /^\/mobile$/.test(navLocation.pathname):
         setNavActive(2);
         break;
       default:
@@ -35,23 +35,23 @@ const MobileNavbar = () => {
 
   return (
     <NavBox>
-      <NavStyle to='/search'>
+      <NavStyle to='search'>
         <BiSearch />
         <span>검색</span>
       </NavStyle>
-      <NavStyle to='/signup'>
+      <NavStyle to='like'>
         <BiStar />
         <span>즐겨찾기</span>
       </NavStyle>
-      <NavStyle to='/'>
+      <NavStyle to='/mobile' end>
         <BiHome />
         <span>홈</span>
       </NavStyle>
-      <NavStyle to='/places'>
+      <NavStyle to='places'>
         <BiMapPin />
         <span>주변</span>
       </NavStyle>
-      <NavStyle to='/mypage'>
+      <NavStyle to='mypage'>
         <BiUser />
         <span>마이페이지</span>
       </NavStyle>

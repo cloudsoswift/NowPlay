@@ -12,7 +12,7 @@ export const PlaceCard = ({ place }: PlaceCardProps) => {
   }
   return (
     <div className="w-[90vw] h-[40vh] grid justify-self-center border rounded-xl" onClick={handleClick}>
-      <img src={`pics/${place.imageURL}`} alt="" />
+      <img src={`/pics/${place.imageURL}`} alt="" />
       <div className="grid grid-cols-2">
         <div>{place.name}</div>
         <div>{place.subCategory}</div>

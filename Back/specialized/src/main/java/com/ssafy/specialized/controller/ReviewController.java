@@ -15,12 +15,12 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("place")
+@RequestMapping("/place")
 public class ReviewController {
     @Autowired
     private final ReviewService reviewService;
 
-    @PostMapping("{id}/reviews")
+    @PostMapping("/{id}/reviews")
     public ResponseEntity<ReviewDto> writeReview(@RequestBody ReviewDto reviewDto,
                                                  @RequestPart ("file") List<MultipartFile> files) throws Exception {
         reviewService.writeReview(reviewDto, files);

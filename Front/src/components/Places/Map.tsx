@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { atom } from "recoil";
 import { Filter } from "./Filter/Filter";
-import { PlaceCards } from "./PlaceCard";
+import { PlaceCardSheet } from "./PlaceCard";
 import type { TFilter } from "./Types";
 import * as json from "./Filter/categories.json";
 
@@ -59,13 +59,13 @@ export const Map = (props: Props) => {
         onClose={setIsFilterShown}
         />
       )}
-      <button
+      {/* <button
         className="absolute bottom-20 left-1/2 -translate-x-1/2 border-2 border-black"
         onClick={handleCardListToggle}
         >
         카드리스트 호출 버튼
-      </button>
-      {isCardlistShown && <PlaceCards onClose={setIsCardlistShown} />}
+      </button> */}
+      <PlaceCardSheet onClose={setIsCardlistShown} />
     </>
   );
 };

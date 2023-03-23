@@ -32,7 +32,7 @@ public class StoreServiceImpl implements StoreService {
     public void getAllExistingCategories() {
         List<HobbyMain> mainList = hobbyMainRepository.findAll();
         for (int i = 0; i < mainList.size(); i++) {
-            List<HobbySubcategory> subList = hobbySubcategoryRepository.findAllByHobbyMain(mainList.get(i));
+            List<HobbySubcategory> subList = hobbySubcategoryRepository.findAllByMainCategory(mainList.get(i));
         }
     }
 }

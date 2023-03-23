@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"https://j8d110.p.ssafy.io", "http://127.0.0.1:5173", "http://localhost:5173", "http://172.30.1.95"}, allowCredentials = "true")
-@RequestMapping("spring/accounts")
+@RequestMapping("/accounts")
 public class UserController {
 
     @Autowired
@@ -71,8 +71,8 @@ public class UserController {
 
     //아이디 중복 검사
     @GetMapping("/id")
-    public ResponseEntity<?> checkIdDuplication(@RequestParam String userId) {
-        int statusCode = userService.checkIdDuplication(userId);
+    public ResponseEntity<?> checkIdDuplication() {
+        int statusCode = userService.checkIdDuplication();
         return ResponseEntity.status(statusCode).build();
     }
 

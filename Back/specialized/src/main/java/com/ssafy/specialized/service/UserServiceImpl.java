@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int checkIdDuplication(String userId) {
+    public int checkIdDuplication() {
         User user = userRepository.findById(userId).orElse(null);
         return user == null ? 200 : 403;
     }
@@ -108,6 +108,26 @@ public class UserServiceImpl implements UserService {
     public List<Bookmark> getMyBookmarkList() {
         User user = userRepository.findByName(SecurityUtil.getLoginUsername());
         List<Bookmark> list = bookmarkRepository.findAllByUser(user);
+        return list;
+    }
+
+    @Override
+    public List<Review> getStoreReviwList(int storePk) {
+        Optional<Store> optStore = storeRepository.findById(storePk);
+        Store store = null;
+        if (optStore.isPresent()){
+            store = optStore.get();
+        }
+        List<Review> list = reviewRepository.findAllByStore(store);
+        for (Review review : list) {
+            List<ReviewImage> optReviewImage = reviewImageRepository.findAllByReview(review);
+        }
+
+ class Out{
+
+}
+
+
         return list;
     }
 
@@ -129,7 +149,7 @@ public class UserServiceImpl implements UserService {
         // 로그인시 토큰 생성
         UsernamePasswordAuthenticationToken authenticationToken = login.toAuthentication();
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        TokenDTO tokenDto = jwtTokenProvider.generateToken(authentication);
+        TokenDTO tokenDto = jwtTokenProvider.generateToken(authentication, login.getUserId());
         // 토큰 정보 설정
 //        redisTemplate.opsForValue()
 //                .set("RT:" + authentication.getName(), tokenDto.getRefreshToken(),
@@ -157,11 +177,13 @@ public class UserServiceImpl implements UserService {
         if (!jwtTokenProvider.validateToken(logout.getAccessToken())) {
             throw new CustomException(ErrorCode.USER_LOGIN_INFO_INVALID);
         }
+
         // 토큰이 유효하다면 Access 토큰을 받아옴
         Authentication authentication = jwtTokenProvider.getAuthentication(logout.getAccessToken());
         if (redisTemplate.opsForValue().get("RT:" + authentication.getName()) != null) {
             redisTemplate.delete("RT:" + authentication.getName());
         }
+
         // 토큰을 즉시 만료시키고 블랙리스트에 등록
         Long expiration = jwtTokenProvider.getExpiration(logout.getAccessToken());
         redisTemplate.opsForValue()
@@ -256,7 +278,7 @@ public class UserServiceImpl implements UserService {
         if (!refreshToken.equals(tokenDTO.getRefreshToken())) {
             throw new CustomException(ErrorCode.NO_CONTENT);
         }
-        TokenDTO token = jwtTokenProvider.generateToken(authentication);
+        TokenDTO token = jwtTokenProvider.generateToken(authentication,null);
         redisTemplate.opsForValue()
                 .set("RT:" + authentication.getName(), token.getRefreshToken(),
                         token.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);

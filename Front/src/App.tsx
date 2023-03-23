@@ -27,7 +27,7 @@ function App() {
       <Routes>
         <Route path="/mobile/*" element={<Mobile />} />
         <Route path="/owner/*" element={<Desktop />} />
-        {/* <Route path="/" element={<Navigate to={"/mobile"} />} /> */}
+        
       </Routes>
     </>
   );

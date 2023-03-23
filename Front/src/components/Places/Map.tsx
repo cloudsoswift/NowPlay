@@ -30,6 +30,7 @@ export const filterState = atom<TFilter>({
 export const Map = (props: Props) => {
   const [isFilterShown, setIsFilterShown] = useState(false);
   const [isCardlistShown, setIsCardlistShown] = useState(false);
+  const [markerList, setMarkerList] = useState<Array<naver.maps.Marker>>([]);
 
   const handleFilterToggle = () => {
     setIsFilterShown((prevState) => !prevState);
@@ -45,21 +46,21 @@ export const Map = (props: Props) => {
   }, []);
   return (
     <>
-      <div id="map" className="w-screen h-[calc(100vh-160px)] mt-20 -z-20"></div>
+      <div id="map" className="w-screen h-[calc(100vh-122px)] -z-20"></div>
       <button
-        className="absolute top-24 left-1/2 -translate-x-1/2 border-2 border-black"
+        className="absolute top-12 left-1/2 -translate-x-1/2 border-2 border-black"
         onClick={handleFilterToggle}
         >
         필터 호출 버튼
       </button>
       {isFilterShown && (
         <Filter
-        className="w-screen h-[50vh] bg-white border-4 absolute top-20 left-0 overflow-y-auto"
+        className="w-screen h-[50vh] bg-white border-4 absolute top-12 left-0 overflow-y-auto"
         onClose={setIsFilterShown}
         />
       )}
       <button
-        className="absolute bottom-24 left-1/2 -translate-x-1/2 border-2 border-black"
+        className="absolute bottom-20 left-1/2 -translate-x-1/2 border-2 border-black"
         onClick={handleCardListToggle}
         >
         카드리스트 호출 버튼

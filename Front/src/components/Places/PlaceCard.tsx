@@ -11,7 +11,7 @@ export const PlaceCard = ({ place }: PlaceCardProps) => {
     navigate(`${place.id}`);
   }
   return (
-    <div className="w-[90vw] h-[40vh] grid justify-self-center border rounded-xl" onClick={handleClick}>
+    <div className="w-full h-[40vh] grid justify-self-center border rounded-xl" onClick={handleClick}>
       <img src={`/pics/${place.imageURL}`} alt="" />
       <div className="grid grid-cols-2">
         <div>{place.name}</div>
@@ -82,9 +82,9 @@ export const PlaceCards = (props: PlaceCardsProps) => {
   return (
     <div
       className="w-screen h-[79vh] px-4 bg-white border-4 absolute bottom-20 left-0 grid overflow-y-scroll"
-      style={{ zIndex: "100" }}
     >
       <div className="sticky top-1 text-end">
+        <div className="cursor-row-resize"></div>
         <button
           onClick={() => {
             props.onClose(false);

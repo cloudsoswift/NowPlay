@@ -83,12 +83,15 @@ export const ownerSignupAPI = async (values: TinitialValues) => {
     // &&
     // (values.isHoliday === true || values.isHoliday === false)
   ) {
+    Array.from(values.brcImage).forEach((img) => {
+      formData.append("brcImage", img)
+    })
+
     formData.append("userId", values.userId);
     formData.append("userName", values.name);
     formData.append("userPassword", values.password);
     formData.append("userPhoneNumber", values.phoneNumber);
     formData.append("userEmail", values.email);
-    formData.append("userBrcImage", values.brcImage);
     formData.append("businessHour", JSON.stringify(values.businessHour));
     formData.append("isHoliday", JSON.stringify(values.isHoliday));
     formData.append("hobbyMajorCategory", values.hobbyMajorCategory);

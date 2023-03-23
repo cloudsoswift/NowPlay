@@ -12,7 +12,8 @@ export const useLogin = () => {
   const [cookies, setCookies, removeCooke] = useCookies(["accessToken"]);
   const navigation = useNavigate();
 
-  return useMutation((values: TinitialValues) => loginAPI(values), {
+  return useMutation((values: TinitialValues) => {
+    return loginAPI(values)}, {
     onSuccess: (data: TAxoisUserInfo) => {
       if (data.accessToken) {
         setCookies("accessToken", data.accessToken, { path: "/mobile" });
@@ -23,7 +24,7 @@ export const useLogin = () => {
         userName: data.userName,
         userDistance: data.userDistance,
       });
-      navigation("/moblie/mypage");
+      navigation("/mobile/mypage");
     },
   });
 };

@@ -2,6 +2,7 @@ package com.ssafy.specialized.service;
 
 import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.review.ReviewDto;
+import com.ssafy.specialized.domain.dto.review.ReviewListDto;
 import com.ssafy.specialized.domain.entity.Review;
 import com.ssafy.specialized.domain.entity.ReviewImage;
 import com.ssafy.specialized.domain.entity.Store;
@@ -19,8 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
 
 @Slf4j
 @Service
@@ -66,11 +70,31 @@ public class ReviewServiceImpl implements ReviewService {
 
             ReviewImage reviewImage = ReviewImage.builder()
                     .review(review)
-                    .reviewImageUrl(username+originalfileName)
+                    .reviewImageUrl("/reviewImage/" + username + originalfileName)
                     .build();
             reviewImageRepository.save(reviewImage);
         }
+    }
+
+    @Override
+    public List<Review> getStoreReviwList(int storePk) {
+        Optional<Store> optStore = storeRepository.findById(storePk);
+        Store store = null;
+        if (optStore.isPresent()){
+            store = optStore.get();
+        }
+        List<Review> list = reviewRepository.findAllByStore(store);
+        List<ReviewListDto> responlist = new ArrayList<>();
+        for (Review review : list) {
+            responlist.
+            List<ReviewImage> reviewImagelist = reviewImageRepository.findAllByReview(review);
+
+            }
 
 
+
+
+
+        return list;
     }
 }

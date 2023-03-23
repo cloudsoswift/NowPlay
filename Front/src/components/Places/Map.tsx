@@ -55,7 +55,6 @@ export const Map = (props: Props) => {
       {isFilterShown && (
         <Filter
         className="w-screen h-[50vh] bg-white border-4 absolute top-20 left-0 overflow-y-auto"
-        style={{ zIndex: "100" }}
         onClose={setIsFilterShown}
         />
       )}

@@ -6,7 +6,7 @@ RUN npm install --force
 RUN npm run build
 
 FROM nginx:stable-alpine as production-stage
-COPY --from=build-stage /app/dist /usr/share/nginx/html/mobile/
-COPY --from=build-stage /app/dist /usr/share/nginx/html/owner/
+COPY --from=build-stage /app/dist /usr/share/nginx/html/mobile/mobile/
+COPY --from=build-stage /app/dist /usr/share/nginx/html/owner/owner/
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

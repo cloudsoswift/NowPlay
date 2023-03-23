@@ -1,6 +1,7 @@
 FROM node:18.13.0 as build-stage
 WORKDIR /app
 COPY . .
+RUN npm cache clean --force
 RUN npm install --force
 RUN npm run build
 

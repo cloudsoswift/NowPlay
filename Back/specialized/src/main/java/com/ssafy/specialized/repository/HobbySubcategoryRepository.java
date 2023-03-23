@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface HobbySubcategoryRepository extends JpaRepository<HobbySubcategory, Integer> {
     Optional<HobbySubcategory> findBySubcategory(String subcategory);
 
-    List<HobbySubcategory> findAllByHobbyMain(HobbyMain hobbyMain);
+    List<HobbySubcategory> findAllByMainCategory(HobbyMain hobbyMain);
 }

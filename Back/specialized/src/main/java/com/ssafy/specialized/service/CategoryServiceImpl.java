@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
             hobbyDto.setIdx(hobbyMain.getIdx());
             hobbyDto.setMainCategory(hobbyMain.getMainCategory());
             hobbyDto.setMainImageUrl(hobbyMain.getMainImageUrl());
-            hobbyDto.setSubcategories(hobbySubcategoryRepository.findAllByHobbyMain(hobbyMain));
+            hobbyDto.setSubcategories(hobbySubcategoryRepository.findAllByMainCategory(hobbyMain));
             list.add(hobbyDto);
         }
         return list;

@@ -12,6 +12,14 @@ import styled from "styled-components";
 import Mobile from "./Mobile";
 import Desktop from "./Desktop";
 
+declare global {
+  interface Window {
+    naver: { LoginWithNaverId: any; map: naver.maps.Map };
+    Kakao: any;
+    google: any;
+  }
+}
+
 function App() {
   return (
     <>

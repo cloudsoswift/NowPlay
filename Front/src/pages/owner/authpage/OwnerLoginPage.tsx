@@ -1,12 +1,13 @@
-import AuthForm from "../../../components/AuthForm/AuthForm";
+import { OwnerLoginAuthForm } from '../../../components/OwnerForm/OwnerAuthForm/OwnerAuthForm';
 import OAuthLoginForm from "../../../components/AuthForm/OAuthLoginForm";
+
 
 
 const OwnerloginPage = () => {
 
   return (
     <>
-      <AuthForm formType="login" />
+      <OwnerLoginAuthForm />
       <OAuthLoginForm />
     </>
   );

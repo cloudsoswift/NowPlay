@@ -25,14 +25,14 @@ export default function PrivateRoute({authentication, type}:PrivateRouteProps):R
     // 인증이 반드시 필요한 페이지
   
     // 인증을 안했을 경우 로그인 페이지로, 했을 경우 해당 페이지로
-    if (type === "mobile") return (isAuthenticated === "" || isAuthenticated === undefined) ? <Navigate to="/mypage/login"/> : <Outlet/>;
+    if (type === "mobile") return (isAuthenticated === "" || isAuthenticated === undefined) ? <Navigate to="/mobile/mypage/login"/> : <Outlet/>;
     return (isAuthenticated === "" || isAuthenticated === undefined) ? <Navigate to="/owner/login"/> : <Outlet/>;
 
   } else {
     // 인증이 반드시 필요 없는 페이지
 
     // 인증을 안햇을 경우 해당 페이지로 인증을 한 상태일 경우 main페이지로
-    if (type === "mobile") return (isAuthenticated === "" || isAuthenticated === undefined) ? <Outlet/> : <Navigate to='/mypage'/>;  
+    if (type === "mobile") return (isAuthenticated === "" || isAuthenticated === undefined) ? <Outlet/> : <Navigate to='/mobile/mypage'/>;  
     return (isAuthenticated === "" || isAuthenticated === undefined) ? <Outlet/> : <Navigate to='/owner'/>;  
   }
 }

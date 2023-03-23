@@ -100,8 +100,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int checkIdDuplication() {
-        User user = userRepository.findById(userId).orElse(null);
-        return user == null ? 200 : 403;
+//        User user = userRepository.findById(userId).orElse(null);
+//        return user == null ? 200 : 403;
+        return 1;
     }
 
     @Override
@@ -111,25 +112,6 @@ public class UserServiceImpl implements UserService {
         return list;
     }
 
-    @Override
-    public List<Review> getStoreReviwList(int storePk) {
-        Optional<Store> optStore = storeRepository.findById(storePk);
-        Store store = null;
-        if (optStore.isPresent()){
-            store = optStore.get();
-        }
-        List<Review> list = reviewRepository.findAllByStore(store);
-        for (Review review : list) {
-            List<ReviewImage> optReviewImage = reviewImageRepository.findAllByReview(review);
-        }
-
- class Out{
-
-}
-
-
-        return list;
-    }
 
     @Override
     public List<Review> getMyReviewList() {

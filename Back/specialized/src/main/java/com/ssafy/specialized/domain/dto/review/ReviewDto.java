@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 public class ReviewDto {
     // 리뷰 작성시 입력 정보
 
-    private int store;
-
     private String content;
 
     private float rationg;

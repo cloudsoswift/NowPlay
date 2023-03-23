@@ -1,16 +1,14 @@
 package com.ssafy.specialized.service;
 
 import com.ssafy.specialized.common.security.SecurityUtil;
+import com.ssafy.specialized.domain.dto.review.ResponReviewsDto;
 import com.ssafy.specialized.domain.dto.review.ReviewDto;
 import com.ssafy.specialized.domain.dto.review.ReviewListDto;
 import com.ssafy.specialized.domain.entity.Review;
 import com.ssafy.specialized.domain.entity.ReviewImage;
 import com.ssafy.specialized.domain.entity.Store;
 import com.ssafy.specialized.domain.entity.User;
-import com.ssafy.specialized.repository.ReviewImageRepository;
-import com.ssafy.specialized.repository.ReviewRepository;
-import com.ssafy.specialized.repository.StoreRepository;
-import com.ssafy.specialized.repository.UserRepository;
+import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -38,16 +35,19 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewImageRepository reviewImageRepository;
 
     @Autowired
+    private final OwnerCommentRepository ownerCommentRepository;
+
+    @Autowired
     private final UserRepository userRepository;
 
     @Autowired
     private final StoreRepository storeRepository;
 
     @Override
-    public void writeReview(ReviewDto reviewDto, List<MultipartFile> files) throws IOException {
+    public void writeReview(int id, ReviewDto reviewDto, List<MultipartFile> files) throws IOException {
         String username = SecurityUtil.getLoginUsername();
         User user = userRepository.findByName(username);
-        Optional<Store> optStore = storeRepository.findById(reviewDto.getStore());
+        Optional<Store> optStore = storeRepository.findById(id);
         Store store = null;
         if (optStore.isPresent()) {
             store = optStore.get();
@@ -77,7 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<Review> getStoreReviwList(int storePk) {
+    public ResponReviewsDto getStoreReviwList(int storePk) {
         Optional<Store> optStore = storeRepository.findById(storePk);
         Store store = null;
         if (optStore.isPresent()){
@@ -86,15 +86,37 @@ public class ReviewServiceImpl implements ReviewService {
         List<Review> list = reviewRepository.findAllByStore(store);
         List<ReviewListDto> responlist = new ArrayList<>();
         for (Review review : list) {
-            responlist.
             List<ReviewImage> reviewImagelist = reviewImageRepository.findAllByReview(review);
-
+            ReviewListDto reviewListDto = new ReviewListDto();
+            reviewListDto.setReviewIndex(review.getIdx());
+            reviewListDto.setWriter(review.getWriter());
+            reviewListDto.setReviewContent(review.getContent());
+            reviewListDto.setReviewRate(review.getRating());
+            reviewListDto.setCreatedAt(review.getCreatedAt());
+            reviewListDto.setReviewIsHidden(review.isHidden());
+            reviewListDto.setReviewImages(reviewImagelist);
+            reviewListDto.setOwnerComments(ownerCommentRepository.findByReivew(review));
+            responlist.add(reviewListDto);
             }
+        ResponReviewsDto responReviewsDto = new ResponReviewsDto();
+        responReviewsDto.setReviewListDto(responlist);
+        responReviewsDto.setTotalReviewCount(list.size());
 
+        return responReviewsDto;
+    }
 
+    @Override
+    public Review getDetailReviewDto(int pk) {
+        Optional<Review> optReview = reviewRepository.findById(pk);
+        Review review = null;
+        if (optReview.isPresent()){
+            review = optReview.get();
+        }
+        return review;
+    }
 
+    @Override
+    public void updateReview(ReviewDto reviewDto, List<MultipartFile> files) throws IOException {
 
-
-        return list;
     }
 }

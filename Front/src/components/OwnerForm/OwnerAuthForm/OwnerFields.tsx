@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState, useRef, RefObject} from 'react';
 import styled from 'styled-components';
 
 import { InputBox, FormContext } from '../../AuthForm/AuthFields';
@@ -14,9 +14,21 @@ type TselectOptions = {
   [key: string]: string[];
 };
 
-const FileField = ({ type, name }: { type: string; name: string }) => {
+type Timg = {
+  name: string
+  url: string
+}
+
+interface InputWithFiles extends HTMLInputElement {
+  files: FileList;
+}
+
+const FileField = ({ type, name }: { type: string; name: "newStoreBrcImages" | "brcImage" }) => {
   const {values, getFieldProps, touched, errors } = useContext(FormContext);
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<Timg[]>([]);
+
+  const fileInput: RefObject<InputWithFiles> =  useRef(null)
+  
 
   useEffect(() => {
     let fileArray: File[] | null = []
@@ -26,18 +38,26 @@ const FileField = ({ type, name }: { type: string; name: string }) => {
     else {
       fileArray = values["brcImage"] ? Array.from(values["brcImage"]) : null
     }
-    console.log(fileArray)
+    
     const selectedFiles = fileArray ? fileArray.map((file) => {
-      console.log(file)
-      return URL.createObjectURL(file);
+      return { name: file.name , url: URL.createObjectURL(file)};
     }) : [];
     setImages([...selectedFiles])
+    if (name === "newStoreBrcImages" && fileInput.current && typeof values["newStoreBrcImages"] !== "undefined") {
+      fileInput.current.files = values["newStoreBrcImages"]
+    }
+    if (name === "brcImage" && fileInput.current && typeof values["brcImage"] !== "undefined") {
+      fileInput.current.files = values["brcImage"]
+    }
   },[values[name]])
   
   const newImages = images.map((img, idx) => {
         return (
           <div key={idx}>
-            <img src={img} alt='' />
+            <ImCancelCircle id={img.name} onClick={
+                getFieldProps(name).onClick
+              }/>
+            <img src={img.url} alt='' />
           </div>
         );
       });
@@ -47,7 +67,7 @@ const FileField = ({ type, name }: { type: string; name: string }) => {
       <label htmlFor={name}>{labelText[name]}</label>
       {images.length ? "새로 업로드한 이미지" : null}
       {newImages}
-      <input type={type} id={name} accept='image/*' multiple {...getFieldProps(name)} />
+      <input type={type} id={name} accept='image/*' multiple {...getFieldProps(name)} ref={fileInput}/>
       <div className='bar'></div>
       {!touched[name] || !errors[name] ? null : (
         <span id='FileError'>{errors[name]}</span>

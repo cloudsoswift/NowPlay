@@ -97,7 +97,7 @@ const FormBox = styled.form`
   align-items: stretch;
   height: auto;
   width: 90vw;
-  max-width: 700px;
+  max-width: 500px;
   padding: 40px;
   margin: 20px;
   border-radius: 10px;

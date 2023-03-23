@@ -79,10 +79,6 @@ const OwnerStorePage = () => {
 
   return (
     <>
-      <div>
-        <span>누구누구 사장님</span> 여기가 헤더 <button>로그아웃 버튼</button>
-      </div>
-      
       {isUpdate ? (
         <StoreInfoForm initialValues={dummyData}/>
       ) : (

@@ -9,10 +9,12 @@ import OwnerReviewPage from "./pages/owner/OwnerReviewPage";
 import OwnerStorePage from "./pages/owner/OwnerStorePage";
 import OwnerloginPage from "./pages/owner/authpage/OwnerLoginPage";
 import OwnersignupPage from "./pages/owner/authpage/OwnerSignupPage";
+import OwnerTopbar from "./components/Topbar/OwnerTopbar";
 
 function Desktop() {
   return (
     <>
+      <OwnerTopbar />
       <DesktopContainer>
         <Routes>
           <Route element={<PrivateRoute authentication={true} type="desktop" />}>
@@ -41,5 +43,6 @@ export default Desktop;
 
 const DesktopContainer = styled.div`
   margin-left: 240px;
-  min-height: 100vh;
+  margin-top: 50px;
+  min-height: calc(100vh - 50px);
 `;

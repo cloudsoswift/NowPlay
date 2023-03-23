@@ -20,7 +20,7 @@ interface TbusinessDay {
 }
 
 export interface TinitialValues {
-  [key: string]: string | undefined | boolean | File | string[] | TbusinessDay;
+  [key: string]: string | undefined | boolean | FileList | string[] | TbusinessDay;
   userId?: string;
   password?: string;
   phoneNumber?: string;
@@ -28,7 +28,7 @@ export interface TinitialValues {
   name?: string;
   nickname?: string;
   passwordcheck?: string;
-  brcImage?: File;
+  brcImage?: FileList;
   hobbyMainCategory?: string;
   hobbyMajorCategory?: string;
   businessHour?: TbusinessDay;
@@ -40,6 +40,7 @@ export interface TinitialValues {
   storeContactNumber?: string;
   storeHompageUrl?: string;
   storeBrcImages?: string[];
+  newStoreBrcImages?: FileList;
   storeExplanation?: string;
 }
 
@@ -80,8 +81,11 @@ export type TuseFormReturn = {
         | React.ChangeEvent<HTMLInputElement>
         | React.ChangeEvent<HTMLSelectElement>
     ) => void;
+    onClick?: (e: React.MouseEvent) => void;
   };
 };
+
+
 
 function useForm({
   initialValues,
@@ -118,7 +122,7 @@ function useForm({
       ) {
         setValues({
           ...values,
-          [e.target.name]: e.target.files[0],
+          [e.target.name]: e.target.files,
         });
         return;
       }
@@ -149,6 +153,21 @@ function useForm({
     setTouched({
       ...touched,
       [e.target.name]: true,
+    });
+  };
+
+  const handleRemoveOldImg = (e: React.MouseEvent) => {
+    const imgid = e.currentTarget.id;
+    setValues((prev) => {
+      return {
+        ...prev,
+        storeBrcImages: prev.storeBrcImages?.filter((imgsrc) => {
+          if (imgsrc === imgid) {
+            return false;
+          }
+          return true;
+        }),
+      };
     });
   };
 
@@ -227,7 +246,13 @@ function useForm({
 
     const onBlur = handleBlur;
     const onChange = handleChange;
-    if (name === "passwordcheck" || name ===  "brcImage" ||name ===  "storeBrcImages" ||name ===  "password") {
+    const onClick = handleRemoveOldImg;
+    if (
+      name === "passwordcheck" ||
+      name === "brcImage" ||
+      name === "newStoreBrcImages" ||
+      name === "password"
+    ) {
       return {
         name,
         maxLength,
@@ -235,6 +260,16 @@ function useForm({
         onBlur,
         onChange,
       };
+    } else if (name === "storeBrcImages") {
+      return {
+        name,
+        value,
+        maxLength,
+        placeholder,
+        onBlur,
+        onChange,
+        onClick
+      }
     } else {
       return {
         name,

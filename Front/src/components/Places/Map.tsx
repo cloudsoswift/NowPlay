@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { atom } from "recoil";
 import { Filter } from "./Filter/Filter";
 import { PlaceCardSheet } from "./PlaceCard";
+import { IoReorderThree } from "react-icons/io5";
 import type { TFilter } from "./Types";
 import * as json from "./Filter/categories.json";
 
@@ -46,16 +47,16 @@ export const Map = (props: Props) => {
   }, []);
   return (
     <>
-      <div id="map" className="w-screen h-[calc(100vh-122px)] -z-20"></div>
+      <div id="map" className="w-screen h-[calc(100vh-122px)] -z-0"></div>
       <button
-        className="absolute top-12 left-1/2 -translate-x-1/2 border-2 border-black"
+        className="absolute top-12 left-1/2 -translate-x-1/2 border-2 border-black bg-white rounded-full"
         onClick={handleFilterToggle}
         >
-        필터 호출 버튼
+        <IoReorderThree className="text-3xl" />
       </button>
       {isFilterShown && (
         <Filter
-        className="w-screen h-[50vh] bg-white border-4 absolute top-12 left-0 overflow-y-auto"
+        className="w-screen h-[50vh] bg-white border-2 rounded-b-lg absolute top-12 left-0 overflow-y-auto p-4 space-y-2"
         onClose={setIsFilterShown}
         />
       )}
@@ -65,7 +66,7 @@ export const Map = (props: Props) => {
         >
         카드리스트 호출 버튼
       </button> */}
-      <PlaceCardSheet onClose={setIsCardlistShown} />
+      <PlaceCardSheet />
     </>
   );
 };

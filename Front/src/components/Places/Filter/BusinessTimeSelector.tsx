@@ -14,7 +14,7 @@ export const BusinessTimeSelector = (props: Props) => {
     })
   };
   return (
-    <div>
+    <div className="grid justify-center w-full border rounded-xl p-2">
       <input type="time" name="" id="" onChange={handleTimeChange} />
     </div>
   );

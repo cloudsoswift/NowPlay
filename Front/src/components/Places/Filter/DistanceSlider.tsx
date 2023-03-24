@@ -16,12 +16,13 @@ export const DistanceSlider = (props: Props) => {
     });
   };
   return (
-    <div>
+    <div className="grid justify-center w-full border rounded-xl p-2">
       <input
         type="range"
         id=""
         min="1"
         max="6"
+        className="w-full"
         onChange={handleDistanceChange}
       />
     </div>

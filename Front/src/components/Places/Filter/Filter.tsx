@@ -9,9 +9,19 @@ type Props = {
   onClose: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export const Filter = (props: Props) => {
+  const handleApplyFilter = () => {
+    
+  }
   return (
     <div className={props.className}>
-      <div className="sticky top-1 text-end">
+      <Categories />
+      <SelectableCategories />
+      <DistanceSlider />
+      <BusinessTimeSelector />
+      <div>
+        <button onClick={handleApplyFilter} className="w-full border rounded-xl p-2 text-white bg-[var(--primary-color)]">적용</button>
+      </div>
+      <div className="bottom-0">
         <button
           onClick={() => {
             props.onClose(false);
@@ -21,10 +31,6 @@ export const Filter = (props: Props) => {
           <ImCross />
         </button>
       </div>
-      <Categories />
-      <SelectableCategories />
-      <DistanceSlider />
-      <BusinessTimeSelector />
     </div>
   );
 };

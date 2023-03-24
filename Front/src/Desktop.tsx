@@ -13,7 +13,7 @@ import OwnerTopbar from "./components/Topbar/OwnerTopbar";
 
 function Desktop() {
   return (
-    <>
+    <DeskBackground>
       <OwnerTopbar />
       <DesktopContainer>
         <Routes>
@@ -35,14 +35,20 @@ function Desktop() {
         </Routes>
       </DesktopContainer>
       <DeskNavbar />
-    </>
+    </DeskBackground>
   );
 }
 
 export default Desktop;
 
+const DeskBackground = styled.div`
+  background-color: var(--desk-body-color);
+`
+
 const DesktopContainer = styled.div`
-  margin-left: 240px;
+  margin-left: 260px;
+  padding-right: 20px;
   margin-top: 50px;
   min-height: calc(100vh - 50px);
+  padding-bottom: 20px;
 `;

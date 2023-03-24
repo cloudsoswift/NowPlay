@@ -7,9 +7,10 @@ import { category } from '../OwnerAuthForm/OwnerAuthDescription';
 import useStoreUpdate from '../../../utils/hooks/useStoreUpdate';
 
 const StoreInfoForm = ({
-  initialValues,
+  initialValues, updateHandle
 }: {
   initialValues: TinitialValues;
+  updateHandle: () => void
 }) => {
   const { formPlaceHolder, formMaxLength, validate } = StoreDescription;
 
@@ -17,7 +18,8 @@ const StoreInfoForm = ({
 
   const StoreUpdateHandler = (values: TinitialValues) => {
     console.log(values);
-    storeInfoMutation.mutate(values)
+    updateHandle()
+    // storeInfoMutation.mutate(values)
   };
 
   const newInitialValues = {...initialValues, newStoreBrcImages: undefined}

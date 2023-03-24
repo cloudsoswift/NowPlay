@@ -19,43 +19,43 @@ const ownerAuthDescriptions = {
         monday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
         tuesday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
         wendesday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
         thursday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
         friday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
         saturday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
         sunday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
       },

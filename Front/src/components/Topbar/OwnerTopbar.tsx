@@ -31,17 +31,17 @@ const TopbarContainer = styled.div`
   display: flex;
   position: fixed;
   align-items: center;
-  justify-content: space-between;
+  justify-content: end;
   height: 50px;
   width: calc(100vw - 240px);
   top: 0;
   left: 240px;
+  padding-right: 20px;
 
-  z-index: 100;
+  z-index: 1;
 
-  background-color: var(--gray-color-light);
+  background-color: var(--desk-body-color);
   button {
     margin-right: 10px;
-    background-color: var();
   }
 `;

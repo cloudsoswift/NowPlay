@@ -248,4 +248,8 @@ const SubmitButton = styled.button`
     border-top-color: var(--primary-color-light);
     animation: ${spinAnimation} 1s ease-out infinite;
   }
+
+  &:disabled {
+    background-color: var(--gray-color-light);
+  }
 `;

@@ -286,7 +286,7 @@ function useForm({
 
     const onBlur = handleBlur;
     const onChange = handleChange;
-    const onClick = handleRemoveOldImg;
+    
     if (name === "passwordcheck" || name === "password") {
       return {
         name,

@@ -28,9 +28,9 @@ function Mobile() {
           <Route element={<PrivateRoute authentication={true} type="mobile"/>}>
             <Route path="/mypage/*" element={<MyPage />} />
           </Route>
-          <Route element={<PrivateRoute authentication={true} type="mobile"/>}>
-            <Route path="/homepage/*" element={<HomePage />} />
-          </Route>
+          {/* <Route element={<PrivateRoute authentication={true} type="mobile"/>}> */}
+            <Route path="/*" element={<HomePage />} />
+          {/* </Route> */}
           <Route element={<PrivateRoute authentication={true} type="mobile"/>}>
             <Route path="/search/*" element={<SearchPage />} />
           </Route>

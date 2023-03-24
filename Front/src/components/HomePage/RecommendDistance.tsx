@@ -1,7 +1,7 @@
 import MiniCard from "./MiniCard";
 import styled from "styled-components";
 
-const DistanceRecommend = () => {
+const RecommendDistance = () => {
   return (
     <CardList>
       <MiniCard />
@@ -11,7 +11,7 @@ const DistanceRecommend = () => {
   )
 };
 
-export default DistanceRecommend
+export default RecommendDistance
 
 const CardList = styled.div`
   display: flex;

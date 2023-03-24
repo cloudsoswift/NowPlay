@@ -3,6 +3,8 @@ import { ImCross } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { useBottomSheet } from "../../utils/hooks/useBottomSheet";
+import styled from "styled-components";
+import { motion } from "framer-motion";
 
 type PlaceCardProps = {
   place: TPlaceCard;
@@ -81,20 +83,38 @@ const TEST_DATA: Array<TPlaceCard> = [
 ];
 
 type PlaceCardsProps = {
-  onClose: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const MIN_Y = 60; // 바텀시트가 최대로 높이 올라갔을 때의 y 값
-export const MAX_Y = window.innerHeight - 80; // 바텀시트가 최소로 내려갔을 때의 y 값
-export const BOTTOM_SHEET_HEIGHT = `h-\[${window.innerHeight - MIN_Y}px\]`; // 바텀시트의 세로 길이
+export const MIN_Y = 120; // 바텀시트가 최대로 높이 올라갔을 때의 y 값
+export const MAX_Y = window.innerHeight - 60; // 바텀시트가 최소로 내려갔을 때의 y 값
+export const BOTTOM_SHEET_HEIGHT = window.innerHeight; // 바텀시트의 세로 길이
 
 export const PlaceCardSheet = (props: PlaceCardsProps) => {
-  const { sheet } = useBottomSheet();
+  const { sheet, content } = useBottomSheet();
+  
   return (
-    <div className={`flex flex-col fixed z-[1] top-0 left-0 right-0 rounded-t-lg shadow-lg ${BOTTOM_SHEET_HEIGHT} bg-neutral-500`} ref={sheet}>
-      <div className="h-12 rounded-t-lg pt-4 pb-1">
+    <Wrapper ref={sheet}>
+      <div className="h-12 rounded-t-lg pt-4 pb-1" id="bottomSheetHeader">
         <div className="w-8 h-1 rounded-sm m-auto bg-slate-500"></div>
       </div>
-    </div>
+      <div id="bottomSheetContent" className="overflow-auto p-4" ref={content}>
+        {TEST_DATA.map((data)=><PlaceCard key={data.id} place={data} />)}
+      </div>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  z-index: 0;
+  top: calc(100% - ${MIN_Y}px);
+  left: 0;
+  right: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+  height: ${BOTTOM_SHEET_HEIGHT}px;
+`;

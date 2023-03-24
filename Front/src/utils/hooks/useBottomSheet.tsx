@@ -10,6 +10,7 @@ type BottomSheetMetrics = {
     prevTouchY?: number; // 다음 touchmove 이벤트 핸들러에서 필요한 터치 포인트 Y값을 저장
     movingDirection: "none" | "down" | "up"; // 유저가 touch를 움직이고 있는 방향
   }
+  isContentAreaTouched: boolean; // 컨텐츠 영역을 터치하고 있음을 기록
 }
 const initialMetrics:BottomSheetMetrics = {
   touchStart: {
@@ -20,57 +21,93 @@ const initialMetrics:BottomSheetMetrics = {
     prevTouchY: 0,
     movingDirection: "none",
   },
+  isContentAreaTouched: false,
 };
 export const useBottomSheet = () => {
   const sheet = useRef<HTMLDivElement>(null);
+  const content = useRef<HTMLDivElement>(null);
   const metrics = useRef<BottomSheetMetrics>(initialMetrics);
   useEffect(()=>{
+    const canUserMoveBottomSheet = () => {
+      const { touchMove, isContentAreaTouched } = metrics.current;
+      // 바텀 시트에서 컨텐츠 영역이 아닌 부분을 터치하면 항상 바텀 시트 움직임.
+      
+      if(!isContentAreaTouched) {
+        return true;
+      }
+      
+      // 바텀 시트가 올라와 있는 상태가 아닐 때는 컨텐츠 영역 터치해도 바텀 시트 움직임
+      if(sheet.current?.getBoundingClientRect().y !== 60) {
+        return true;
+      }
+      
+      
+      if(touchMove.movingDirection === 'down') {
+        // 스크롤 더 올릴거 없으면, 바텀 시트 움직이도록
+        return content.current!.scrollTop <= 0;
+      }
+
+      return false;
+    }
     const handleTouchStart = (e: TouchEvent) => {
-      const {touchStart} = metrics.current;
+      const {touchStart, touchMove} = metrics.current;
       // 유저가 BottomSheet 터치했을 때의 y 좌표 기록
       touchStart.sheetY = sheet.current!.getBoundingClientRect().y; // BottomSheet의 Y값
       touchStart.touchY = e.touches[0].clientY; // 터치 포인트의 Y값
+      touchMove.prevTouchY = touchStart.touchY;
     };
+    
     const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault();
 
       const {touchStart, touchMove} = metrics.current;
       const currentTouch = e.touches[0];
 
       // 이전 터치 기록값 없으면 터치 시작점을 기록
-      if(touchMove.prevTouchY === undefined){
+      if(touchMove.prevTouchY === undefined || touchMove.prevTouchY === 0){
         touchMove.prevTouchY = touchStart.touchY;
       }
       // 이전 터치 기록 - 현재 터치 위치 비교해서 위로 끌고가는지 아래로 끌고가는지 판단
       if(touchMove.prevTouchY < currentTouch.clientY){
         touchMove.movingDirection = 'down';
       }
+      console.log(touchMove.prevTouchY, currentTouch.clientY);
       if(touchMove.prevTouchY > currentTouch.clientY){
         touchMove.movingDirection = 'up';
       }
-      // 터치 시작점 부터 현재 터치 포인트 까지 y값 차이
-      const touchOffset = currentTouch.clientY - touchStart.touchY;
-      let nextSheetY = touchStart.sheetY + touchOffset;
-
-      // nextSheetY는 MIN_Y와 MAX_Y 사이의 값이어야 함.
-      if(nextSheetY < MIN_Y){
-        nextSheetY = MIN_Y;
+      if(canUserMoveBottomSheet()) {
+        // 바텀시트 움직일 수 있는 싱태면, content에서 scroll 발생하는거 막음.
+        e.preventDefault();
+        // 터치 시작점 부터 현재 터치 포인트 까지 y값 차이
+        const touchOffset = currentTouch.clientY - touchStart.touchY;
+        let nextSheetY = touchStart.sheetY + touchOffset;
+        
+        // nextSheetY는 MIN_Y와 MAX_Y 사이의 값이어야 함.
+        if(nextSheetY < MIN_Y){
+          nextSheetY = MIN_Y;
+        }
+        if(nextSheetY > MAX_Y){
+          nextSheetY = MAX_Y;
+        }
+        sheet.current?.style.setProperty('transform', `translateY(${nextSheetY - MAX_Y}px)`);
+      } else {
+        document.body.style.overflowY = 'hidden';
       }
-      if(nextSheetY > MAX_Y){
-        nextSheetY = MAX_Y;
-      }
-      sheet.current?.style.setProperty('transform', `translateY(${nextSheetY - MAX_Y}px)`);
     };
+
     const handleTouchEnd = (e: TouchEvent) => {
       const {touchMove} = metrics.current;
       // Snap Animation
       const currentSheetY = sheet.current?.getBoundingClientRect().y;
+      console.log(currentSheetY, MAX_Y);
+      
       if(currentSheetY !== MIN_Y){
         if(touchMove.movingDirection === 'down'){
+          console.log("다운",currentSheetY, MAX_Y);
           sheet.current?.style.setProperty('transform', 'translateY(0)');
         }
         if(touchMove.movingDirection === 'up') {
-          sheet.current?.style.setProperty('transform', `translateY(${MIN_Y - MAX_Y})`);
+          console.log("업",currentSheetY, MAX_Y);
+          // sheet.current?.style.setProperty('transform', `translateY(-${MAX_Y}px)`);
         }
       }
       // metrics 초기화
@@ -86,5 +123,12 @@ export const useBottomSheet = () => {
       sheet.current?.removeEventListener('touchend', handleTouchEnd);
     }
   }, [])
-  return {sheet};
+  useEffect(()=> {
+    const handleTouchStart = () => {
+      metrics.current.isContentAreaTouched = true;
+    }
+    content.current?.addEventListener('touchstart', handleTouchStart);
+    return () => content.current?.removeEventListener('touchstart', handleTouchStart);
+  }, []);
+  return {sheet, content};
 };

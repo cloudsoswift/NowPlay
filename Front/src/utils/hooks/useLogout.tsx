@@ -3,24 +3,24 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { userInfoAtom } from "../recoil/userAtom";
-import { logoutAPI } from "../api/apiFunctions";
-import { TAxoisUserInfo } from "../api/apiFunctions";
+import { logoutAPI } from "../api/authApiFunctions";
+import { TAxoisUserInfo } from "../api/authApiFunctions";
 
 export const useLogout = () => {
   const setUserInfo = useSetRecoilState(userInfoAtom);
   const [cookies, setCookies, removeCookie] = useCookies(["accessToken"]);
   const navigation = useNavigate();
 
-  return useMutation((values: { [key: string]: string }) => logoutAPI(values), {
+  return useMutation(() => logoutAPI(), {
     onSuccess: () => {
-      removeCookie("accessToken");
+      removeCookie("accessToken", { path: "/mobile" });
       setUserInfo({
         userNickname: "",
         userAddress: "",
         userName: "",
         userDistance: "",
       });
-      navigation("/mypage");
+      navigation("/moblie/mypage");
     },
   });
 };

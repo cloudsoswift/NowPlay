@@ -54,22 +54,22 @@ public class ReviewServiceImpl implements ReviewService {
                 .writer(user)
                 .store(store)
                 .content(reviewDto.getContent())
-                .rating(reviewDto.getRationg())
+                .rating(reviewDto.getRating())
                 .createdAt(LocalDateTime.now())
                 .isHidden(reviewDto.isHidden())
                 .build();
         review = reviewRepository.save(review);
-
-        for(MultipartFile file : files){
-            String originalfileName = file.getOriginalFilename();
-            File dest = new File("../../../../../resources/reviewImage",username+originalfileName);
-            file.transferTo(dest);
-
-            ReviewImage reviewImage = ReviewImage.builder()
-                    .review(review)
-                    .reviewImageUrl("/reviewImage/" + username + originalfileName)
-                    .build();
-            reviewImageRepository.save(reviewImage);
+        if (files.size() >= 1) {
+            for (MultipartFile file : files) {
+                String originalfileName = file.getOriginalFilename();
+                File dest = new File("../../../../../resources/img/reviewImage", username + originalfileName);
+                file.transferTo(dest);
+                ReviewImage reviewImage = ReviewImage.builder()
+                        .review(review)
+                        .reviewImageUrl(username + originalfileName)
+                        .build();
+                reviewImageRepository.save(reviewImage);
+            }
         }
     }
 

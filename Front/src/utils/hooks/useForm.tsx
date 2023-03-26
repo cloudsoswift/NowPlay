@@ -1,7 +1,51 @@
 import React, { useState, useEffect, useCallback } from "react";
+import useBusinessHour from "./useBusinessHour";
+
+interface TbusinessDayHour {
+  open: string;
+  close: string;
+  reservationInterval: string;
+  storeHoliday: boolean;
+}
+
+interface TbusinessDay {
+  [key: string]: TbusinessDayHour;
+  monday: TbusinessDayHour;
+  tuesday: TbusinessDayHour;
+  wendesday: TbusinessDayHour;
+  thursday: TbusinessDayHour;
+  friday: TbusinessDayHour;
+  saturday: TbusinessDayHour;
+  sunday: TbusinessDayHour;
+}
+
+export interface TinitialValues {
+  [key: string]: string | undefined | boolean | FileList | string[] | TbusinessDay;
+  userId?: string;
+  password?: string;
+  phoneNumber?: string;
+  email?: string;
+  name?: string;
+  nickname?: string;
+  passwordcheck?: string;
+  brcImage?: FileList;
+  hobbyMainCategory?: string;
+  hobbyMajorCategory?: string;
+  businessHour?: TbusinessDay;
+  isHoliday?: boolean;
+  agree?: boolean;
+
+  storeName?: string;
+  storeAddress?: string;
+  storeContactNumber?: string;
+  storeHompageUrl?: string;
+  storeBrcImages?: string[];
+  newStoreBrcImages?: FileList;
+  storeExplanation?: string;
+}
 
 export type TuseFormParams = {
-  initialValues: { [key: string]: string | boolean };
+  initialValues: TinitialValues;
   formPlaceHolder: { [key: string]: string };
   formMaxLength: { [key: string]: number };
   validate(values: object): object;
@@ -9,9 +53,7 @@ export type TuseFormParams = {
 };
 
 export type TuseFormReturn = {
-  values: {
-    [key: string]: string | boolean;
-  };
+  values: TinitialValues;
   errors: {
     [key: string]: string;
   };
@@ -19,15 +61,31 @@ export type TuseFormReturn = {
     [key: string]: string;
   };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleBusinessHour: (
+    e:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+  ) => void;
   handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   getFieldProps: (name: string) => {
     name: string;
     // value: string;
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur: (
+      e:
+        | React.FocusEvent<HTMLInputElement>
+        | React.FocusEvent<HTMLSelectElement>
+    ) => void;
+    onChange: (
+      e:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLSelectElement>
+    ) => void;
+    onClick?: (e: React.MouseEvent) => void;
   };
 };
+
+
 
 function useForm({
   initialValues,
@@ -36,28 +94,80 @@ function useForm({
   validate,
   onSubmit,
 }: TuseFormParams) {
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState<TinitialValues>(initialValues);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+  const updateHour = useBusinessHour();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.type === 'checkbox') {
-      setValues({
-        ...values,
-        [e.target.name]: e.target.checked,
-      });
-      return ;
+  const handleChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    {
+      if (
+        e.target instanceof HTMLInputElement &&
+        e.target.type === "checkbox"
+      ) {
+        setValues({
+          ...values,
+          [e.target.name]: e.target.checked,
+        });
+        return;
+      }
+      if (
+        e.target instanceof HTMLInputElement &&
+        e.target.type === "file" &&
+        e.target.files
+      ) {
+        setValues({
+          ...values,
+          [e.target.name]: e.target.files,
+        });
+        return;
+      }
     }
     setValues({
       ...values,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value.trim(),
     });
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  // 영업시간 업데이트
+  const handleBusinessHour = (
+    e:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newBus = updateHour({ e, values });
+
+    setValues({
+      ...values,
+      businessHour: newBus,
+    });
+  };
+
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement> | React.FocusEvent<HTMLSelectElement>
+  ) => {
     setTouched({
       ...touched,
       [e.target.name]: true,
+    });
+  };
+
+  const handleRemoveOldImg = (e: React.MouseEvent) => {
+    const imgid = e.currentTarget.id;
+    setValues((prev) => {
+      return {
+        ...prev,
+        storeBrcImages: prev.storeBrcImages?.filter((imgsrc) => {
+          if (imgsrc === imgid) {
+            return false;
+          }
+          return true;
+        }),
+      };
     });
   };
 
@@ -96,16 +206,13 @@ function useForm({
   // 전화번호 자동 하이픈 생성
   useEffect(() => {
     if (!values.phoneNumber) return;
-    if (typeof values.phoneNumber === 'string') {
-      const pNumber = values.phoneNumber
+    if (typeof values.phoneNumber === "string") {
+      const pNumber = values.phoneNumber;
       if (pNumber.length === 11) {
         setValues((prev) => {
           return {
             ...prev,
-            phoneNumber: pNumber.replace(
-              /(\d{3})(\d{4})(\d{4})/,
-              "$1-$2-$3"
-            ),
+            phoneNumber: pNumber.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"),
           };
         });
       } else if (pNumber.length === 13) {
@@ -122,25 +229,57 @@ function useForm({
     }
   }, [values.phoneNumber]);
 
+  useEffect(() => {
+    setValues({
+      ...values,
+      hobbyMajorCategory: "",
+    });
+  }, [values.hobbyMainCategory]);
+
   // 필드 속성으로 사용할 값을 조회한다
   const getFieldProps = (name: string) => {
-    // password값이 DOM에 보여서...제외
-    const value = name === "password" ? undefined : values[name];
+    // password값이 DOM에 보여서...제외, HTMLInput에서 File이 values로 존재할 수 없어서 제외
+    const value = values[name];
 
     const maxLength = formMaxLength[name];
     const placeholder = formPlaceHolder[name];
 
     const onBlur = handleBlur;
     const onChange = handleChange;
-
-    return {
-      name,
-      value,
-      maxLength,
-      placeholder,
-      onBlur,
-      onChange,
-    };
+    const onClick = handleRemoveOldImg;
+    if (
+      name === "passwordcheck" ||
+      name === "brcImage" ||
+      name === "newStoreBrcImages" ||
+      name === "password"
+    ) {
+      return {
+        name,
+        maxLength,
+        placeholder,
+        onBlur,
+        onChange,
+      };
+    } else if (name === "storeBrcImages") {
+      return {
+        name,
+        value,
+        maxLength,
+        placeholder,
+        onBlur,
+        onChange,
+        onClick
+      }
+    } else {
+      return {
+        name,
+        value,
+        maxLength,
+        placeholder,
+        onBlur,
+        onChange,
+      };
+    }
   };
 
   // 훅을 사용하는 쪽에 제공하는 api다
@@ -149,6 +288,7 @@ function useForm({
     errors,
     touched,
     handleChange,
+    handleBusinessHour,
     handleBlur,
     handleSubmit,
     getFieldProps,

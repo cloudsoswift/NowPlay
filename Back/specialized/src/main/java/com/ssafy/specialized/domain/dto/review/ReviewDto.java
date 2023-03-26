@@ -11,7 +11,7 @@ public class ReviewDto {
 
     private String content;
 
-    private float rationg;
+    private float rating;
 
     private  boolean isHidden;
 

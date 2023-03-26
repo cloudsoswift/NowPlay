@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Store {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
     @OneToOne
@@ -33,7 +33,7 @@ public class Store {
 
     private String homepage;
 
-    //    private String imagesUrl;
+    private String imagesUrl;
 
     private String explanation;
 

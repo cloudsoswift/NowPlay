@@ -4,6 +4,7 @@ import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.review.ResponReviewsDto;
 import com.ssafy.specialized.domain.dto.review.ReviewDto;
 import com.ssafy.specialized.domain.dto.review.ReviewListDto;
+import com.ssafy.specialized.domain.dto.review.ReviewUpdateDto;
 import com.ssafy.specialized.domain.entity.*;
 import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -114,7 +115,51 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void updateReview(ReviewDto reviewDto, List<MultipartFile> files) throws IOException {
+    public void updateReview(ReviewUpdateDto reviewUpdateDto, List<MultipartFile> files) throws IOException {
+        String username = SecurityUtil.getLoginUsername();
+        Optional<Review> optReview = reviewRepository.findById(reviewUpdateDto.getIdx());
+        Review review = null;
+        if (optReview.isPresent()){
+            review = optReview.get();
+        }
+        List<ReviewImage> reviewImageList = reviewImageRepository.findAllByReview(review);
+        for (ReviewImage reviewImage: reviewImageList) {
+            File file = new File(reviewImage.getReviewImageUrl());
+            file.delete();
+            reviewImageRepository.delete((reviewImage));
+        }
+        review.setContent(reviewUpdateDto.getContent());
+        review.setCreatedAt(LocalDateTime.now());
+        review.setRating(reviewUpdateDto.getRating());
+        reviewRepository.save(review);
+        if (files.size() >= 1) {
+            for (MultipartFile file : files) {
+                String originalfileName = file.getOriginalFilename();
+                File dest = new File("../../../../../resources/img/reviewImage", username + originalfileName);
+                file.transferTo(dest);
+                ReviewImage reviewImage = ReviewImage.builder()
+                        .review(review)
+                        .reviewImageUrl(username + originalfileName)
+                        .build();
+                reviewImageRepository.save(reviewImage);
+            }
+        }
 
+    }
+
+    @Override
+    public void deleteReview(int pk) throws IOException {
+        Optional<Review> optReview = reviewRepository.findById(pk);
+        Review review = null;
+        if (optReview.isPresent()){
+            review = optReview.get();
+        }
+        List<ReviewImage> reviewImageList = reviewImageRepository.findAllByReview(review);
+        for (ReviewImage reviewImage: reviewImageList) {
+            File file = new File(reviewImage.getReviewImageUrl());
+            file.delete();
+            reviewImageRepository.delete((reviewImage));
+        }
+        reviewRepository.delete(review);
     }
 }

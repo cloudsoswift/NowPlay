@@ -1,5 +1,8 @@
 package com.ssafy.specialized.service;
 
+import com.ssafy.specialized.domain.dto.reservation.ReservationDto;
+import com.ssafy.specialized.domain.dto.reservation.ReservationRequestDto;
+
 public interface ReservationService {
     // 예약 요청을 처리하는 메서드
     ReservationDto reserve(ReservationRequestDto reservationRequestDto);

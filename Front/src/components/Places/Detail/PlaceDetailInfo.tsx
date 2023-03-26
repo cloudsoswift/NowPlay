@@ -1,16 +1,42 @@
+import { GrDocumentText, GrMapLocation } from "react-icons/gr";
+import { ImPhone } from "react-icons/im";
 import { TPlaceDetail } from "../Types";
-
+import { HiOutlineGlobeAlt } from "react-icons/hi";
 type Props = {
-  placeDetail: TPlaceDetail 
+  placeDetail: TPlaceDetail;
 };
-export const PlaceDetailInfo = ({placeDetail}: Props) => {
+export const PlaceDetailInfo = ({ placeDetail }: Props) => {
   return (
-    <div className="">
-      <div>사업장 주소 {placeDetail.address}</div>
-      <div>영업시간 {placeDetail.businessTimes.map((a)=><div>a</div>)}</div>
-      <div>전화 번호{placeDetail.contactNumber}</div>
-      <div>웹사이트 주소{placeDetail.homepage}</div>
-      <div>사업장 사진들 {placeDetail.imageURLs.map((a)=><div>a</div>)}</div>
+    <div className="[&>*]:border-t-2 first:border-t-0">
+      <div className="border-t-0 flex p-2 text-lg items-center first:border-t-0">
+        <GrMapLocation className="mr-2 text-lg" /> {placeDetail.address}
+      </div>
+      <div>
+        영업시간{" "}
+        {placeDetail.businessTimes.map((a) => (
+          <div>a</div>
+        ))}
+      </div>
+      <div className="flex p-2 text-lg items-center">
+        <ImPhone className="mr-2 text-lg" />
+        {placeDetail.contactNumber}
+      </div>
+      <div className="flex p-2 text-lg items-center">
+        <HiOutlineGlobeAlt className="mr-2 text-lg" />
+        {placeDetail.homepage}
+      </div>
+      <div className="flex p-2 text-lg items-center">
+        <GrDocumentText className="mr-2 text-lg" />
+        {placeDetail.description}
+      </div>
+      <div>
+        <div className="text-center">사업장 사진들</div>
+        <div className="grid grid-cols-2">
+          {placeDetail.imageURLs.map((a) => (
+            <div>a</div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

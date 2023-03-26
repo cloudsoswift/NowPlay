@@ -15,18 +15,28 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/place")
+@RequestMapping("/places")
 public class ReviewController {
     @Autowired
     private final ReviewService reviewService;
 
     @PostMapping("/{id}/reviews")
-    public ResponseEntity<ReviewDto> writeReview(@RequestBody ReviewDto reviewDto,
-                                                 @RequestPart ("file") List<MultipartFile> files) throws Exception {
-        reviewService.writeReview(reviewDto, files);
+    public ResponseEntity<ReviewDto> writeReview(@PathVariable int id,
+                                                @RequestBody ReviewDto reviewDto,
+                                                @RequestPart ("file") List<MultipartFile> files) throws Exception {
+        reviewService.writeReview(id, reviewDto, files);
         return ResponseEntity.ok(null);
     }
 
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<?> getReviewList(@PathVariable int id) throws Exception {
+        return ResponseEntity.ok(reviewService.getStoreReviwList(id));
+    }
+
+    @GetMapping("/{id}/review")
+    public ResponseEntity<?> getReview(@PathVariable int id) throws Exception {
+        return ResponseEntity.ok(reviewService.getDetailReviewDto(id));
+    }
 
 
 

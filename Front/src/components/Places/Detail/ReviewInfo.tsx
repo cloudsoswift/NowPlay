@@ -14,7 +14,7 @@ export const Review = ({ review }: ReviewProps) => {
   const date = review.created_at;
   const dateString = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`;
   return (
-    <div className="border p-4 w-full h-[30vh]">
+    <div className="border p-4 w-full h-[30vh] shadow-sm">
       <div>
         <span className="text-lg">{review.nickname}</span>{" "}
         <span className="text-sm">{dateString}</span>{" "}
@@ -23,10 +23,10 @@ export const Review = ({ review }: ReviewProps) => {
           {review.rate}
         </span>
       </div>
-      <div className="grid grid-cols-3 w-full h-[20vh] space-x-2">
+      <div className="flex w-full h-[20vh] space-x-2 flex-col">
         {/* <img src={review.imageURL} alt="" className="max-h-[20vh]" /> */}
-        <PopupImage imageURL={review.imageURL} imageClass="max-h-[20vh] max-w-[20vw]" />
-        <div className="overflow-y-scroll col-span-2">{review.content}</div>
+        <PopupImage imageURL={review.imageURL} imageClass="max-h-[15vh] w-full object-cover" />
+        <div className="overflow-y-scroll">{review.content}</div>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import { ChangeEvent, useRef } from "react";
 import { useSetRecoilState } from "recoil";
-import styled from "styled-components";
 import { motion } from "framer-motion";
 import { filterState } from "../Map";
 

@@ -8,7 +8,7 @@ export const PopupImage = ({ imageURL, imageClass }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className={imageClass}>
-      <img src={imageURL} alt="" className="" onClick={() => setIsOpen(true)} />
+      <img src={imageURL} alt="" className={imageClass} onClick={() => setIsOpen(true)} />
       <Dialog
         open={isOpen}
         onClose={() => setIsOpen(false)}

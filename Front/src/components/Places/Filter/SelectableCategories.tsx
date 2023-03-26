@@ -86,7 +86,7 @@ export const SelectableCategories = (props: sCategoriesProps) => {
                     const isSelected = selectedCategories.some((sC)=>sC.category === sbC.category);
                     return (
                       <SelectableCategory
-                        key={i}
+                        key={`${index}-${i}`}
                         id={i}
                         category={sbC}
                         onClick={setFilter}

@@ -18,7 +18,7 @@ export const PlaceCard = ({ place }: PlaceCardProps) => {
   };
   return (
     <div
-      className="w-full h-[40vh] grid justify-self-center border rounded-xl p-2"
+      className="w-full h-[40vh] grid justify-self-center border rounded-xl p-2 shadow-md"
       onClick={handleClick}
     >
       <img src={`/pics/${place.imageURL}`} alt="" className="h-[25vh] w-full" />

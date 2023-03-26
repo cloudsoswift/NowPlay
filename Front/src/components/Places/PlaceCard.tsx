@@ -5,6 +5,8 @@ import { useEffect, useRef } from "react";
 import { useBottomSheet } from "../../utils/hooks/useBottomSheet";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { StarRating } from "./StarRating";
 
 type PlaceCardProps = {
   place: TPlaceCard;
@@ -16,19 +18,23 @@ export const PlaceCard = ({ place }: PlaceCardProps) => {
   };
   return (
     <div
-      className="w-full h-[40vh] grid justify-self-center border rounded-xl"
+      className="w-full h-[40vh] grid justify-self-center border rounded-xl p-2"
       onClick={handleClick}
     >
-      <img src={`/pics/${place.imageURL}`} alt="" />
-      <div className="grid grid-cols-2">
-        <div>{place.name}</div>
-        <div>{place.subCategory}</div>
+      <img src={`/pics/${place.imageURL}`} alt="" className="h-[25vh] w-full" />
+      <div className="flex space-x-2">
+        <span className="text-xl">{place.name}</span>
+        <span className="text-[var(--gray-color)]">{place.subCategory}</span>
       </div>
       <div>{place.address}</div>
-      <div className="grid grid-cols-3">
-        <div>{place.distance}</div>
-        <div>{place.reviewCount}</div>
-        <div>{place.averageRating}</div>
+      <div className="flex space-x-2 items-center">
+        <div className="text-[var(--primary-color)]">
+          {place.distance < 1
+            ? `${place.distance * 1000}m`
+            : `${place.distance.toFixed(2)}km`}
+        </div>
+        <div>{`리뷰 ${place.reviewCount}개`}</div>
+        <StarRating rating={place.averageRating}/>
       </div>
       <div>{place.isBookmark}</div>
     </div>
@@ -82,8 +88,7 @@ const TEST_DATA: Array<TPlaceCard> = [
   },
 ];
 
-type PlaceCardsProps = {
-};
+type PlaceCardsProps = {};
 
 export const MIN_Y = 120; // 바텀시트가 최대로 높이 올라갔을 때의 y 값
 export const MAX_Y = window.innerHeight - 60; // 바텀시트가 최소로 내려갔을 때의 y 값
@@ -91,14 +96,20 @@ export const BOTTOM_SHEET_HEIGHT = window.innerHeight; // 바텀시트의 세로
 
 export const PlaceCardSheet = (props: PlaceCardsProps) => {
   const { sheet, content } = useBottomSheet();
-  
+
   return (
     <Wrapper ref={sheet}>
       <div className="h-12 rounded-t-lg pt-4 pb-1" id="bottomSheetHeader">
         <div className="w-8 h-1 rounded-sm m-auto bg-slate-500"></div>
       </div>
-      <div id="bottomSheetContent" className="overflow-auto p-4" ref={content}>
-        {TEST_DATA.map((data)=><PlaceCard key={data.id} place={data} />)}
+      <div
+        id="bottomSheetContent"
+        className="overflow-auto p-4 space-y-4"
+        ref={content}
+      >
+        {TEST_DATA.map((data) => (
+          <PlaceCard key={data.id} place={data} />
+        ))}
       </div>
     </Wrapper>
   );
@@ -116,5 +127,5 @@ const Wrapper = styled(motion.div)`
   border-top-right-radius: 8px;
   background-color: #fff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
-  height: ${BOTTOM_SHEET_HEIGHT}px;
+  height: ${BOTTOM_SHEET_HEIGHT - MIN_Y}px;
 `;

@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OwnerCommentRepository extends JpaRepository<OwnerComment, Integer> {
 
-    OwnerComment findByReivew(Review review);
+    OwnerComment findByReview(Review review);
 }

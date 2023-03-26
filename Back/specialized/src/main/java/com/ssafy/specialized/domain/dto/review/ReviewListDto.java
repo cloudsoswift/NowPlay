@@ -19,5 +19,5 @@ public class ReviewListDto {
     private LocalDateTime createdAt;
     private boolean reviewIsHidden;
     private List<ReviewImage> reviewImages;
-    private OwnerComment ownerComments;
+    private OwnerComment ownerComment;
 }

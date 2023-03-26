@@ -4,10 +4,7 @@ import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.review.ResponReviewsDto;
 import com.ssafy.specialized.domain.dto.review.ReviewDto;
 import com.ssafy.specialized.domain.dto.review.ReviewListDto;
-import com.ssafy.specialized.domain.entity.Review;
-import com.ssafy.specialized.domain.entity.ReviewImage;
-import com.ssafy.specialized.domain.entity.Store;
-import com.ssafy.specialized.domain.entity.User;
+import com.ssafy.specialized.domain.entity.*;
 import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -95,7 +92,8 @@ public class ReviewServiceImpl implements ReviewService {
             reviewListDto.setCreatedAt(review.getCreatedAt());
             reviewListDto.setReviewIsHidden(review.isHidden());
             reviewListDto.setReviewImages(reviewImagelist);
-            reviewListDto.setOwnerComments(ownerCommentRepository.findByReivew(review));
+            Optional<OwnerComment> ownerComment = Optional.ofNullable(ownerCommentRepository.findByReview(review));
+            reviewListDto.setOwnerComment(ownerComment.get());
             responlist.add(reviewListDto);
             }
         ResponReviewsDto responReviewsDto = new ResponReviewsDto();

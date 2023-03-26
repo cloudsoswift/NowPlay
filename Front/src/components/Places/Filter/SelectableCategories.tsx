@@ -58,9 +58,6 @@ const selectedCategoryClass = "border-b-2 border-b-[var(--primary-color)]";
 export const SelectableCategories = (props: sCategoriesProps) => {
   const [{ categories, selectedCategories }, setFilter] = useRecoilState(filterState);
   const [subCategories, setSubcategories] = useState<subCategoryList>();
-  useEffect(() => {
-    console.log(subCategories);
-  }, [subCategories]);
   return (
     <div className="bg-white border-2 rounded-xl p-2 grid grid-cols-3">
       {categories.map((category, index) => {

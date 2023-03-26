@@ -10,7 +10,7 @@ type BottomSheetMetrics = {
     prevTouchY?: number; // 다음 touchmove 이벤트 핸들러에서 필요한 터치 포인트 Y값을 저장
     movingDirection: "none" | "down" | "up"; // 유저가 touch를 움직이고 있는 방향
   }
-  isContentAreaTouched: boolean; // 컨텐츠 영역을 터치하고 있음을 기록
+  isContentAreTouched: boolean; // 컨텐츠 영역을 터치하고 있음을 기록
 }
 const initialMetrics:BottomSheetMetrics = {
   touchStart: {
@@ -21,7 +21,7 @@ const initialMetrics:BottomSheetMetrics = {
     prevTouchY: 0,
     movingDirection: "none",
   },
-  isContentAreaTouched: false,
+  isContentAreTouched: false,
 };
 export const useBottomSheet = () => {
   const sheet = useRef<HTMLDivElement>(null);
@@ -29,18 +29,17 @@ export const useBottomSheet = () => {
   const metrics = useRef<BottomSheetMetrics>(initialMetrics);
   useEffect(()=>{
     const canUserMoveBottomSheet = () => {
-      const { touchMove, isContentAreaTouched } = metrics.current;
+      const { touchMove, isContentAreTouched } = metrics.current;
       // 바텀 시트에서 컨텐츠 영역이 아닌 부분을 터치하면 항상 바텀 시트 움직임.
       
-      if(!isContentAreaTouched) {
+      if(!isContentAreTouched) {
         return true;
       }
       
       // 바텀 시트가 올라와 있는 상태가 아닐 때는 컨텐츠 영역 터치해도 바텀 시트 움직임
-      if(sheet.current?.getBoundingClientRect().y !== 60) {
+      if(sheet.current?.getBoundingClientRect().y !== MIN_Y/2) {
         return true;
       }
-      
       
       if(touchMove.movingDirection === 'down') {
         // 스크롤 더 올릴거 없으면, 바텀 시트 움직이도록
@@ -70,7 +69,6 @@ export const useBottomSheet = () => {
       if(touchMove.prevTouchY < currentTouch.clientY){
         touchMove.movingDirection = 'down';
       }
-      console.log(touchMove.prevTouchY, currentTouch.clientY);
       if(touchMove.prevTouchY > currentTouch.clientY){
         touchMove.movingDirection = 'up';
       }
@@ -98,16 +96,13 @@ export const useBottomSheet = () => {
       const {touchMove} = metrics.current;
       // Snap Animation
       const currentSheetY = sheet.current?.getBoundingClientRect().y;
-      console.log(currentSheetY, MAX_Y);
       
-      if(currentSheetY !== MIN_Y){
+      if(currentSheetY !== MIN_Y/2){
         if(touchMove.movingDirection === 'down'){
-          console.log("다운",currentSheetY, MAX_Y);
           sheet.current?.style.setProperty('transform', 'translateY(0)');
         }
         if(touchMove.movingDirection === 'up') {
-          console.log("업",currentSheetY, MAX_Y);
-          // sheet.current?.style.setProperty('transform', `translateY(-${MAX_Y}px)`);
+          sheet.current?.style.setProperty('transform', `translateY(${MIN_Y - MAX_Y}px)`);
         }
       }
       // metrics 초기화
@@ -125,7 +120,7 @@ export const useBottomSheet = () => {
   }, [])
   useEffect(()=> {
     const handleTouchStart = () => {
-      metrics.current.isContentAreaTouched = true;
+      metrics.current.isContentAreTouched = true;
     }
     content.current?.addEventListener('touchstart', handleTouchStart);
     return () => content.current?.removeEventListener('touchstart', handleTouchStart);

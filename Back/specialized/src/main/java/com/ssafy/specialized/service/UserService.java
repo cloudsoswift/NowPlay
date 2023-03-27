@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserService {
     void updateUserHobby(UpdateUserHobbyRequestDto updateUserHobbyRequestDto);
     void signUp(SignUpRequestDto signUpRequestDto);
-    int checkIdDuplication(String userId);
+    int checkIdDuplication();
     List<Bookmark> getMyBookmarkList();
     List<Review> getMyReviewList();
 

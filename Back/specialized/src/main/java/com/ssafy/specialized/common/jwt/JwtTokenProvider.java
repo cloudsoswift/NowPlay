@@ -36,15 +36,17 @@ public class JwtTokenProvider {
     }
 
     // 토큰 생성 설정
-    public TokenDTO generateToken(Authentication authentication) {
+    public TokenDTO generateToken(Authentication authentication, String userId) {
+        if (userId == null) {
+            this.parseClaims(authentication.toString()).getSubject();
+        }
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-
         long now = (new Date()).getTime();
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(userId)
                 .claim("auth", authorities)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -100,7 +102,7 @@ public class JwtTokenProvider {
 
     // 토큰 파싱하기
     private Claims parseClaims(String accessToken) {
-        try{
+        try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();

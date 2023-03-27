@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { BiSearch } from "react-icons/bi";
-import { PropsWithChildren, useState, useEffect } from "react";
+import React, { PropsWithChildren, useState, useEffect } from "react";
 
 interface SearchBarType {
   innerPlaceHolder: string;
@@ -10,9 +10,14 @@ interface SearchBarType {
 }
 
 const Search = ({ innerPlaceHolder, searchId, submit, valueText, children }: PropsWithChildren<SearchBarType>) => {
+  const onChangeSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
+    valueText(e.target.value)
+  }
+
+
   return (
     <SearchBar>
-      <SearchBarInput id={searchId} placeholder={innerPlaceHolder}/>
+      <SearchBarInput id={searchId} placeholder={innerPlaceHolder} onChange={onChangeSubmit} />
       <button onClick={(e: React.MouseEvent) => {
           e.preventDefault();
           submit()

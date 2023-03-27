@@ -3,10 +3,7 @@ package com.ssafy.specialized.domain.entity;
 import com.ssafy.specialized.common.enums.AlarmType;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,9 +16,11 @@ public class Alarm {
 
     @Id
     @GeneratedValue
+    @Column(name = "alarm")
     private int idx;
 
     @ManyToOne
+    @JoinColumn(name = "sender")
     private User sender;
 
     @ManyToOne

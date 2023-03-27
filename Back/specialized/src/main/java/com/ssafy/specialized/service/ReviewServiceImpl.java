@@ -1,15 +1,12 @@
 package com.ssafy.specialized.service;
 
 import com.ssafy.specialized.common.security.SecurityUtil;
+import com.ssafy.specialized.domain.dto.review.ResponReviewsDto;
 import com.ssafy.specialized.domain.dto.review.ReviewDto;
-import com.ssafy.specialized.domain.entity.Review;
-import com.ssafy.specialized.domain.entity.ReviewImage;
-import com.ssafy.specialized.domain.entity.Store;
-import com.ssafy.specialized.domain.entity.User;
-import com.ssafy.specialized.repository.ReviewImageRepository;
-import com.ssafy.specialized.repository.ReviewRepository;
-import com.ssafy.specialized.repository.StoreRepository;
-import com.ssafy.specialized.repository.UserRepository;
+import com.ssafy.specialized.domain.dto.review.ReviewListDto;
+import com.ssafy.specialized.domain.dto.review.ReviewUpdateDto;
+import com.ssafy.specialized.domain.entity.*;
+import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 
 @Slf4j
 @Service
@@ -34,16 +33,19 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewImageRepository reviewImageRepository;
 
     @Autowired
+    private final OwnerCommentRepository ownerCommentRepository;
+
+    @Autowired
     private final UserRepository userRepository;
 
     @Autowired
     private final StoreRepository storeRepository;
 
     @Override
-    public void writeReview(ReviewDto reviewDto, List<MultipartFile> files) throws IOException {
+    public void writeReview(int id, ReviewDto reviewDto, List<MultipartFile> files) throws IOException {
         String username = SecurityUtil.getLoginUsername();
         User user = userRepository.findByName(username);
-        Optional<Store> optStore = storeRepository.findById(reviewDto.getStore());
+        Optional<Store> optStore = storeRepository.findById(id);
         Store store = null;
         if (optStore.isPresent()) {
             store = optStore.get();
@@ -53,24 +55,111 @@ public class ReviewServiceImpl implements ReviewService {
                 .writer(user)
                 .store(store)
                 .content(reviewDto.getContent())
-                .rating(reviewDto.getRationg())
+                .rating(reviewDto.getRating())
                 .createdAt(LocalDateTime.now())
                 .isHidden(reviewDto.isHidden())
                 .build();
         review = reviewRepository.save(review);
+        if (files.size() >= 1) {
+            for (MultipartFile file : files) {
+                String originalfileName = file.getOriginalFilename();
+                File dest = new File("../../../../../resources/img/reviewImage", username + originalfileName);
+                file.transferTo(dest);
+                ReviewImage reviewImage = ReviewImage.builder()
+                        .review(review)
+                        .reviewImageUrl(username + originalfileName)
+                        .build();
+                reviewImageRepository.save(reviewImage);
+            }
+        }
+    }
 
-        for(MultipartFile file : files){
-            String originalfileName = file.getOriginalFilename();
-            File dest = new File("../../../../../resources/reviewImage",username+originalfileName);
-            file.transferTo(dest);
+    @Override
+    public ResponReviewsDto getStoreReviwList(int storePk) {
+        Optional<Store> optStore = storeRepository.findById(storePk);
+        Store store = null;
+        if (optStore.isPresent()){
+            store = optStore.get();
+        }
+        List<Review> list = reviewRepository.findAllByStore(store);
+        List<ReviewListDto> responlist = new ArrayList<>();
+        for (Review review : list) {
+            List<ReviewImage> reviewImagelist = reviewImageRepository.findAllByReview(review);
+            ReviewListDto reviewListDto = new ReviewListDto();
+            reviewListDto.setReviewIndex(review.getIdx());
+            reviewListDto.setWriter(review.getWriter());
+            reviewListDto.setReviewContent(review.getContent());
+            reviewListDto.setReviewRate(review.getRating());
+            reviewListDto.setCreatedAt(review.getCreatedAt());
+            reviewListDto.setReviewIsHidden(review.isHidden());
+            reviewListDto.setReviewImages(reviewImagelist);
+            Optional<OwnerComment> ownerComment = Optional.ofNullable(ownerCommentRepository.findByReview(review));
+            reviewListDto.setOwnerComment(ownerComment.get());
+            responlist.add(reviewListDto);
+            }
+        ResponReviewsDto responReviewsDto = new ResponReviewsDto();
+        responReviewsDto.setReviewListDto(responlist);
+        responReviewsDto.setTotalReviewCount(list.size());
 
-            ReviewImage reviewImage = ReviewImage.builder()
-                    .review(review)
-                    .reviewImageUrl(username+originalfileName)
-                    .build();
-            reviewImageRepository.save(reviewImage);
+        return responReviewsDto;
+    }
+
+    @Override
+    public Review getDetailReviewDto(int pk) {
+        Optional<Review> optReview = reviewRepository.findById(pk);
+        Review review = null;
+        if (optReview.isPresent()){
+            review = optReview.get();
+        }
+        return review;
+    }
+
+    @Override
+    public void updateReview(ReviewUpdateDto reviewUpdateDto, List<MultipartFile> files) throws IOException {
+        String username = SecurityUtil.getLoginUsername();
+        Optional<Review> optReview = reviewRepository.findById(reviewUpdateDto.getIdx());
+        Review review = null;
+        if (optReview.isPresent()){
+            review = optReview.get();
+        }
+        List<ReviewImage> reviewImageList = reviewImageRepository.findAllByReview(review);
+        for (ReviewImage reviewImage: reviewImageList) {
+            File file = new File(reviewImage.getReviewImageUrl());
+            file.delete();
+            reviewImageRepository.delete((reviewImage));
+        }
+        review.setContent(reviewUpdateDto.getContent());
+        review.setCreatedAt(LocalDateTime.now());
+        review.setRating(reviewUpdateDto.getRating());
+        reviewRepository.save(review);
+        if (files.size() >= 1) {
+            for (MultipartFile file : files) {
+                String originalfileName = file.getOriginalFilename();
+                File dest = new File("../../../../../resources/img/reviewImage", username + originalfileName);
+                file.transferTo(dest);
+                ReviewImage reviewImage = ReviewImage.builder()
+                        .review(review)
+                        .reviewImageUrl(username + originalfileName)
+                        .build();
+                reviewImageRepository.save(reviewImage);
+            }
         }
 
+    }
 
+    @Override
+    public void deleteReview(int pk) throws IOException {
+        Optional<Review> optReview = reviewRepository.findById(pk);
+        Review review = null;
+        if (optReview.isPresent()){
+            review = optReview.get();
+        }
+        List<ReviewImage> reviewImageList = reviewImageRepository.findAllByReview(review);
+        for (ReviewImage reviewImage: reviewImageList) {
+            File file = new File(reviewImage.getReviewImageUrl());
+            file.delete();
+            reviewImageRepository.delete((reviewImage));
+        }
+        reviewRepository.delete(review);
     }
 }

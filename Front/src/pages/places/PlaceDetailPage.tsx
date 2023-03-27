@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import { Link } from 'react-router-dom';
 import { PlaceDetailInfo } from '../../components/Places/Detail/PlaceDetailInfo';
 import { PlaceMapInfo } from '../../components/Places/Detail/PlaceMapInfo';
 import { ReviewInfo } from '../../components/Places/Detail/ReviewInfo';
@@ -37,7 +38,7 @@ export const PlaceDetailPage = (props: Props) => {
         <div className='text-3xl text-center'>{TEST_DATA.name}</div>
         <StarRating rating={TEST_DATA.averageRating} className={"justify-center"}/>
         <div className="flex justify-center">
-        <button className="w-full border my-2">예약</button>
+        <Link to="reservation" className="w-full border my-2 text-center">예약</Link>
         </div>
       </div>
       <div className="flex justify-center border-y-2 [&>*]:mx-2">

@@ -5,6 +5,7 @@ import { PlaceCardSheet } from "./PlaceCard";
 import { IoReorderThree } from "react-icons/io5";
 import type { TFilter } from "./Types";
 import * as json from "./Filter/categories.json";
+import { AnimatePresence } from "framer-motion";
 
 type Props = {};
 
@@ -51,15 +52,17 @@ export const Map = (props: Props) => {
       <button
         className="absolute top-12 left-1/2 -translate-x-1/2 border-2 border-black bg-white rounded-full"
         onClick={handleFilterToggle}
-        >
+      >
         <IoReorderThree className="text-3xl" />
       </button>
-      {isFilterShown && (
-        <Filter
-        className="w-screen h-[50vh] bg-white border-2 rounded-b-lg absolute top-12 left-0 overflow-y-auto p-4 space-y-2"
-        onClose={setIsFilterShown}
-        />
-      )}
+      <AnimatePresence initial={false}>
+        {isFilterShown && (
+          <Filter
+            className="w-screen h-[50vh] bg-white border-2 rounded-b-lg absolute top-12 left-0 overflow-y-auto p-4 space-y-2"
+            onClose={setIsFilterShown}
+          />
+        )}
+      </AnimatePresence>
       {/* <button
         className="absolute bottom-20 left-1/2 -translate-x-1/2 border-2 border-black"
         onClick={handleCardListToggle}

@@ -9,16 +9,9 @@ export const DistanceSlider = (props: Props) => {
   const setFilter = useSetRecoilState(filterState);
   const draggableArea = useRef<HTMLDivElement>(null);
   const draggableTarget = useRef<HTMLDivElement>(null);
-  const handleDistanceChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
-    setFilter((prevData) => {
-      return {
-        ...prevData,
-        distance: Number(e.target.value),
-      };
-    });
-  };
   const modifyTarget = (target: number) => {
+    let pos = 0;
+    let distance = 1;
     if (draggableArea.current && draggableTarget.current) {
       const appRect = draggableArea.current.getBoundingClientRect();
       const pipRect = draggableTarget.current.getBoundingClientRect();
@@ -28,18 +21,29 @@ export const DistanceSlider = (props: Props) => {
       console.log(target);
       // console.log(appRect, pipRect, pipMiddleX, pipMiddleY);
       if (pipMiddleX < divider) {
-        return 0;
+        pos = 0;
+        distance = 1;
       } else if (pipMiddleX >= divider && pipMiddleX < spot + divider){
-        return spot - pipRect.width / 2;
+        pos = spot - pipRect.width / 2;
+        distance = 5;
       } else if (pipMiddleX >= spot + divider && pipMiddleX < spot * 2 + divider){
-        return (spot - pipRect.width / 4) * 2;
+        pos = (spot - pipRect.width / 4) * 2;
+        distance = 10;
       } else if (pipMiddleX >= spot * 2 + divider && pipMiddleX < spot * 3 + divider){
-        return (spot  - pipRect.width / 6 ) * 3;
+        pos = (spot  - pipRect.width / 6 ) * 3;
+        distance = 15;
       } else if (pipMiddleX >= spot * 3 + divider && pipMiddleX < spot * 4 + divider) {
-        return (spot  - pipRect.width / 8 ) * 4;
+        pos = (spot  - pipRect.width / 8 ) * 4;
+        distance = 20;
       }
     }
-    return 0;
+    setFilter((prevData) => {
+      return {
+        ...prevData,
+        distance,
+      };
+    });
+    return pos;
   };
   return (
     <div className="grid grid-cols-1 w-full border rounded-xl p-2">

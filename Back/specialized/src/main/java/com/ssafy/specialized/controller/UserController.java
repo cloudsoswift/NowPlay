@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -37,7 +38,10 @@ public class UserController {
         login.setUserId(signUpRequestDto.getUserId());
         login.setUserPassword(signUpRequestDto.getUserPassword());
         LoginResponseDto loginResponseDto = userService.login(login);
-        response.addHeader("Set-Cookie", loginResponseDto.getRefreshToken().toString());
+        Cookie cookie = new Cookie("refreshToken", loginResponseDto.getRefreshToken().toString());
+        cookie.setMaxAge(3600);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
         loginResponseDto.setRefreshToken(null);
         return ResponseEntity.ok(loginResponseDto);
     }

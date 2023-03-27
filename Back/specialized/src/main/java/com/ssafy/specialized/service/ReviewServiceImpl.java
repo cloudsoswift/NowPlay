@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.acl.Owner;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,10 +61,10 @@ public class ReviewServiceImpl implements ReviewService {
                 .isHidden(reviewDto.isHidden())
                 .build();
         review = reviewRepository.save(review);
-        if (files.size() >= 1) {
+        if (files != null) {
             for (MultipartFile file : files) {
                 String originalfileName = file.getOriginalFilename();
-                File dest = new File("../../../../../resources/img/reviewImage", username + originalfileName);
+                File dest = new File("../../../../../resources/img/reviewImage/", username + originalfileName);
                 file.transferTo(dest);
                 ReviewImage reviewImage = ReviewImage.builder()
                         .review(review)
@@ -94,8 +95,12 @@ public class ReviewServiceImpl implements ReviewService {
                 reviewListDto.setCreatedAt(review.getCreatedAt());
                 reviewListDto.setReviewIsHidden(review.isHidden());
                 reviewListDto.setReviewImages(reviewImagelist);
-                Optional<OwnerComment> ownerComment = Optional.ofNullable(ownerCommentRepository.findByReview(review));
-                reviewListDto.setOwnerComment(ownerComment.get());
+                Optional<OwnerComment> optownerComment = Optional.ofNullable(ownerCommentRepository.findByReview(review));
+                OwnerComment ownerComment = null;
+                if (optownerComment.isPresent()){
+                    ownerComment = optownerComment.get();
+                }
+                reviewListDto.setOwnerComment(ownerComment);
                 responlist.add(reviewListDto);
             }
         }

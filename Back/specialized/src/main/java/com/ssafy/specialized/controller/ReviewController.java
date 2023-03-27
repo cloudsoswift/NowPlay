@@ -2,8 +2,7 @@ package com.ssafy.specialized.controller;
 
 import com.ssafy.specialized.domain.dto.review.ReviewDto;
 import com.ssafy.specialized.service.ReviewService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @RestController
 @Slf4j
@@ -23,12 +21,18 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping("/{id}/reviews")
-    public ResponseEntity<ReviewDto> writeReview(
-                                                @PathVariable int id,
-                                                @RequestBody ReviewDto reviewDto,
-                                                @RequestPart ("file") List<MultipartFile> files) throws Exception {
-
-        reviewService.writeReview(id, reviewDto, files);
+    public ResponseEntity<?> writeReview(
+                                            @PathVariable int id,
+                                            @RequestParam String content,
+                                            @RequestParam int rating,
+                                            @RequestParam boolean isHidden,
+                                            @RequestPart (name = "files", required = false) MultipartFile[] files) throws Exception {
+        System.out.println(files);
+        ReviewDto reviewDto = new ReviewDto();
+        reviewDto.setContent(content);
+        reviewDto.setHidden(isHidden);
+        reviewDto.setRating(rating);
+//        reviewService.writeReview(id, reviewDto, files);
         return ResponseEntity.ok(null);
     }
 

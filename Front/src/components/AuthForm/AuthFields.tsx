@@ -100,6 +100,7 @@ const FormBox = styled.form`
   max-width: 500px;
   padding: 40px;
   margin: 20px;
+  background-color: var(--body-color);
   border-radius: 10px;
   box-shadow: 10px 10px 10px var(--gray-color-light);
 

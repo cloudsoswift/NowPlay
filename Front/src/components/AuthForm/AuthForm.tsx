@@ -85,7 +85,7 @@ const SignupAuthForm = () => {
         <Field type='text' name='email' />
         <CheckBoxField type='checkbox' name='agree' />
         
-        <SubmitButton type='submit' disabled={true}>회원가입</SubmitButton>
+        <SubmitButton type='submit'>회원가입</SubmitButton>
       </Form>
     );
 };

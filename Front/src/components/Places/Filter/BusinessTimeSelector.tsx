@@ -31,7 +31,7 @@ export const BusinessTimeSelector = (props: Props) => {
           </option>
         }
         {
-          <option value={0} disabled={nowMinute > 30}>
+          <option value={0} disabled={nowMinute > 30 && hour <= nowHour}>
             30
           </option>
         }

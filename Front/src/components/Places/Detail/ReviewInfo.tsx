@@ -2,6 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { AiFillStar } from "react-icons/ai";
 import { HiPencilAlt } from "react-icons/hi";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 import { PopupImage } from "../PopupImage";
 import { TReview } from "../Types";
 
@@ -26,7 +27,7 @@ export const Review = ({ review }: ReviewProps) => {
       <div className="flex w-full h-[20vh] space-x-2 flex-col">
         {/* <img src={review.imageURL} alt="" className="max-h-[20vh]" /> */}
         <PopupImage imageURL={review.imageURL} imageClass="max-h-[15vh] w-full object-cover" />
-        <div className="overflow-y-scroll">{review.content}</div>
+        <ReviewBox>{review.content}</ReviewBox>
       </div>
     </div>
   );
@@ -81,3 +82,10 @@ export const ReviewInfo = (props: ReviewInfoProps) => {
     </div>
   );
 };
+
+const ReviewBox = styled.div`
+display: -webkit-box;
+-webkit-box-orient: vertical;
+-webkit-line-clamp: 2;
+overflow: hidden;
+`

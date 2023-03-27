@@ -10,17 +10,19 @@ const OwnerTopbar = () => {
   };
 
   const [Cookie] = useCookies(["accessToken"]);
-  
+
   return (
     <>
-      {Cookie.accessToken !== undefined ? (
-        <TopbarContainer>
-          <div>사장님</div>
-          <div>
-            <button onClick={logoutHandler}>로그아웃</button>
-          </div>
-        </TopbarContainer>
-      ) : null}
+      <TopbarContainer>
+        {Cookie.accessToken !== undefined ? (
+          <>
+            <div>사장님</div>
+            <div>
+              <button onClick={logoutHandler}>로그아웃</button>
+            </div>
+          </>
+        ) : null}
+      </TopbarContainer>
     </>
   );
 };

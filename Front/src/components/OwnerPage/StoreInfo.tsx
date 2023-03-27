@@ -141,6 +141,8 @@ const StoreImageContainer = styled.div`
   padding: 10px;
   margin-bottom: 10px;
 
+  cursor: grab;
+
   animation: ${faidIn} 1s ease;
 
   flex-wrap: nowrap;

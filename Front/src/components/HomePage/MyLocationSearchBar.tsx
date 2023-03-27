@@ -1,8 +1,9 @@
 import styled, { keyframes } from "styled-components";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 import Search from "../SearchPage/Search";
 import Aim from "../../svg/aim.svg";
 import Vector from "../../svg/vector.svg";
+import { List } from "postcss/lib/list";
 
 interface ModalType {
   onClickToggleMap: () => void;
@@ -14,9 +15,64 @@ const MyLocationSearchBar = ({
   isMap,
   children,
 }: PropsWithChildren<ModalType>) => {
+  const [searchMapLog, setSearchMapLog] = useState<List>();
+
+  function searchAddressToCoordinate(address: string) {
+    naver.maps.Service.geocode(
+      {
+        query: address,
+      },
+      function (status, response) {
+        if (status === naver.maps.Service.Status.ERROR) {
+          return alert("Something Wrong!");
+        }
+        if (response.v2.meta.totalCount === 0) {
+          return alert("올바른 주소를 입력해주세요.");
+        }
+        var htmlAddresses = [],
+          item = response.v2.addresses[0]
+        if (item.roadAddress) {
+          htmlAddresses.push("[도로명 주소] " + item.roadAddress);
+        }
+        if (item.jibunAddress) {
+          htmlAddresses.push("[지번 주소] " + item.jibunAddress);
+        }
+        if (item.englishAddress) {
+          htmlAddresses.push("[영문명 주소] " + item.englishAddress);
+        }
+
+        console.log(item)
+      }
+    );
+  }
+
+  // function insertAddress(address: string, latitude: number, longitude: number) {
+  //   var mapList = "";
+  //   mapList += "<tr>";
+  //   mapList += "	<td>" + address + "</td>";
+  //   mapList += "	<td>" + latitude + "</td>";
+  //   mapList += "	<td>" + longitude + "</td>";
+  //   mapList += "</tr>";
+
+  //   $("#mapList").append(mapList);
+
+  //   var map = new naver.maps.Map("map", {
+  //     center: new naver.maps.LatLng(longitude, latitude),
+  //     zoom: 14,
+  //   });
+  //   var marker = new naver.maps.Marker({
+  //     map: map,
+  //     position: new naver.maps.LatLng(longitude, latitude),
+  //   });
+  // }
+
+  const searchSubmit = () => {
+    searchAddressToCoordinate($('#address').val());
+  }
+
   return (
     <MyBar isMap={isMap}>
-      <Search />
+      <Search innerPlaceHolder="지번, 도로명으로 검색" searchId='address' submit={searchSubmit} />
       <GoToMap
         onClick={(e: React.MouseEvent) => {
           e.preventDefault();

@@ -97,3 +97,4 @@ const MainBox = styled.div`
 const TitleBox = styled.div`
   width: 100%;
 `;
+

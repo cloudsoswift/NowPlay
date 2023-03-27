@@ -12,6 +12,7 @@ import styled from "styled-components";
 import { PlacesPage } from "./pages/places/PlacesPage";
 import { PlaceDetailPage } from "./pages/places/PlaceDetailPage";
 import { PlaceReviewWritePage } from "./pages/places/PlaceReviewWritePage";
+import { PlaceReservationPage } from "./pages/places/PlaceReservationPage";
 
 function Mobile() {
   return (
@@ -36,6 +37,7 @@ function Mobile() {
           </Route>
           <Route path="/places" element={<PlacesPage />} />
           <Route path="/places/:id" element={<PlaceDetailPage />} />
+          <Route path="/places/:id/reservation" element={<PlaceReservationPage />} />
           {/* <Route element={<PrivateRoute authentication={true} type="mobile" />}> */}
             <Route path="/places/:id/review" element={<PlaceReviewWritePage />} />
           {/* </Route> */}

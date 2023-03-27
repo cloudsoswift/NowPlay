@@ -48,7 +48,7 @@ const DeskBackground = styled.div`
 const DesktopContainer = styled.div`
   margin-left: 260px;
   padding-right: 20px;
-  margin-top: 50px;
+  margin-top: 70px;
   min-height: calc(100vh - 50px);
   padding-bottom: 20px;
 `;

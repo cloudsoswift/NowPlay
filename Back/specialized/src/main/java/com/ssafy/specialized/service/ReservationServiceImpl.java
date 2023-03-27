@@ -1,5 +1,6 @@
 package com.ssafy.specialized.service;
 
+import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.reservation.ReservationDto;
 import com.ssafy.specialized.domain.dto.reservation.ReservationRequestDto;
 import com.ssafy.specialized.domain.entity.Reservation;
@@ -20,55 +21,62 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
-    private final ModelMapper modelMapper;
 
     @Autowired
     public ReservationServiceImpl(ReservationRepository reservationRepository, UserRepository userRepository, StoreRepository storeRepository, ModelMapper modelMapper) {
         this.reservationRepository = reservationRepository;
         this.userRepository = userRepository;
         this.storeRepository = storeRepository;
-        this.modelMapper = modelMapper;
     }
-
     @Override
-    public ReservationDto reserve(ReservationRequestDto reservationRequestDto) {
-        // 예약자, 가게 정보 가져오기
-        User reserver = userRepository.findById(reservationRequestDto.getReserverIdx())
-                .orElseThrow(() -> new IllegalArgumentException("예약자 정보가 없습니다."));
-        Store store = storeRepository.findById(reservationRequestDto.getStoreIdx())
+    public ReservationDto createReservation(ReservationRequestDto reservationRequestDto) {
+        int storeIdx = reservationRequestDto.getStoreIdx();
+        String username = SecurityUtil.getLoginUsername();
+        // 누가 로그인 했지?
+        System.out.println(username);
+        User reserver = userRepository.findByName(username);
+        Store store = storeRepository.findById(storeIdx)
                 .orElseThrow(() -> new IllegalArgumentException("가게 정보가 없습니다."));
 
-        // 예약 정보 생성 및 저장
-        Reservation reservation = modelMapper.map(reservationRequestDto, Reservation.class);
-        reservation.setReserver(reserver);
-        reservation.setStore(store);
-        reservation.setCreatedAt(LocalDateTime.now());
-        reservation.setConfirmed(false);
+        User storeOwner = store.getOwner();
+
+        Reservation reservation = Reservation.builder()
+                .reserver(reserver)
+                .store(store)
+                .history(reservationRequestDto.getHistory())
+                .time(reservationRequestDto.getTime())
+                .createdAt(LocalDateTime.now())
+                .isConfirmed(false)
+                .build();
         reservationRepository.save(reservation);
 
-        return modelMapper.map(reservation, ReservationDto.class);
+        // 예약 알림 메시지 생성 및 저장
+//        String message = String.format("%s님이 %s에 예약 요청을 보냈습니다.", reserver.getName(), store.getName());
+//        Notification reservationNotification = Notification.builder()
+//                .user(storeOwner)
+//                .message(message)
+//                .link("/store/" + storeId + "/reservation")
+//                .checked(false)
+//                .createdAt(LocalDateTime.now())
+//                .build();
+//        notificationRepository.save(reservationNotification);
+
+        return new ReservationDto(
+                reservation.getIdx(),
+                reservation.getHistory(),
+                reservation.getReserver().getIdx(),
+                reservation.getStore().getIdx(),
+                reservation.getTime(),
+                reservation.isConfirmed(),
+                reservation.getCreatedAt()
+        );
     }
 
-    @Override
-    public ReservationDto getReservation(int reservationIdx) {
-        Reservation reservation = reservationRepository.findById(reservationIdx)
-                .orElseThrow(() -> new IllegalArgumentException("해당 예약 정보가 없습니다."));
-
-        return modelMapper.map(reservation, ReservationDto.class);
-    }
 
     @Override
-    public ReservationDto updateReservation(int reservationIdx, ReservationRequestDto reservationRequestDto) {
-        Reservation reservation = reservationRepository.findById(reservationIdx)
+    public Reservation getReservation(int reservationIdx) {
+        return reservationRepository.findById(reservationIdx)
                 .orElseThrow(() -> new IllegalArgumentException("해당 예약 정보가 없습니다."));
-
-        // 예약 내용 업데이트
-        reservation.setHistory(reservationRequestDto.getHistory());
-        reservation.setTime(reservationRequestDto.getTime());
-
-        reservationRepository.save(reservation);
-
-        return modelMapper.map(reservation, ReservationDto.class);
     }
 
     @Override

@@ -21,13 +21,14 @@ public class Reservation {
     @GeneratedValue
     private int idx;
 
+    private String history;
+
     @ManyToOne
     private User reserver;
 
     @ManyToOne
     private Store store;
 
-    private String history;
 
     private LocalDateTime time;
 

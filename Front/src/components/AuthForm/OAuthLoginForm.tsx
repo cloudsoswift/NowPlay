@@ -2,13 +2,6 @@ import { useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-declare global {
-  interface Window {
-    Kakao: any;
-    naver: any;
-    google: any;
-  }
-}
 
 const OAuthLoginForm = () => {
   const oAuthPath = useLocation()
@@ -26,7 +19,7 @@ const OAuthLoginForm = () => {
       clientId: "FL_dHs6b8BOH36DPExe3",
       callbackUrl: "http://127.0.0.1:5173/?naver",
       isPopup: false,
-      loginButton: { color: "green", type: 1, height: "40" },
+      loginButton: { color: "green", type: 2 },
     });
     naverLogin.init();
   };
@@ -41,21 +34,7 @@ const OAuthLoginForm = () => {
 
   return (
     <>
-      <h1>OAuth로그인</h1>
       <NaverLoginImage id='naverIdLogin' />
-      <div id="g_id_onload"
-         data-client_id="1054906647598-q9ths8aaoid5kbdaoi336gb1sooh0fbo.apps.googleusercontent.com"
-         data-login_uri="http://127.0.0.1:5173/"
-         data-auto_prompt="false">
-      </div>
-      <div className="g_id_signin"
-         data-type="standard"
-         data-size="large"
-         data-theme="outline"
-         data-text="sign_in_with"
-         data-shape="rectangular"
-         data-logo_alignment="left">
-      </div>
     </>
   );
 };

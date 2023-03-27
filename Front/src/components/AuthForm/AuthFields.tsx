@@ -1,33 +1,33 @@
 import styled, { keyframes } from "styled-components";
-import { createContext, useContext } from "react";
-import useForm from "../../utils/hooks/useForm";
+import { createContext, useContext, useState } from "react";
+import useForm, { TinitialValues } from "../../utils/hooks/useForm";
 import { TuseFormParams, TuseFormReturn } from "../../utils/hooks/useForm";
 
-export { Form, Field, SubmitButton };
+import { labelText } from "./AuthDescription";
 
-interface IFormParams extends TuseFormParams {
+export {
+  FormContext,
+  Form,
+  Field,
+  CheckBoxField,
+  SubmitButton,
+  InputBox
+};
+
+export interface IFormParams extends TuseFormParams {
   children: React.ReactNode;
 }
-
-const labelText: { [key: string]: string } = {
-  userId: "아이디",
-  password: "비밀번호",
-  phoneNumber: "휴대전화 번호",
-  email: "이메일",
-  nickname: "닉네임",
-  passwordcheck: "비밀번호 확인",
-  agree: "약관에 동의하시겠습니까?",
-};
 
 const FormContext = createContext<TuseFormReturn>({
   values: {},
   errors: {},
   touched: {},
   handleChange: () => {},
+  handleBusinessHour: () => {},
   handleBlur: () => {},
   handleSubmit: () => {},
   getFieldProps: () => {
-    return { name: "", value: "", onBlur: () => {}, onChange: () => {} };
+    return { name: "", value: "", onBlur: () => {}, onChange: () => {}, };
   },
 });
 FormContext.displayName = "FormContext";
@@ -55,19 +55,10 @@ const Form = ({
   );
 };
 
+
+
 const Field = ({ type, name }: { type: string; name: string }) => {
   const { getFieldProps, touched, errors } = useContext(FormContext);
-  if (name === "agree") {
-    return (
-      <InputBox>
-        <div className='check-box'>
-          <label htmlFor={name}>{labelText[name]}</label>
-          <input type={type} id={name} {...getFieldProps(name)} />
-        </div>
-        {!touched[name] || !errors[name] ? null : <span>{errors[name]}</span>}
-      </InputBox>
-    );
-  }
 
   return (
     <InputBox>
@@ -79,6 +70,25 @@ const Field = ({ type, name }: { type: string; name: string }) => {
   );
 };
 
+const CheckBoxField = ({ type, name }: { type: string; name: string }) => {
+  const { getFieldProps, touched, errors } = useContext(FormContext);
+  return (
+    <InputBox>
+      <div className='check-box'>
+        <label htmlFor={name}>{labelText[name]}</label>
+        <input type={type} id={name} {...getFieldProps(name)} />
+      </div>
+      {!touched[name] || !errors[name] ? null : <span>{errors[name]}</span>}
+    </InputBox>
+  );
+};
+
+
+
+
+
+
+
 // ===== styled-components =====
 
 const FormBox = styled.form`
@@ -86,8 +96,11 @@ const FormBox = styled.form`
   flex-direction: column;
   align-items: stretch;
   height: auto;
+  width: 90vw;
+  max-width: 500px;
   padding: 40px;
   margin: 20px;
+  background-color: var(--body-color);
   border-radius: 10px;
   box-shadow: 10px 10px 10px var(--gray-color-light);
 
@@ -126,7 +139,7 @@ const InputBox = styled.div`
   }
 
   input[type="checkbox"]:checked {
-    background: var(--primary-color-light);
+    background: var(--primary-color);
     border: 2px solid var(--gray-color-light);
     border-radius: 100%;
   }
@@ -186,12 +199,29 @@ const InputBox = styled.div`
     color: red;
     font-size: var(--caption);
   }
+
+  /* file */
+
+  #FileError {
+    top: 80px;
+  }
+
+  /* businesshour */
+
+  > .businesssheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
 `;
+
+
 
 const spinAnimation = keyframes`
   0% {transform: rotate(0deg);}
   100% {transform: rotate(365deg);}
-`
+`;
 
 const SubmitButton = styled.button`
   display: flex;
@@ -219,5 +249,8 @@ const SubmitButton = styled.button`
     border-top-color: var(--primary-color-light);
     animation: ${spinAnimation} 1s ease-out infinite;
   }
-`;
 
+  &:disabled {
+    background-color: var(--gray-color-light);
+  }
+`;

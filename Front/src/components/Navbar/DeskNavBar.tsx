@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 
-import { BiSearch, BiStar, BiHome, BiMapPin, BiUser } from "react-icons/bi";
+import { BiHighlight, BiHome, BiCalendarCheck } from "react-icons/bi";
 
 const DeskNavbar = () => {
   const [navActive, setNavActive] = useState<number>(0);
@@ -11,56 +11,51 @@ const DeskNavbar = () => {
 
   const moveIndicator = () => {
     switch (true) {
-      case /^\/search/.test(navLocation.pathname):
-        setNavActive(0);
-        break;
-      case /^\/signup/.test(navLocation.pathname):
+      case /^\/owner\/reserve/.test(navLocation.pathname):
         setNavActive(1);
         break;
-      case /^\/around/.test(navLocation.pathname):
-        setNavActive(3);
-        break;
-      case /^\/mypage/.test(navLocation.pathname):
-        setNavActive(4);
-        break;
-      case /^\/$/.test(navLocation.pathname):
+      case /^\/owner\/review/.test(navLocation.pathname):
         setNavActive(2);
         break;
+      case /^\/owner$/.test(navLocation.pathname):
+        setNavActive(0);
+        break;
       default:
-        setNavActive(-1);
+        setNavActive(-2);
     }
   };
 
   useEffect(moveIndicator, [navLocation.pathname]);
 
   return (
-    <NavBox>
-      <NavStyle to='/search'>
-        <BiSearch />
-        <span>검색</span>
-      </NavStyle>
-      <NavStyle to='/signup'>
-        <BiStar />
-        <span>즐겨찾기</span>
-      </NavStyle>
-      <NavStyle to='/'>
-        <BiHome />
-        <span>홈</span>
-      </NavStyle>
-      <NavStyle to='/around'>
-        <BiMapPin />
-        <span>주변</span>
-      </NavStyle>
-      <NavStyle to='/mypage'>
-        <BiUser />
-        <span>마이페이지</span>
-      </NavStyle>
-      <Indicatior movement={navActive}></Indicatior>
-    </NavBox>
+    <NavContainer>
+      <NavBox>
+        <NavHeader>여가어때</NavHeader>
+        <NavStyle to="" end>
+          <BiHome />
+          <span>가게 정보/관리</span>
+        </NavStyle>
+        <NavStyle to="reserve">
+          <BiCalendarCheck />
+          <span>예약 관리</span>
+        </NavStyle>
+        <NavStyle to="review">
+          <BiHighlight />
+          <span>리뷰 관리</span>
+        </NavStyle>
+        <Indicatior movement={navActive}></Indicatior>
+      </NavBox>
+    </NavContainer>
   );
 };
 
 export default DeskNavbar;
+
+const NavContainer = styled.div`
+  position: relative;
+  min-width: 240px;
+  
+`;
 
 const NavBox = styled.nav`
   position: fixed;
@@ -68,41 +63,50 @@ const NavBox = styled.nav`
   flex-direction: column;
   top: 0;
   left: 0;
-  background-color: var(--gray-color-light);
-  width: 10vw;
+  background-color: var(--body-color);
+  min-width: 240px;
   height: 100vh;
+  box-shadow: 3px 3px 10px var(--gray-color-light);
+`;
 
-  justify-content: space-evenly;
+const NavHeader = styled.div`
+  font-family: LINESeedKRBd;
+  text-align: center;
+  height: 100px;
+  font-size: 55px;
+  color: var(--primary-color)
 `;
 
 const NavStyle = styled(NavLink)`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  height: 90px;
+  min-width: 240px;
+  padding: 20px;
+  margin-bottom: 20px;
   align-items: center;
-  color: black;
+  color: var(--gray-color);
   width: 10vw;
   z-index: 1;
 
   svg {
+    margin-right: 20px;
     transition: 0.1s;
-    font-size: var(--title-1);
-    margin-bottom: 8px;
+    font-size: var(--title-2);
   }
 
   &.active > svg {
-    color: white;
-    font-size: var(--large-text);
+    color: var(--text-color);
+    font-size: calc(var(--title-2) + 5px);
   }
 
   span {
-    font-size: var(--navigation-text);
-    height: 20px;
+    font-size: var(--title-2);
   }
 
   &.active > span {
-    color: white;
-    font-size: var(--navigation-text);
+    color: var(--text-color);
+    font-size: calc(var(--title-2) + 5px);
   }
 `;
 
@@ -111,12 +115,13 @@ const Indicatior = styled.div<{ movement: number }>`
   top: 0px;
   left: 0px;
   height: 80px;
-  width: 20vw;
-  z-index: 0;
+  width: 10px;
+  z-index: -1;
   background-color: var(--primary-color);
-  border-radius: 10px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
   /* border: var(--gray-color-light) 17px solid; */
 
   transition: 0.5s;
-  transform: ${(props) => `translateY(${props.movement * 20}vw)`};
+  transform: ${(props) => `translateY(${105 + props.movement * 110}px)`};
 `;

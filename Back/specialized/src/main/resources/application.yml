@@ -1,0 +1,38 @@
+server:
+  #  host: localhost
+  #  port: 8085
+  servlet:
+    context-path: /spring
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://52.78.94.18:4000/mariadb
+    username: root
+    password: tmxkqjrtm
+  #    url: jdbc:mysql://127.0.0.1:3306/teukhwa
+  #    username: root
+  #    password: ssafy
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  profiles:
+    include: key
+
+  redis:
+    host: j8d110.p.ssafy.io
+    port: 7963
+#    host: localhost
+#    port: 6379
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

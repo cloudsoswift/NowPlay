@@ -14,6 +14,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ReservationRequestDto {
+    // idx 필드 추가
+
+    @NotBlank(message = "예약 내용은 필수 입력값입니다.")
+    private String history;
 
     @NotNull(message = "예약자는 필수 입력값입니다.")
     private int reserverIdx;
@@ -21,8 +25,6 @@ public class ReservationRequestDto {
     @NotNull(message = "가게는 필수 입력값입니다.")
     private int storeIdx;
 
-    @NotBlank(message = "예약 내용은 필수 입력값입니다.")
-    private String history;
 
     @NotNull(message = "예약 시간은 필수 입력값입니다.")
     private LocalDateTime time;

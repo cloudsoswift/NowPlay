@@ -97,9 +97,10 @@ const FormBox = styled.form`
   align-items: stretch;
   height: auto;
   width: 90vw;
-  max-width: 700px;
+  max-width: 500px;
   padding: 40px;
   margin: 20px;
+  background-color: var(--body-color);
   border-radius: 10px;
   box-shadow: 10px 10px 10px var(--gray-color-light);
 
@@ -247,5 +248,9 @@ const SubmitButton = styled.button`
     border-radius: 50%;
     border-top-color: var(--primary-color-light);
     animation: ${spinAnimation} 1s ease-out infinite;
+  }
+
+  &:disabled {
+    background-color: var(--gray-color-light);
   }
 `;

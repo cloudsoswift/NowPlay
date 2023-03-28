@@ -20,7 +20,13 @@ interface TbusinessDay {
 }
 
 export interface TinitialValues {
-  [key: string]: string | undefined | boolean | FileList | string[] | TbusinessDay;
+  [key: string]:
+    | string
+    | undefined
+    | boolean
+    | FileList
+    | string[]
+    | TbusinessDay;
   userId?: string;
   password?: string;
   phoneNumber?: string;
@@ -84,8 +90,6 @@ export type TuseFormReturn = {
     onClick?: (e: React.MouseEvent) => void;
   };
 };
-
-
 
 function useForm({
   initialValues,
@@ -171,6 +175,42 @@ function useForm({
     });
   };
 
+  const handleRemoveNewStoreImg = (e: React.MouseEvent) => {
+    const dataTransfer = new DataTransfer();
+    if (values.newStoreBrcImages) {
+      Array.from(values.newStoreBrcImages)
+        .filter((file) => file.name != e.currentTarget.id)
+        .forEach((file) => {
+          dataTransfer.items.add(file);
+        });
+    }
+
+    setValues((prev) => {
+      return {
+        ...prev,
+        newStoreBrcImages: dataTransfer.files,
+      };
+    });
+  };
+
+  const handleRemoveBrcImg = (e: React.MouseEvent) => {
+    const dataTransfer = new DataTransfer();
+    if (values.brcImage) {
+      Array.from(values.brcImage)
+        .filter((file) => file.name != e.currentTarget.id)
+        .forEach((file) => {
+          dataTransfer.items.add(file);
+        });
+    }
+
+    setValues((prev) => {
+      return {
+        ...prev,
+        brcImage: dataTransfer.files,
+      };
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -246,13 +286,8 @@ function useForm({
 
     const onBlur = handleBlur;
     const onChange = handleChange;
-    const onClick = handleRemoveOldImg;
-    if (
-      name === "passwordcheck" ||
-      name === "brcImage" ||
-      name === "newStoreBrcImages" ||
-      name === "password"
-    ) {
+    
+    if (name === "passwordcheck" || name === "password") {
       return {
         name,
         maxLength,
@@ -268,9 +303,28 @@ function useForm({
         placeholder,
         onBlur,
         onChange,
-        onClick
-      }
-    } else {
+        onClick: handleRemoveOldImg,
+      };
+    } else if (name === "newStoreBrcImages") {
+      return {
+        name,
+        maxLength,
+        placeholder,
+        onBlur,
+        onChange,
+        onClick: handleRemoveNewStoreImg,
+      };
+    } else if (name === "brcImage") {
+      return {
+        name,
+        maxLength,
+        placeholder,
+        onBlur,
+        onChange,
+        onClick: handleRemoveBrcImg,
+      };
+    }
+     else {
       return {
         name,
         value,

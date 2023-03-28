@@ -144,7 +144,7 @@ const CategotySelectField = ({
 };
 
 const BusinessHourField = () => {
-  const { values, handleBusinessHour, getFieldProps } = useContext(FormContext);
+  const { values, handleBusinessHour } = useContext(FormContext);
 
   const [hourOpen, setHourOpen] = useState(false);
 
@@ -189,7 +189,7 @@ const HourDisclosure = styled.div<{ open: boolean }>`
   border-radius: 10px;
   padding: 10px;
   overflow: hidden;
-  height: ${(props) => `${props.open ? "580px" : "0px"}`};
+  height: ${(props) => `${props.open ? "760px" : "0"}`};
   transition: height 0.7s;
 `;
 

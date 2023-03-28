@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, { useState} from "react"
 
 import {BiRightArrowAlt, BiLeftArrowAlt} from "react-icons/bi"
 import styled, { keyframes } from "styled-components"

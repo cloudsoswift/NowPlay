@@ -1,5 +1,4 @@
-import { useState, useEffect, Suspense, useDeferredValue } from "react";
-import { GiCancel } from "react-icons/gi";
+import { useState, Suspense, useDeferredValue } from "react";
 import StoreInfoForm from "../../components/OwnerForm/StoreForm/StoreInfoForm";
 import StoreInfo from "../../components/OwnerPage/StoreInfo";
 import StoreInfoSuspense from "../../components/OwnerPage/StoreInfoSuspense";

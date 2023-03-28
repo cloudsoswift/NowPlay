@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 
 import { BiHighlight, BiHome, BiCalendarCheck } from "react-icons/bi";
@@ -30,7 +30,9 @@ const DeskNavbar = () => {
   return (
     <NavContainer>
       <NavBox>
-        <NavHeader>여가어때</NavHeader>
+        <NavHeader>
+          <Link to={"/owner"}>여가어때</Link>
+        </NavHeader>
         <NavStyle to="" end>
           <BiHome />
           <span>가게 정보/관리</span>
@@ -54,7 +56,6 @@ export default DeskNavbar;
 const NavContainer = styled.div`
   position: relative;
   min-width: 240px;
-  
 `;
 
 const NavBox = styled.nav`
@@ -70,11 +71,13 @@ const NavBox = styled.nav`
 `;
 
 const NavHeader = styled.div`
-  font-family: LINESeedKRBd;
   text-align: center;
   height: 100px;
-  font-size: 55px;
-  color: var(--primary-color)
+  a {
+    font-family: LINESeedKRBd;
+    font-size: 50px;
+    color: var(--primary-color);
+  }
 `;
 
 const NavStyle = styled(NavLink)`

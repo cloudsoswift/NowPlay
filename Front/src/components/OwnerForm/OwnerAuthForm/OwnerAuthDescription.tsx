@@ -306,6 +306,7 @@ const DayBusinessHour = ({ day, hourHandler, values }: TdayBussinessHour) => {
           </select>
           분
         </label>
+        <br />
         예약 간격
         <label htmlFor={`${day}-reservationInterval`}>
           <select

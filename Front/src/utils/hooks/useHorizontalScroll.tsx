@@ -1,6 +1,4 @@
-import { useRef, useEffect, useState, MutableRefObject } from "react";
-
-interface HorizontalScrollMetrics {}
+import { useState, MutableRefObject } from "react";
 
 const useHorizontalScroll = (ref: MutableRefObject<HTMLElement>) => {
   const [isMouseOn, setIsMouseOn] = useState(false);

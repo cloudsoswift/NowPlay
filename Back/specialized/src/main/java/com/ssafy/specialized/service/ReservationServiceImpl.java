@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -86,4 +88,25 @@ public class ReservationServiceImpl implements ReservationService {
 
         reservationRepository.delete(reservation);
     }
+
+    @Override
+    public List<ReservationDto> getReservationsForCurrentUser() {
+        String username = SecurityUtil.getLoginUsername();
+        User reserver = userRepository.findByName(username);
+
+        List<Reservation> reservations = reservationRepository.findByReserver(reserver);
+        return reservations.stream()
+                .map(reservation -> new ReservationDto(
+                        reservation.getIdx(),
+                        reservation.getHistory(),
+                        reservation.getReserver().getIdx(),
+                        reservation.getStore().getIdx(),
+                        reservation.getTime(),
+                        reservation.isConfirmed(),
+                        reservation.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
 }

@@ -13,7 +13,8 @@ import javax.persistence.*;
 public class HobbySubcategory {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private int idx;
 
     @ManyToOne

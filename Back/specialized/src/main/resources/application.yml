@@ -7,9 +7,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://52.78.94.18:4000/mariadb
+    url: jdbc:mysql://j8d110.p.ssafy.io:4000/specialized
     username: root
-    password: tmxkqjrtm
+    password: root
   #    url: jdbc:mysql://127.0.0.1:3306/teukhwa
   #    username: root
   #    password: ssafy

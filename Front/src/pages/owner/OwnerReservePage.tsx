@@ -37,6 +37,7 @@ const OwnerReservePage = () => {
         <ReserveCard delay={4}><div>예약 정보칸</div> <div><button className='accept'>승낙</button><button className='decline'>거절</button></div></ReserveCard>
         <ReserveCard delay={5}><div>예약 정보칸</div> <div><button className='accept'>승낙</button><button className='decline'>거절</button></div></ReserveCard>
         <ReserveCard delay={6}><div>예약 정보칸</div> <div><button className='accept'>승낙</button><button className='decline'>거절</button></div></ReserveCard>
+        <img src="/img/subcategories/1" alt="" />
     </DateBody>
     </>
 }

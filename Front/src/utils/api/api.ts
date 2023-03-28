@@ -6,7 +6,7 @@ const cookie = new Cookies();
 
 const api = axios.create({
   baseURL: "https://j8d110.p.ssafy.io/spring/",
-  // baseURL: "http://192.168.99.231:8085/spring/",
+  // baseURL: "https://j8d110.p.ssafy.io/testspring/",
   withCredentials: true,
 });
 

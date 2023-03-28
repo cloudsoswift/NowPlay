@@ -1,4 +1,3 @@
-import Pin2 from "../../svg/pin2.svg";
 import styled from "styled-components";
 import Sports from "../../svg/main-sports.svg";
 import Theme from "../../svg/main-theme.svg";
@@ -6,33 +5,18 @@ import Healing from "../../svg/main-healing.svg";
 import Game from "../../svg/main-game.svg";
 import Culture from "../../svg/main-culture.svg";
 import Leisure from "../../svg/main-leisure.svg";
-import DistanceRecommend from "../../components/HomePage/DistanceRecommend";
-import PopularRecommend from "../../components/HomePage/PopularRecommend";
+import Recommend from "../../components/HomePage/Recommend";
 import UserRecommend from "../../components/HomePage/UserRecommend";
-import MyLocationModal from "../../components/HomePage/MyLocationModal";
-import { NavLink, Routes, Route } from "react-router-dom";
-import { useCallback, useState } from "react";
+import { useState } from "react";
+import Title from "../../components/HomePage/Title";
 
 const HomePage = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [isOpenModalBox, setIsOpenModalBox] = useState<boolean>(false);
-
-  const onClickToggleModal = useCallback(() => {
-    if (isOpenModal) {
-      setIsOpenModalBox(!isOpenModalBox)
-      setTimeout(() => setIsOpenModal(!isOpenModal), 500)
-    } else {
-      setIsOpenModalBox(!isOpenModalBox)
-      setIsOpenModal(!isOpenModal);
-    }
-  }, [isOpenModal])
 
   return (
     <HomeBox isOpenModal={isOpenModal}>
-      {isOpenModal && (<MyLocationModal onClickToggleModal={onClickToggleModal} isOpenModal={isOpenModalBox}/>)}
-      <TitleBox onClick={onClickToggleModal}>
-        <img src={Pin2} />
-        <div>지역 위치</div>
+      <TitleBox>
+        <Title isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
       </TitleBox>
       <hr />
       <MainBox>
@@ -66,21 +50,7 @@ const HomePage = () => {
         </div>
       </MainBox>
       <hr />
-      <HomePageRecommend>
-        <NavLink to="popular">
-          <li>인기순</li>
-        </NavLink>
-        <NavLink to="recent">
-          <li>거리순</li>
-        </NavLink>
-      </HomePageRecommend>
-      <HomePageContent>
-        <Routes>
-          <Route path="/" element={<PopularRecommend />}></Route>
-          <Route path="popular" element={<PopularRecommend />}></Route>
-          <Route path="recent" element={<DistanceRecommend />}></Route>
-        </Routes>
-      </HomePageContent>
+      <Recommend />
       <hr />
       <UserRecommend />
     </HomeBox>
@@ -92,27 +62,12 @@ export default HomePage;
 const HomeBox = styled.div<{ isOpenModal: boolean }>`
   justify-content: center;
   height: 88vh;
-  overflow: ${(props) => (props.isOpenModal ? 'hidden' : 'auto')};
+  overflow: ${(props) => (props.isOpenModal ? "hidden" : "auto")};
   > hr {
     background: var(--gray-color);
     height: 1px;
     border: 0;
-    margin-inline: 16px
-  }
-`;
-
-const TitleBox = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 16px;
-  > img {
-    margin: auto 0px;
-    width: 24px;
-    height: 24px;
-  }
-  > div {
-    font-size: var(--title-2);
-    margin: auto 7px;
+    margin-inline: 16px;
   }
 `;
 
@@ -139,37 +94,7 @@ const MainBox = styled.div`
   }
 `;
 
-const HomePageRecommend = styled.ul`
-  display: flex;
-  flex-direction: row;
-  margin: 16px;
-
-  /* border-left: 2px solid var(--primary-color);
-  border-right: 2px solid var(--primary-color);
-  border-bottom: 2px solid var(--primary-color); */
-
-  > a {
-    width: 25%;
-    padding: 10px;
-    font-size: var(--body-text);
-    text-align: center;
-    border-radius: 10px;
-
-    transition: 0.2s all;
-  }
-
-  > a.active {
-    color: white;
-    background-color: var(--primary-color);
-  }
+const TitleBox = styled.div`
+  width: 100%;
 `;
 
-const HomePageContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-bottom: 16px;
-`;

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {  NavLink, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 
 import MyRecent from "../../components/MyPage/MyRecent";

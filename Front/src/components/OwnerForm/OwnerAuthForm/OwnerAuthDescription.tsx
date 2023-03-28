@@ -19,43 +19,43 @@ const ownerAuthDescriptions = {
         monday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
         tuesday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
         wendesday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
         thursday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
         friday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
         saturday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
         sunday: {
           open: "09:00",
           close: "18:00",
-          reservationInterval: "01:00",
+          reservationInterval: "60",
           storeHoliday: false
         },
       },
@@ -98,8 +98,8 @@ const ownerAuthDescriptions = {
       if (!values.password) {
         errors.password = "비밀번호를 입력하세요";
       } else if (typeof(values.password) === "string" &&
-        !RegExp(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/
+      !RegExp(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"])[A-Za-z\d\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]{8,}/
         ).test(values.password)
       ) {
         errors.password = "소/대문자, 숫자, 특수문자가 포함되어야합니다.";
@@ -152,13 +152,13 @@ const category = {
     "스크린 골프",
     "롤러장",
     "아이스링크장",
-    "당구",
+    "당구장",
+    "스크린야구"
   ],
-  문화: ["", "공연장", "박물관", "미술관", "연극장"],
+  문화: ["", "공연장", "박물관", "미술관", "연극극장"],
   오락: [
     "",
     "PC방",
-    "오락실",
     "플스방",
     "인형뽑기",
     "동전노래방",
@@ -171,10 +171,11 @@ const category = {
     "수상스키",
     "클라이밍",
     "승마",
-    "스킨다이빙",
-    "스쿠버다이빙",
+    "스킨스쿠버",
     "낚시",
     "레프팅",
+    "양궁",
+    "사격"
   ],
   테마: [
     "",
@@ -186,7 +187,7 @@ const category = {
     "방탈출",
     "동물원",
   ],
-  힐링: ["", "세차장", "목욕탕", "온천", "공원", "수목원", "화원"],
+  힐링: ["", "세차장", "목욕탕", "온천", "공원", "수목원"],
 }
 
 // ===== 영업시간 관련 =====
@@ -305,6 +306,7 @@ const DayBusinessHour = ({ day, hourHandler, values }: TdayBussinessHour) => {
           </select>
           분
         </label>
+        <br />
         예약 간격
         <label htmlFor={`${day}-reservationInterval`}>
           <select

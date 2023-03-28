@@ -1,11 +1,16 @@
 import styled from "styled-components";
 import Search from "../../components/SearchPage/Search";
-import { NavLink, Routes, Route } from "react-router-dom";
+import { useState } from 'react'
 
 const SearchPage = () => {
+  const [searchText, setSearchText] = useState<string>("")
+  const searchTest = () => {
+    console.log(searchText)
+  }
+
   return (
     <SearchBox>
-      <Search />
+      <Search innerPlaceHolder="가게이름을 검색하세요"  searchId="id" submit={searchTest} valueText={setSearchText}/>
     </SearchBox>
   );
 };

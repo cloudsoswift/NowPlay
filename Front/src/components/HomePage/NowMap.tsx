@@ -66,9 +66,9 @@ const NowMap = ({
         map: map,
         icon: {
           url: Pin1,
-          size: new naver.maps.Size(46, 58),
+          size: new naver.maps.Size(29, 38),
           origin: new naver.maps.Point(0, 0),
-          anchor: new naver.maps.Point(23, 58),
+          anchor: new naver.maps.Point(14.5, 38),
         },
       });
 
@@ -117,9 +117,9 @@ const NowMap = ({
         map: map,
         icon: {
           url: Pin1,
-          size: new naver.maps.Size(46, 58),
+          size: new naver.maps.Size(29, 38),
           origin: new naver.maps.Point(0, 0),
-          anchor: new naver.maps.Point(23, 58),
+          anchor: new naver.maps.Point(14.5, 38),
         },
       });
 
@@ -150,9 +150,9 @@ const NowMap = ({
         map: map,
         icon: {
           url: Pin1,
-          size: new naver.maps.Size(46, 58),
+          size: new naver.maps.Size(29, 38),
           origin: new naver.maps.Point(0, 0),
-          anchor: new naver.maps.Point(23, 58),
+          anchor: new naver.maps.Point(14.5, 38),
         },
       });
 
@@ -183,9 +183,9 @@ const NowMap = ({
         map: map,
         icon: {
           url: Pin1,
-          size: new naver.maps.Size(46, 58),
+          size: new naver.maps.Size(29, 38),
           origin: new naver.maps.Point(0, 0),
-          anchor: new naver.maps.Point(23, 58),
+          anchor: new naver.maps.Point(14.5, 38),
         },
       });
 

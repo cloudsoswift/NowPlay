@@ -13,16 +13,16 @@ public class ReservationDto {
 
     private int idx;
 
+    private String history;
+
     private int reserverIdx;
 
     private int storeIdx;
 
-    private String history;
-
     private LocalDateTime time;
 
-    private LocalDateTime createdAt;
-
     private boolean isConfirmed;
+
+    private LocalDateTime createdAt;
 
 }

@@ -56,7 +56,11 @@ const MyLocationModal = ({
       findAddress={findAddress}
     />
   ) : (
-    <MyLocationSearchBar onClickToggleMap={onClickToggleMap} isMap={isMap} />
+    <MyLocationSearchBar
+      onClickToggleMap={onClickToggleMap}
+      isMap={isMap}
+      setSelectLocation={setSelectLocation}
+    />
   );
 
   return (

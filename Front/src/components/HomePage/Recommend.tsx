@@ -4,10 +4,12 @@ import RecommendPopular from "./RecommendPopular";
 import { NavLink, Routes, Route } from "react-router-dom";
 
 const Recommend = () => {
+  
+
   return (
     <>
       <HomePageRecommend>
-        <NavLink to="popular">
+        <NavLink to="" end>
           <li>인기순</li>
         </NavLink>
         <NavLink to="recent">
@@ -16,9 +18,9 @@ const Recommend = () => {
       </HomePageRecommend>
       <HomePageContent>
         <Routes>
-          <Route path="/" element={<RecommendPopular />}></Route>
-          <Route path="popular" element={<RecommendPopular />}></Route>
-          <Route path="recent" element={<RecommendDistance />}></Route>
+          <Route path="" element={<RecommendPopular />} />
+          {/* <Route path="popular" element={<RecommendPopular />} /> */}
+          <Route path="recent" element={<RecommendDistance />} />
         </Routes>
       </HomePageContent>
     </>
@@ -33,17 +35,19 @@ const HomePageRecommend = styled.ul`
   margin: 16px;
 
   > a {
-    width: 25%;
+    width: 30%;
     padding: 10px;
     font-size: var(--body-text);
     text-align: center;
     border-radius: 10px;
-
+    box-shadow: 2px 2px 2px gray;
     transition: 0.2s all;
+    margin-inline: 5px;
   }
 
   > a.active {
     color: white;
+    box-shadow: 0px 0px 0px gray;
     background-color: var(--primary-color);
   }
 `;

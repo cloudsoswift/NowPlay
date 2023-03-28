@@ -83,20 +83,22 @@ public class ReviewServiceImpl implements ReviewService {
         }
         List<Review> list = reviewRepository.findAllByStore(store);
         List<ReviewListDto> responlist = new ArrayList<>();
-        for (Review review : list) {
-            List<ReviewImage> reviewImagelist = reviewImageRepository.findAllByReview(review);
-            ReviewListDto reviewListDto = new ReviewListDto();
-            reviewListDto.setReviewIndex(review.getIdx());
-            reviewListDto.setWriter(review.getWriter());
-            reviewListDto.setReviewContent(review.getContent());
-            reviewListDto.setReviewRate(review.getRating());
-            reviewListDto.setCreatedAt(review.getCreatedAt());
-            reviewListDto.setReviewIsHidden(review.isHidden());
-            reviewListDto.setReviewImages(reviewImagelist);
-            Optional<OwnerComment> ownerComment = Optional.ofNullable(ownerCommentRepository.findByReview(review));
-            reviewListDto.setOwnerComment(ownerComment.get());
-            responlist.add(reviewListDto);
+        if (list.size() >= 1) {
+            for (Review review : list) {
+                List<ReviewImage> reviewImagelist = reviewImageRepository.findAllByReview(review);
+                ReviewListDto reviewListDto = new ReviewListDto();
+                reviewListDto.setReviewIndex(review.getIdx());
+                reviewListDto.setWriter(review.getWriter());
+                reviewListDto.setReviewContent(review.getContent());
+                reviewListDto.setReviewRate(review.getRating());
+                reviewListDto.setCreatedAt(review.getCreatedAt());
+                reviewListDto.setReviewIsHidden(review.isHidden());
+                reviewListDto.setReviewImages(reviewImagelist);
+                Optional<OwnerComment> ownerComment = Optional.ofNullable(ownerCommentRepository.findByReview(review));
+                reviewListDto.setOwnerComment(ownerComment.get());
+                responlist.add(reviewListDto);
             }
+        }
         ResponReviewsDto responReviewsDto = new ResponReviewsDto();
         responReviewsDto.setReviewListDto(responlist);
         responReviewsDto.setTotalReviewCount(list.size());

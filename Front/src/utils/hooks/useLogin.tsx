@@ -12,19 +12,23 @@ export const useLogin = () => {
   const [cookies, setCookies, removeCooke] = useCookies(["accessToken"]);
   const navigation = useNavigate();
 
-  return useMutation((values: TinitialValues) => {
-    return loginAPI(values)}, {
-    onSuccess: (data: TAxoisUserInfo) => {
-      if (data.accessToken) {
-        setCookies("accessToken", data.accessToken, { path: "/mobile" });
-      }
-      setUserInfo({
-        userNickname: data.userNickname,
-        userAddress: data.userAddress,
-        userName: data.userName,
-        userDistance: data.userDistance,
-      });
-      navigation("/mobile/mypage");
+  return useMutation(
+    (values: TinitialValues) => {
+      return loginAPI(values);
     },
-  });
+    {
+      onSuccess: (data: TAxoisUserInfo) => {
+        if (data.accessToken) {
+          setCookies("accessToken", data.accessToken, { path: "/mobile" });
+        }
+        setUserInfo({
+          userNickname: data.userNickname,
+          userAddress: data.userAddress,
+          userName: data.userName,
+          userDistance: data.userDistance,
+        });
+        navigation("/mobile/mypage");
+      },
+    }
+  );
 };

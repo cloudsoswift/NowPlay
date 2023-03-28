@@ -170,4 +170,5 @@ const ButtonArea = styled.div`
   color: var(--body-color);
   line-height: 43px;
   border-radius: 20px;
+  box-shadow: 2px 2px 2px gray;
 `;

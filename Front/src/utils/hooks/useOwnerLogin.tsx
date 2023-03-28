@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useCookies } from "react-cookie";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { ownerInfoAtion } from "../recoil/userAtom";
 import { ownerloginAPI } from "../api/authApiFunctions";

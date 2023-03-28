@@ -36,5 +36,3 @@ export const ownerInfoAtion = atom({
     localStorageEffect('ownerinfo')
   ]
 })
-
-

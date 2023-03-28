@@ -14,7 +14,8 @@ import java.time.DayOfWeek;
 public class BusinessHour {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private int idx;
 
     @ManyToOne

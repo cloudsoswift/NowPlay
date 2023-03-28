@@ -20,26 +20,26 @@ function Mobile() {
       <Topbar />
       <MobileContainer>
         <Routes>
-          <Route element={<PrivateRoute authentication={false} type="mobile"/>}>
+          <Route
+            element={<PrivateRoute authentication={false} type="mobile" />}
+          >
             <Route path="/mypage/login" element={<LoginPage />} />
           </Route>
-          <Route element={<PrivateRoute authentication={false} type="mobile"/>}>
+          <Route
+            element={<PrivateRoute authentication={false} type="mobile" />}
+          >
             <Route path="/mypage/signup" element={<SignupPage />} />
           </Route>
-          <Route element={<PrivateRoute authentication={true} type="mobile"/>}>
+          <Route element={<PrivateRoute authentication={true} type="mobile" />}>
             <Route path="/mypage/*" element={<MyPage />} />
           </Route>
-          <Route element={<PrivateRoute authentication={true} type="mobile"/>}>
-            <Route path="/homepage/*" element={<HomePage />} />
-          </Route>
-          <Route element={<PrivateRoute authentication={true} type="mobile"/>}>
-            <Route path="/search/*" element={<SearchPage />} />
-          </Route>
+          <Route path="/homepage/*" element={<HomePage />} />
+          <Route path="/search/*" element={<SearchPage />} />
           <Route path="/places" element={<PlacesPage />} />
           <Route path="/places/:id" element={<PlaceDetailPage />} />
           <Route path="/places/:id/reservation" element={<PlaceReservationPage />} />
           {/* <Route element={<PrivateRoute authentication={true} type="mobile" />}> */}
-            <Route path="/places/:id/review" element={<PlaceReviewWritePage />} />
+          <Route path="/places/:id/review" element={<PlaceReviewWritePage />} />
           {/* </Route> */}
         </Routes>
       </MobileContainer>

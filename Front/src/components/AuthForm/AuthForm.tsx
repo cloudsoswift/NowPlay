@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { useLogin } from "../../utils/hooks/useLogin";
 import { useSignup } from "../../utils/hooks/useSignup";
 import { TinitialValues } from "../../utils/hooks/useForm";
+import { useRef } from "react";
 
 const LoginAuthForm = () => {
   const {
@@ -74,6 +75,7 @@ const SignupAuthForm = () => {
         validate={validate}
         onSubmit={signupHandleSubmit}
       >
+        
         <Field type='text' name='userId' />
         <Field type='password' name='password' />
         <Field type='password' name='passwordcheck' />
@@ -82,6 +84,7 @@ const SignupAuthForm = () => {
         <Field type='text' name='phoneNumber' />
         <Field type='text' name='email' />
         <CheckBoxField type='checkbox' name='agree' />
+        
         <SubmitButton type='submit'>회원가입</SubmitButton>
       </Form>
     );

@@ -1,9 +1,9 @@
 import MiniCard from "./MiniCard";
 
-const PopularRecommend = () => {
+const RecommendPopular = () => {
   return (
     <MiniCard />
   )
 };
 
-export default PopularRecommend
+export default RecommendPopular

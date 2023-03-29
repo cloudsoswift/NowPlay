@@ -13,9 +13,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.modelmapper.ModelMapper;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -23,6 +26,9 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+
 
     @Autowired
     public ReservationServiceImpl(ReservationRepository reservationRepository, UserRepository userRepository, StoreRepository storeRepository, ModelMapper modelMapper) {
@@ -105,6 +111,35 @@ public class ReservationServiceImpl implements ReservationService {
                         reservation.isConfirmed(),
                         reservation.getCreatedAt()
                 ))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReservationDto> getReservationsByStore(int storeIdx) {
+        Store store = storeRepository.findById(storeIdx)
+                .orElseThrow(() -> new IllegalArgumentException("가게 정보가 없습니다."));
+
+        List<Reservation> reservations = reservationRepository.findByStore(store);
+        return reservations.stream()
+                .map(reservation -> new ReservationDto(
+                        reservation.getIdx(),
+                        reservation.getHistory(),
+                        reservation.getReserver().getIdx(),
+                        reservation.getStore().getIdx(),
+                        reservation.getTime(),
+                        reservation.isConfirmed(),
+                        reservation.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReservationDto> getReservationsByStoreAndDate(int storeIdx, LocalDate reservationDate) {
+        LocalDateTime startOfDay = LocalDateTime.of(reservationDate, LocalTime.MIN);
+        LocalDateTime endOfDay = LocalDateTime.of(reservationDate, LocalTime.MAX);
+        List<Reservation> reservations = reservationRepository.findByStoreIdxAndStartDatetimeBetween(storeIdx, startOfDay, endOfDay);
+        return reservations.stream()
+                .map(reservation -> modelMapper.map(reservation, ReservationDto.class))
                 .collect(Collectors.toList());
     }
 

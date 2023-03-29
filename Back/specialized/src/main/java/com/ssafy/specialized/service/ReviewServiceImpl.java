@@ -1,5 +1,13 @@
 package com.ssafy.specialized.service;
 
+import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.review.ResponReviewsDto;
 import com.ssafy.specialized.domain.dto.review.ReviewDto;
@@ -41,6 +49,19 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private final StoreRepository storeRepository;
 
+    final String endPoint = "https://kr.object.ncloudstorage.com";
+    final String regionName = "kr-standard";
+    final String accessKey = "ESCb1U9YUC1iPdriv1Qc";
+    final String secretKey = "1M49n1x3q4COn0KtlZ2rKt63AQ4ermzvsCg9yk3l";
+
+    // S3 client
+    final AmazonS3 s3 = AmazonS3ClientBuilder.standard()
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, regionName))
+                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
+                .build();
+
+    String bucketName = "d110/review";
+
     @Override
     public void writeReview(int id, ReviewDto reviewDto, List<MultipartFile> files) throws IOException {
         String username = SecurityUtil.getLoginUsername();
@@ -50,7 +71,6 @@ public class ReviewServiceImpl implements ReviewService {
         if (optStore.isPresent()) {
             store = optStore.get();
         }
-
         Review review = Review.builder()
                 .writer(user)
                 .store(store)
@@ -60,18 +80,36 @@ public class ReviewServiceImpl implements ReviewService {
                 .isHidden(reviewDto.isHidden())
                 .build();
         review = reviewRepository.save(review);
-        if (files.size() >= 1) {
+        if (files != null) {
             for (MultipartFile file : files) {
                 String originalfileName = file.getOriginalFilename();
-                File dest = new File("../../../../../resources/img/reviewImage", username + originalfileName);
+                String newName = username + store.getName() + originalfileName;
+                File dest = new File("/", newName);
                 file.transferTo(dest);
+                String filePath = "/" + newName;
+                try {
+                    s3.putObject(bucketName, newName, new File(filePath));
+                    s3.setObjectAcl(bucketName, newName, CannedAccessControlList.PublicRead);
+                    System.out.format("Object %s has been created.\n", newName);
+                } catch (AmazonS3Exception e) {
+                    e.printStackTrace();
+                } catch(SdkClientException e) {
+                    e.printStackTrace();
+                }
                 ReviewImage reviewImage = ReviewImage.builder()
                         .review(review)
-                        .reviewImageUrl(username + originalfileName)
+                        .reviewImageUrl("https://kr.object.ncloudstorage.com/d110/review/"+newName)
                         .build();
                 reviewImageRepository.save(reviewImage);
+
             }
         }
+
+
+
+
+
+
     }
 
     @Override
@@ -94,8 +132,12 @@ public class ReviewServiceImpl implements ReviewService {
                 reviewListDto.setCreatedAt(review.getCreatedAt());
                 reviewListDto.setReviewIsHidden(review.isHidden());
                 reviewListDto.setReviewImages(reviewImagelist);
-                Optional<OwnerComment> ownerComment = Optional.ofNullable(ownerCommentRepository.findByReview(review));
-                reviewListDto.setOwnerComment(ownerComment.get());
+                Optional<OwnerComment> optownerComment = Optional.ofNullable(ownerCommentRepository.findByReview(review));
+                OwnerComment ownerComment = null;
+                if (optownerComment.isPresent()){
+                    ownerComment = optownerComment.get();
+                }
+                reviewListDto.setOwnerComment(ownerComment);
                 responlist.add(reviewListDto);
             }
         }

@@ -2,17 +2,17 @@ package com.ssafy.specialized.controller;
 
 import com.ssafy.specialized.domain.dto.review.ReviewDto;
 import com.ssafy.specialized.service.ReviewService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.attribute.standard.Media;
 import java.util.List;
-import java.util.logging.Logger;
 
 @RestController
 @Slf4j
@@ -22,12 +22,12 @@ public class ReviewController {
     @Autowired
     private final ReviewService reviewService;
 
-    @PostMapping("/{id}/reviews")
-    public ResponseEntity<ReviewDto> writeReview(
-                                                @PathVariable int id,
-                                                @RequestBody ReviewDto reviewDto,
-                                                @RequestPart ("file") List<MultipartFile> files) throws Exception {
-
+    @PostMapping(value = "/{id}/reviews", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> writeReview(
+                                            @PathVariable int id,
+                                            @RequestPart (name = "review") ReviewDto reviewDto,
+                                            @RequestPart (name = "files", required = false) List<MultipartFile> files) throws Exception {
+        System.out.println(files);
         reviewService.writeReview(id, reviewDto, files);
         return ResponseEntity.ok(null);
     }

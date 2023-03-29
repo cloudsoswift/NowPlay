@@ -4,6 +4,7 @@ import com.ssafy.specialized.domain.dto.reservation.ReservationDto;
 import com.ssafy.specialized.domain.dto.reservation.ReservationRequestDto;
 import com.ssafy.specialized.domain.entity.Reservation;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationService {
@@ -19,4 +20,11 @@ public interface ReservationService {
 
     // 로그인한 사용자 기준 예약내역 불러오기
     List<ReservationDto> getReservationsForCurrentUser();
+
+    // store 기준 예약 내역 불러오기
+    List<ReservationDto> getReservationsByStore(int storeIdx);
+
+    // 날짜 기준 예약 내역 불러오기
+    List<ReservationDto> getReservationsByStoreAndDate(int storeIdx, LocalDate reservationDate);
+
 }

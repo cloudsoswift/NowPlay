@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.print.attribute.standard.Media;
 import java.util.List;
 
 @RestController
@@ -42,6 +41,19 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getDetailReviewDto(id));
     }
 
+    @PutMapping(value = "{id}/reviews", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> updateReview(@PathVariable int id,
+                                          @RequestPart (name = "review") ReviewDto reviewDto,
+                                          @RequestPart (name = "files", required = false) List<MultipartFile> files) throws Exception {
+        System.out.println(files);
+        reviewService.updateReview(id, reviewDto, files);
+        return ResponseEntity.ok(null);
+    }
 
+    @DeleteMapping("{id}/reviews")
+    public  ResponseEntity<?> deleteReview(@PathVariable int id) throws  Exception {
+        reviewService.deleteReview(id);
+        return ResponseEntity.ok(null);
+    }
 
 }

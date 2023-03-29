@@ -22,4 +22,6 @@ public class ReviewImage {
 
     private String reviewImageUrl;
 
+    private String reviewImageFileName;
+
 }

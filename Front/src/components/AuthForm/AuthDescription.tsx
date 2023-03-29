@@ -36,8 +36,8 @@ const authDescriptions = {
         errors.password = "비밀번호를 입력하세요";
       }
       else if (typeof(values.password) === "string" &&
-        !RegExp(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/
+      !RegExp(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"])[A-Za-z\d\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]{8,}/
         ).test(values.password)
       ) {
         // errors.password = "소/대문자, 숫자, 특수문자가 포함되어야합니다.";
@@ -93,7 +93,7 @@ const authDescriptions = {
         errors.password = "비밀번호를 입력하세요";
       } else if (typeof(values.password) === "string" &&
         !RegExp(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"])[A-Za-z\d\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]{8,}/
         ).test(values.password)
       ) {
         errors.password = "소/대문자, 숫자, 특수문자가 포함되어야합니다.";

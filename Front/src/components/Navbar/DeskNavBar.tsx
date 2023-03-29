@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 
 import { BiHighlight, BiHome, BiCalendarCheck } from "react-icons/bi";
@@ -30,7 +30,9 @@ const DeskNavbar = () => {
   return (
     <NavContainer>
       <NavBox>
-        <NavHeader>여가어때</NavHeader>
+        <NavHeader>
+          <Link to={"/owner"}>여가어때</Link>
+        </NavHeader>
         <NavStyle to="" end>
           <BiHome />
           <span>가게 정보/관리</span>
@@ -62,14 +64,20 @@ const NavBox = styled.nav`
   flex-direction: column;
   top: 0;
   left: 0;
-  background-color: var(--gray-color-light);
+  background-color: var(--body-color);
   min-width: 240px;
   height: 100vh;
+  box-shadow: 3px 3px 10px var(--gray-color-light);
 `;
 
 const NavHeader = styled.div`
+  text-align: center;
   height: 100px;
-  font-size: 55px;
+  a {
+    font-family: LINESeedKRBd;
+    font-size: 50px;
+    color: var(--primary-color);
+  }
 `;
 
 const NavStyle = styled(NavLink)`
@@ -80,7 +88,7 @@ const NavStyle = styled(NavLink)`
   padding: 20px;
   margin-bottom: 20px;
   align-items: center;
-  color: black;
+  color: var(--gray-color);
   width: 10vw;
   z-index: 1;
 
@@ -91,7 +99,7 @@ const NavStyle = styled(NavLink)`
   }
 
   &.active > svg {
-    color: white;
+    color: var(--text-color);
     font-size: calc(var(--title-2) + 5px);
   }
 
@@ -100,7 +108,7 @@ const NavStyle = styled(NavLink)`
   }
 
   &.active > span {
-    color: white;
+    color: var(--text-color);
     font-size: calc(var(--title-2) + 5px);
   }
 `;
@@ -110,13 +118,13 @@ const Indicatior = styled.div<{ movement: number }>`
   top: 0px;
   left: 0px;
   height: 80px;
-  width: 220px;
-  margin: 10px;
+  width: 10px;
   z-index: -1;
   background-color: var(--primary-color);
-  border-radius: 10px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
   /* border: var(--gray-color-light) 17px solid; */
 
   transition: 0.5s;
-  transform: ${(props) => `translateY(${93 + props.movement * 110}px)`};
+  transform: ${(props) => `translateY(${105 + props.movement * 110}px)`};
 `;

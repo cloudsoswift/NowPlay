@@ -40,9 +40,11 @@ const GlobalStyle = createGlobalStyle`
       :root {
           /* ===== Colors ===== */
           --body-color : #fff;
+          --desk-body-color : #fffafb;
           --gray-color : #888888;
           --gray-color-light: #EEEEEE;
           --primary-color : #BB2649;
+          --primary-color-on : #e02e58;
           --primary-color-light : #C6637A;
           --text-color : #1A1E27;
           --text-color-light : #B1B8C0;

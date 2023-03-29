@@ -22,9 +22,11 @@ public class Reservation {
     private String history;
 
     @ManyToOne
+    @JoinColumn(name = "reserver_idx")
     private User reserver;
 
     @ManyToOne
+    @JoinColumn(name = "store_idx")
     private Store store;
 
 

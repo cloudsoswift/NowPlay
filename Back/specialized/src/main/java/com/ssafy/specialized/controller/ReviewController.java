@@ -6,10 +6,12 @@ import com.ssafy.specialized.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.attribute.standard.Media;
 import java.util.List;
 
 @RestController
@@ -20,19 +22,13 @@ public class ReviewController {
     @Autowired
     private final ReviewService reviewService;
 
-    @PostMapping("/{id}/reviews")
+    @PostMapping(value = "/{id}/reviews", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> writeReview(
                                             @PathVariable int id,
-                                            @RequestParam String content,
-                                            @RequestParam int rating,
-                                            @RequestParam boolean isHidden,
-                                            @RequestPart (name = "files", required = false) MultipartFile[] files) throws Exception {
+                                            @RequestPart (name = "review") ReviewDto reviewDto,
+                                            @RequestPart (name = "files", required = false) List<MultipartFile> files) throws Exception {
         System.out.println(files);
-        ReviewDto reviewDto = new ReviewDto();
-        reviewDto.setContent(content);
-        reviewDto.setHidden(isHidden);
-        reviewDto.setRating(rating);
-//        reviewService.writeReview(id, reviewDto, files);
+        reviewService.writeReview(id, reviewDto, files);
         return ResponseEntity.ok(null);
     }
 

@@ -5,13 +5,16 @@ import com.ssafy.specialized.domain.dto.reservation.ReservationRequestDto;
 import com.ssafy.specialized.domain.entity.Reservation;
 import com.ssafy.specialized.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/reservation")
@@ -50,4 +53,17 @@ public class ReservationController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/store/{storeIdx}")
+    public ResponseEntity<List<ReservationDto>> getReservationsByStore(@PathVariable int storeIdx) {
+        List<ReservationDto> reservations = reservationService.getReservationsByStore(storeIdx);
+        return ResponseEntity.ok(reservations);
+    }
+
+    @GetMapping("/store/{storeIdx}/date/{date}")
+    public ResponseEntity<List<ReservationDto>> getReservationsByStoreAndDate(
+            @PathVariable int storeIdx,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate reservationDate) {
+        List<ReservationDto> reservations = reservationService.getReservationsByStoreAndDate(storeIdx, reservationDate);
+        return ResponseEntity.ok(reservations);
+    }
 }

@@ -35,7 +35,7 @@ export const DistanceSlider = (props: Props) => {
         distance = 50;
       }else if (pipMiddleX >= spot * 4 + divider && pipMiddleX < spot * 5 + divider) {
         pos = (spot  - pipRect.width / 8 ) * 5;
-        distance = 100;
+        distance = 500;
       }
     }
     setFilter((prevData) => {
@@ -64,12 +64,12 @@ export const DistanceSlider = (props: Props) => {
           <span className="w-4 h-4 block bg-white rounded-full border-2 border-black"/>
         </motion.div>
         <div className="absolute w-full h-1 bg-gray-500 -z-10" />
-        <span className="w-1 h-5 mt-8 flex justify-center">2km</span>
-        <span className="w-1 h-5 mt-8 flex justify-center">5km</span>
-        <span className="w-1 h-5 mt-8 flex justify-center">10km</span>
-        <span className="w-1 h-5 mt-8 flex justify-center">20km</span>
-        <span className="w-1 h-5 mt-8 flex justify-center">50km</span>
-        <span className="w-1 h-5 mt-8 flex justify-center"></span>
+        <span className="w-1 h-5 mt-8 flex justify-right">2km</span>
+        <span className="w-1 h-5 mt-8 flex justify-right">5km</span>
+        <span className="w-1 h-5 mt-8 flex justify-right">10km</span>
+        <span className="w-1 h-5 mt-8 flex justify-right">20km</span>
+        <span className="w-1 h-5 mt-8 flex justify-right">50km</span>
+        <span className="w-9 h-5 mt-8 flex justify-center">{"< 50"}</span>
         {/* <span className="w-1 h-5 block bg-black" />
         <span className="w-1 h-5 block bg-black" />
         <span className="w-1 h-5 block bg-black" />

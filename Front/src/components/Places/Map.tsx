@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
-import { atom } from "recoil";
+import { atom, selector, useRecoilValue } from "recoil";
 import { Filter } from "./Filter/Filter";
 import { PlaceCardSheet } from "./PlaceCard";
 import { IoReorderThree } from "react-icons/io5";
 import type { TFilter } from "./Types";
 import * as json from "./Filter/categories.json";
 import { AnimatePresence } from "framer-motion";
+import api from "../../utils/api/api";
 
 type Props = {};
 
+const categoriesSelector = selector({
+  key: "categoriesSelector",
+  get: async ({get})=>{
+    return await (await api.get("place/categories")).data;
+  }
+})
 export const filterState = atom<TFilter>({
   key: "filterState",
   default: {
@@ -30,6 +37,9 @@ export const filterState = atom<TFilter>({
   },
 });
 export const Map = (props: Props) => {
+  useEffect(()=>{
+    console.log(useRecoilValue(categoriesSelector));
+  }, [])
   const [isFilterShown, setIsFilterShown] = useState(false);
   const [isCardlistShown, setIsCardlistShown] = useState(false);
   const [markerList, setMarkerList] = useState<Array<naver.maps.Marker>>([]);

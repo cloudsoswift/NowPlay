@@ -9,7 +9,7 @@ export const QGetNearbyStoreList =
       distance
       reviewCount
       averageRating
-      isFavorite
+      isBookmark
     }
     totalCount
   }
@@ -26,7 +26,7 @@ export const QSearchStore =
       distance
       reviewCount
       averageRating
-      isFavorite
+      isBookmark
     }
     totalCount
   }
@@ -43,7 +43,7 @@ query storeDetail($storeID: ID!) {
     distance
     reviewCount
     averageRating
-    isFavorite
+    isBookmark
     contactNumber
     homepage
     mainImagesUrl
@@ -75,16 +75,16 @@ export const QGetRecommendStores =
       ...storesField
     }
   }
-  fragment storesField on StoreSummary {
-    idx
-    name
-    subcategory
-    address
-    distance
-    reviewCount
-    averageRating
-    isFavorite
-  }
+}
+fragment storesField on StoreSummary {
+  idx
+  name
+  subcategory
+  address
+  distance
+  reviewCount
+  averageRating
+  isBookmark
 }
 `
 
@@ -119,7 +119,7 @@ type Store implements StoreSummary {
   distance: Float
   reviewCount: Int
   averageRating: Int
-  isFavorite: Boolean
+  isBookmark: Boolean
   owner: String
   contactNumber: String
   homepage: String
@@ -150,6 +150,6 @@ interface StoreSummary {
   distance: Float
   reviewCount: Int
   averageRating: Int
-  isFavorite: Boolean
+  isBookmark: Boolean
 }
 

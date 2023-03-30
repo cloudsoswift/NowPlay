@@ -12,7 +12,7 @@ interface ModalDefaultType {
     map: naver.maps.Map,
     select: React.Dispatch<React.SetStateAction<string>>
   ) => void;
-  myLocation: { latitude: number; longitude: number } | string;
+  defaultLocation: { latitude: number; longitude: number };
   selectLocation: { latitude: number; longitude: number } | string;
   setSelectLocation: React.Dispatch<
     React.SetStateAction<
@@ -23,7 +23,23 @@ interface ModalDefaultType {
         }
     >
   >;
+  recentAddressData: string[];
   isOpenModal: boolean;
+  searchRoadAddress: string;
+  searchJibunAddress: string;
+  componentCheck: boolean;
+  setComponentCheck: React.Dispatch<React.SetStateAction<boolean>>;
+  searchLocation: { latitude: number; longitude: number } | string;
+  setsearchLocation: React.Dispatch<
+    React.SetStateAction<
+      | string
+      | {
+          latitude: number;
+          longitude: number;
+        }
+    >
+  >;
+  searchAddressToCoordinate(address: string, check: boolean): void;
 }
 
 const MyLocationModal = ({
@@ -31,19 +47,20 @@ const MyLocationModal = ({
   isOpenModal,
   selectAddress,
   setSelectAddress,
-  myLocation,
+  defaultLocation,
   selectLocation,
   setSelectLocation,
   findAddress,
+  recentAddressData,
+  searchRoadAddress,
+  searchJibunAddress,
+  componentCheck,
+  setComponentCheck,
+  searchLocation,
+  setsearchLocation,
+  searchAddressToCoordinate,
   children,
 }: PropsWithChildren<ModalDefaultType>) => {
-  function recentAddressStore(): string[] {
-    const recentAddressJSON = localStorage.getItem("RecentAddressSearch");
-    if (recentAddressJSON ===null) return [];
-    return JSON.parse(recentAddressJSON)
-  }
-  const recentAddressData:string[] = recentAddressStore()
-
   const [isMap, setIsMap] = useState<boolean>(false);
 
   const onClickToggleMap = useCallback(() => {
@@ -57,7 +74,7 @@ const MyLocationModal = ({
       onClickToggleModal={onClickToggleModal}
       selectAddress={selectAddress}
       setSelectAddress={setSelectAddress}
-      myLocation={myLocation}
+      defaultLocation={defaultLocation}
       selectLocation={selectLocation}
       setSelectLocation={setSelectLocation}
       findAddress={findAddress}
@@ -69,6 +86,13 @@ const MyLocationModal = ({
       isMap={isMap}
       setSelectLocation={setSelectLocation}
       recentAddressData={recentAddressData}
+      searchRoadAddress={searchRoadAddress}
+      searchJibunAddress={searchJibunAddress}
+      componentCheck={componentCheck}
+      setComponentCheck={setComponentCheck}
+      searchLocation={searchLocation}
+      setsearchLocation={setsearchLocation}
+      searchAddressToCoordinate={searchAddressToCoordinate}
     />
   );
 

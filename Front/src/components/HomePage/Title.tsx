@@ -18,10 +18,56 @@ const Title = ({
   setIsOpenModal,
   children,
 }: PropsWithChildren<TitlelType>) => {
-  const [myLocation, setMyLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  }>({ latitude: 36.1048884, longitude: 128.4201059 });
+  function recentAddressStore(): string[] {
+    const recentAddressJSON = localStorage.getItem("RecentAddressSearch");
+    if (recentAddressJSON === null) return [];
+    return JSON.parse(recentAddressJSON);
+  }
+  const recentAddressData: string[] = recentAddressStore();
+
+  const [searchRoadAddress, setSearchRoadAddress] = useState<string>("");
+  const [searchJibunAddress, setSearchJibunAddress] = useState<string>("");
+  const [componentCheck, setComponentCheck] = useState<boolean>(false);
+  const [searchLocation, setsearchLocation] = useState<
+    { latitude: number; longitude: number } | string
+  >("");
+
+  function searchAddressToCoordinate(address: string, check: boolean) {
+    naver.maps.Service.geocode(
+      {
+        query: address,
+      },
+      function (status, response) {
+        if (status === naver.maps.Service.Status.ERROR) {
+          return alert("Something Wrong!");
+        }
+        if (response.v2.meta.totalCount === 0) {
+          return alert("올바른 주소를 입력해주세요.");
+        }
+        const item = response.v2.addresses[0];
+        if (item.roadAddress) {
+          setSearchRoadAddress(item.roadAddress);
+        }
+        if (item.jibunAddress) {
+          setSearchJibunAddress(item.jibunAddress);
+        }
+        if (check) {
+          setsearchLocation({
+            latitude: Number(item.y),
+            longitude: Number(item.x),
+          });
+          setComponentCheck(true);
+        } else {
+          setSelectLocation({
+            latitude: Number(item.y),
+            longitude: Number(item.x),
+          });
+        }
+      }
+    );
+  }
+
+  const defaultLocation = { latitude: 36.1078224, longitude: 128.4177517 };
   const [selectAddress, setSelectAddress] = useState<string>("");
 
   const [isOpenModalBox, setIsOpenModalBox] = useState<boolean>(false);
@@ -69,19 +115,17 @@ const Title = ({
   };
 
   useEffect(() => {
-    const position = new naver.maps.LatLng(
-      myLocation.latitude,
-      myLocation.longitude
-    );
-    const map = naver.maps.Map;
-    findAddress(position, map as unknown as naver.maps.Map, setSelectAddress);
+    if (recentAddressData.length !== 0) {
+      searchAddressToCoordinate(recentAddressData[0], false);
+      setSelectAddress(recentAddressData[0]);
+    }
   }, []);
 
   return (
     <>
       {isOpenModal && (
         <MyLocationModal
-          myLocation={myLocation}
+          defaultLocation={defaultLocation}
           onClickToggleModal={onClickToggleModal}
           isOpenModal={isOpenModalBox}
           selectAddress={selectAddress}
@@ -89,11 +133,19 @@ const Title = ({
           findAddress={findAddress}
           selectLocation={selectLocation}
           setSelectLocation={setSelectLocation}
+          recentAddressData={recentAddressData}
+          searchRoadAddress={searchRoadAddress}
+          searchJibunAddress={searchJibunAddress}
+          componentCheck={componentCheck}
+          setComponentCheck={setComponentCheck}
+          searchLocation={searchLocation}
+          setsearchLocation={setsearchLocation}
+          searchAddressToCoordinate={searchAddressToCoordinate}
         />
       )}
       <TitleBox onClick={onClickToggleModal}>
         <img src={Pin2} />
-        <div>{selectAddress}</div>
+        <div>{selectAddress ? selectAddress : "주소를 검색해주세요"}</div>
       </TitleBox>
     </>
   );

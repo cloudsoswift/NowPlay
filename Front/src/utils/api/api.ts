@@ -7,7 +7,7 @@ const cookie = new Cookies();
 const api = axios.create({
   baseURL: "https://j8d110.p.ssafy.io/spring/",
   // baseURL: "https://j8d110.p.ssafy.io/testspring/",
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 // timeout 설정 4초

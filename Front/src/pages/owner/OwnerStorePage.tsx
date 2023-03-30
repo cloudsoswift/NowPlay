@@ -14,7 +14,7 @@ const dummyData: TinitialValues = {
     "https://olo-images-live.imgix.net/14/148a54de922e4aecb705b905f405cd29.jpg?auto=format%2Ccompress&q=60&cs=tinysrgb&w=1500&h=1200&fit=crop&s=cba7c8944afbf3d7157d0be622a741c7",
     "https://media.istockphoto.com/id/827639672/photo/three-steaks-roasted-on-the-grill.jpg?s=612x612&w=0&k=20&c=gAMNM76tFk60zgxThKQJ3YSNNlw9jJZFHLpQfx5VeDM=",
     "https://mp-seoul-image-production-s3.mangoplate.com/sources/web/restaurants/350267/1851613_1607879873062?fit=around|738:738&crop=738:738;*,*&output-format=jpg&output-quality=80",
-    "https://img.siksinhot.com/article/1635736419573708.jpeg"
+    "https://img.siksinhot.com/article/1635736419573708.jpeg",
   ],
   storeExplanation: "뉴욕의 전통 스테이크 하우스",
   hobbyMainCategory: "힐링",
@@ -67,20 +67,20 @@ const dummyData: TinitialValues = {
 
 const OwnerStorePage = () => {
   const [isUpdate, setIsUpdate] = useState(false);
-  const deferredValue = useDeferredValue(dummyData)
+  const deferredValue = useDeferredValue(dummyData);
 
   const toUpdate = () => {
-    setIsUpdate(prev => !prev)
-  }
+    setIsUpdate((prev) => !prev);
+  };
 
   return (
     <>
       {isUpdate ? (
-        <Suspense fallback={<StoreInfoSuspense />} >
-          <StoreInfoForm initialValues={deferredValue} updateHandle={toUpdate} />
-        </Suspense>
+        <StoreInfoForm initialValues={deferredValue} updateHandle={toUpdate} />
       ) : (
-        <StoreInfo values={dummyData} updateHandle={toUpdate}/>
+        <Suspense fallback={<StoreInfoSuspense />}>
+          <StoreInfo values={dummyData} updateHandle={toUpdate} />
+        </Suspense>
       )}
     </>
   );

@@ -37,6 +37,13 @@ const MyLocationModal = ({
   findAddress,
   children,
 }: PropsWithChildren<ModalDefaultType>) => {
+  function recentAddressStore(): string[] {
+    const recentAddressJSON = localStorage.getItem("RecentAddressSearch");
+    if (recentAddressJSON ===null) return [];
+    return JSON.parse(recentAddressJSON)
+  }
+  const recentAddressData:string[] = recentAddressStore()
+
   const [isMap, setIsMap] = useState<boolean>(false);
 
   const onClickToggleMap = useCallback(() => {
@@ -54,12 +61,14 @@ const MyLocationModal = ({
       selectLocation={selectLocation}
       setSelectLocation={setSelectLocation}
       findAddress={findAddress}
+      recentAddressData={recentAddressData}
     />
   ) : (
     <MyLocationSearchBar
       onClickToggleMap={onClickToggleMap}
       isMap={isMap}
       setSelectLocation={setSelectLocation}
+      recentAddressData={recentAddressData}
     />
   );
 

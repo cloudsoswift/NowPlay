@@ -32,13 +32,21 @@ export const UserInfoCard = () => {
 export const MyPageCategory = () => {
   return (
     <MyPageCategoryBox>
-        <NavLink to="recent"><li>최근 내역</li></NavLink>
-        <NavLink to="my-review"><li>내 리뷰</li></NavLink>
-        <NavLink to="my-reservation"><li>예약 내역</li></NavLink>
-        <NavLink to="customer-service"><li>고객 센터</li></NavLink>
-      </MyPageCategoryBox>
-  )
-}
+      <NavLink to="recent">
+        <li>최근 내역</li>
+      </NavLink>
+      <NavLink to="my-review">
+        <li>내 리뷰</li>
+      </NavLink>
+      <NavLink to="my-reservation">
+        <li>예약 내역</li>
+      </NavLink>
+      <NavLink to="customer-service">
+        <li>고객 센터</li>
+      </NavLink>
+    </MyPageCategoryBox>
+  );
+};
 
 const UserInfoCardBox = styled.div`
   display: flex;

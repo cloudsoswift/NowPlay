@@ -53,7 +53,7 @@ export const Filter = ({className, onClose}: Props) => {
         <Categories />
         <SelectableCategories />
         <DistanceSlider />
-        <BusinessTimeSelector />
+        {/* <BusinessTimeSelector /> */}
         <div>
           <button onClick={handleApplyFilter} className="w-full border rounded-xl p-2 mt-2 text-white bg-[var(--primary-color)]">적용</button>
         </div>

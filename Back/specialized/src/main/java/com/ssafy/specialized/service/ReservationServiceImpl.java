@@ -155,5 +155,23 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public ReservationDto confirmReservation(int reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("예약 정보가 없습니다."));
+
+        reservation.setConfirmed(true);
+        reservationRepository.save(reservation);
+
+        return new ReservationDto(
+                reservation.getIdx(),
+                reservation.getHistory(),
+                reservation.getReserver().getIdx(),
+                reservation.getStore().getIdx(),
+                reservation.getTime(),
+                reservation.isConfirmed(),
+                reservation.getCreatedAt()
+        );
+    }
 
 }

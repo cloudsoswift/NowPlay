@@ -14,7 +14,7 @@ interface ModalType {
     map: naver.maps.Map,
     select: React.Dispatch<React.SetStateAction<string>>
   ) => void;
-  myLocation: { latitude: number; longitude: number } | string;
+  defaultLocation: { latitude: number; longitude: number };
   selectLocation: { latitude: number; longitude: number } | string;
   setSelectLocation: React.Dispatch<
     React.SetStateAction<
@@ -34,7 +34,7 @@ const MyLocationSearchMap = ({
   onClickToggleModal,
   selectAddress,
   setSelectAddress,
-  myLocation,
+  defaultLocation,
   selectLocation,
   setSelectLocation,
   findAddress,
@@ -82,7 +82,7 @@ const MyLocationSearchMap = ({
       </TopArea>
       <MapArea>
         <NowMap
-          myLocation={myLocation}
+          defaultLocation={defaultLocation}
           selectLocation={selectLocation}
           setSelectLocation={setSelectLocation}
           nowLocation={nowLocation}

@@ -11,7 +11,7 @@ interface NowMapType {
     map: naver.maps.Map,
     select: React.Dispatch<React.SetStateAction<string>>
   ) => void;
-  myLocation: { latitude: number; longitude: number } | string;
+  defaultLocation: { latitude: number; longitude: number };
   selectLocation: { latitude: number; longitude: number } | string;
   setSelectLocation: React.Dispatch<
     React.SetStateAction<
@@ -38,7 +38,7 @@ const NowMap = ({
   nowAddress,
   setNowAddress,
   findAddress,
-  myLocation,
+  defaultLocation,
   nowLocation,
   setNowLocation,
   selectLocation,
@@ -133,39 +133,6 @@ const NowMap = ({
         });
         findAddress(e.coord, map as naver.maps.Map, setNowAddress);
       });
-    } else if (typeof myLocation !== "string") {
-      const position = new naver.maps.LatLng(
-        myLocation.latitude,
-        myLocation.longitude
-      );
-
-      const map = new naver.maps.Map("map", {
-        center: position,
-        zoom: 17,
-        zoomControl: true,
-      });
-
-      const marker = new naver.maps.Marker({
-        position: position,
-        map: map,
-        icon: {
-          url: Pin1,
-          size: new naver.maps.Size(29, 38),
-          origin: new naver.maps.Point(0, 0),
-          anchor: new naver.maps.Point(14.5, 38),
-        },
-      });
-
-      findAddress(position, map as naver.maps.Map, setNowAddress);
-
-      naver.maps.Event.addListener(map, "click", function (e) {
-        marker.setPosition(e.coord);
-        setSelectLocation({
-          latitude: e.coord._lat,
-          longitude: e.coord._lng,
-        });
-        findAddress(e.coord, map as naver.maps.Map, setNowAddress);
-      });
     } else if (typeof nowLocation !== "string") {
       const position = new naver.maps.LatLng(
         nowLocation.latitude,
@@ -199,13 +166,42 @@ const NowMap = ({
         });
         findAddress(e.coord, map as naver.maps.Map, setNowAddress);
       });
+          } else if (typeof defaultLocation !== "string") {
+      const position = new naver.maps.LatLng(
+        defaultLocation.latitude,
+        defaultLocation.longitude
+      );
+
+      const map = new naver.maps.Map("map", {
+        center: position,
+        zoom: 17,
+        zoomControl: true,
+      });
+
+      const marker = new naver.maps.Marker({
+        position: position,
+        map: map,
+        icon: {
+          url: Pin1,
+          size: new naver.maps.Size(29, 38),
+          origin: new naver.maps.Point(0, 0),
+          anchor: new naver.maps.Point(14.5, 38),
+        },
+      });
+
+      findAddress(position, map as naver.maps.Map, setNowAddress);
+
+      naver.maps.Event.addListener(map, "click", function (e) {
+        marker.setPosition(e.coord);
+        setSelectLocation({
+          latitude: e.coord._lat,
+          longitude: e.coord._lng,
+        });
+        findAddress(e.coord, map as naver.maps.Map, setNowAddress);
+      });
     }
   }, [nowLocation]);
-
-  // const mapStyle = {
-  //   width: "100vw",
-  //   height: "35vh",
-  // };
+  
   return (
     <div>
       <MapBox id="map" />

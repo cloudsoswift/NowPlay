@@ -14,7 +14,7 @@ interface ModalType {
     map: naver.maps.Map,
     select: React.Dispatch<React.SetStateAction<string>>
   ) => void;
-  myLocation: { latitude: number; longitude: number } | string;
+  defaultLocation: { latitude: number; longitude: number };
   selectLocation: { latitude: number; longitude: number } | string;
   setSelectLocation: React.Dispatch<
     React.SetStateAction<
@@ -26,6 +26,7 @@ interface ModalType {
     >
   >;
   isMap: boolean;
+  recentAddressData: string[];
 }
 
 const MyLocationSearchMap = ({
@@ -33,18 +34,37 @@ const MyLocationSearchMap = ({
   onClickToggleModal,
   selectAddress,
   setSelectAddress,
-  myLocation,
+  defaultLocation,
   selectLocation,
   setSelectLocation,
   findAddress,
   isMap,
+  recentAddressData,
   children,
 }: PropsWithChildren<ModalType>) => {
+
   const [nowAddress, setNowAddress] = useState<string>(selectAddress);
 
   const [nowLocation, setNowLocation] = useState<
     { latitude: number; longitude: number } | string
   >("");
+
+  const setMap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault();
+    setSelectAddress(nowAddress);
+    const duplicationAddress =  recentAddressData.findIndex(address => address === nowAddress)
+    if (duplicationAddress !== -1) {
+      recentAddressData.splice(duplicationAddress, 1)
+    }
+    recentAddressData.unshift(nowAddress)
+    if (recentAddressData.length > 5) {
+      recentAddressData.pop()
+    }
+    localStorage.setItem("RecentAddressSearch", JSON.stringify(recentAddressData))
+    if (onClickToggleModal) {
+      onClickToggleModal();
+    }
+  }
 
   return (
     <MyMap isMap={isMap}>
@@ -62,7 +82,7 @@ const MyLocationSearchMap = ({
       </TopArea>
       <MapArea>
         <NowMap
-          myLocation={myLocation}
+          defaultLocation={defaultLocation}
           selectLocation={selectLocation}
           setSelectLocation={setSelectLocation}
           nowLocation={nowLocation}
@@ -77,13 +97,7 @@ const MyLocationSearchMap = ({
         <div>{nowAddress}</div>
       </LocationArea>
       <ButtonArea
-        onClick={(e: React.MouseEvent) => {
-          e.preventDefault();
-          setSelectAddress(nowAddress);
-          if (onClickToggleModal) {
-            onClickToggleModal();
-          }
-        }}
+        onClick={setMap}
       >
         이 위치로 주소 설정
       </ButtonArea>

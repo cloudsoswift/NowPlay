@@ -36,3 +36,8 @@ export const ownerInfoAtion = atom({
     localStorageEffect('ownerinfo')
   ]
 })
+
+export const selectHobbyAction = atom<string[]>({
+  key: "hobbyInfo",
+  default: []
+})

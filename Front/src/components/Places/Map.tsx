@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { atom } from "recoil";
 import { Filter } from "./Filter/Filter";
-import { PlaceCards } from "./PlaceCard";
+import { PlaceCardSheet } from "./PlaceCard";
+import { IoReorderThree } from "react-icons/io5";
 import type { TFilter } from "./Types";
 import * as json from "./Filter/categories.json";
+import { AnimatePresence } from "framer-motion";
 
 type Props = {};
 
@@ -30,6 +32,7 @@ export const filterState = atom<TFilter>({
 export const Map = (props: Props) => {
   const [isFilterShown, setIsFilterShown] = useState(false);
   const [isCardlistShown, setIsCardlistShown] = useState(false);
+  const [markerList, setMarkerList] = useState<Array<naver.maps.Marker>>([]);
 
   const handleFilterToggle = () => {
     setIsFilterShown((prevState) => !prevState);
@@ -45,26 +48,28 @@ export const Map = (props: Props) => {
   }, []);
   return (
     <>
-      <div id="map" className="w-screen h-[calc(100vh-160px)] mt-20 -z-20"></div>
+      <div id="map" className="w-screen h-[calc(100vh-122px)] -z-0"></div>
       <button
-        className="absolute top-24 left-1/2 -translate-x-1/2 border-2 border-black"
+        className="absolute top-12 left-1/2 -translate-x-1/2 border-2 border-black bg-white rounded-full"
         onClick={handleFilterToggle}
-        >
-        필터 호출 버튼
+      >
+        <IoReorderThree className="text-3xl" />
       </button>
-      {isFilterShown && (
-        <Filter
-        className="w-screen h-[50vh] bg-white border-4 absolute top-20 left-0 overflow-y-auto"
-        onClose={setIsFilterShown}
-        />
-      )}
-      <button
-        className="absolute bottom-24 left-1/2 -translate-x-1/2 border-2 border-black"
+      <AnimatePresence initial={false}>
+        {isFilterShown && (
+          <Filter
+            className="w-screen h-[50vh] bg-white border-2 rounded-b-lg absolute top-12 left-0 overflow-y-auto p-4 space-y-2"
+            onClose={setIsFilterShown}
+          />
+        )}
+      </AnimatePresence>
+      {/* <button
+        className="absolute bottom-20 left-1/2 -translate-x-1/2 border-2 border-black"
         onClick={handleCardListToggle}
         >
         카드리스트 호출 버튼
-      </button>
-      {isCardlistShown && <PlaceCards onClose={setIsCardlistShown} />}
+      </button> */}
+      <PlaceCardSheet />
     </>
   );
 };

@@ -1,9 +1,9 @@
 import styled, { keyframes } from "styled-components";
-import { PropsWithChildren, useEffect, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import Search from "../SearchPage/Search";
 import Aim from "../../svg/aim.svg";
 import Vector from "../../svg/vector.svg";
-import { List } from "postcss/lib/list";
+import Pin1 from "../../svg/mini-pin.svg";
 
 interface ModalType {
   onClickToggleMap: () => void;
@@ -17,53 +17,39 @@ interface ModalType {
         }
     >
   >;
+  recentAddressData: string[];
+  searchRoadAddress: string;
+  searchJibunAddress: string;
+  componentCheck: boolean;
+  setComponentCheck: React.Dispatch<React.SetStateAction<boolean>>;
+  searchLocation: { latitude: number; longitude: number } | string;
+  setsearchLocation: React.Dispatch<
+    React.SetStateAction<
+      | string
+      | {
+          latitude: number;
+          longitude: number;
+        }
+    >
+  >;
+  searchAddressToCoordinate(address: string, check: boolean): void;
 }
 
 const MyLocationSearchBar = ({
   onClickToggleMap,
   isMap,
   setSelectLocation,
+  recentAddressData,
+  searchRoadAddress,
+  searchJibunAddress,
+  componentCheck,
+  setComponentCheck,
+  searchLocation,
+  setsearchLocation,
+  searchAddressToCoordinate,
   children,
 }: PropsWithChildren<ModalType>) => {
-  const [searchRoadAddress, setSearchRoadAddress] = useState<string>("");
-  const [searchJibunAddress, setSearchJibunAddress] = useState<string>("");
-  const [componentCheck, setComponentCheck] = useState<boolean>(false);
   const [searchMapText, setSearchMapText] = useState<string>("");
-  const [searchLocation, setsearchLocation] = useState<
-    { latitude: number; longitude: number } | string
-  >("");
-
-  function searchAddressToCoordinate(address: string) {
-    naver.maps.Service.geocode(
-      {
-        query: address,
-      },
-      function (status, response) {
-        if (status === naver.maps.Service.Status.ERROR) {
-          return alert("Something Wrong!");
-        }
-        if (response.v2.meta.totalCount === 0) {
-          return alert("올바른 주소를 입력해주세요.");
-        }
-        // const htmlAddresses = [];
-        const item = response.v2.addresses[0];
-        if (item.roadAddress) {
-          // htmlAddresses.push("[도로명 주소] " + item.roadAddress);
-          setSearchRoadAddress(item.roadAddress);
-        }
-        if (item.jibunAddress) {
-          // htmlAddresses.push("[지번 주소] " + item.jibunAddress);
-          setSearchJibunAddress(item.jibunAddress);
-        }
-        // htmlAddresses.push([item.x, item.y]);
-        setsearchLocation({
-          latitude: Number(item.y),
-          longitude: Number(item.x),
-        });
-        setComponentCheck(true);
-      }
-    );
-  }
 
   useEffect(() => {
     if (!searchMapText) {
@@ -72,8 +58,31 @@ const MyLocationSearchBar = ({
   }, [searchMapText]);
 
   const searchSubmit = () => {
-    searchAddressToCoordinate(searchMapText);
+    searchAddressToCoordinate(searchMapText, true);
   };
+
+  const RecentSearchBox =
+    recentAddressData.length === 0 ? (
+      <NoRecent>최근 검색 기록이 없습니다.</NoRecent>
+    ) : (
+      <RecentSearchList>
+        {recentAddressData.map((address) => (
+          <li
+            key={address}
+            onClick={(e: React.MouseEvent) => {
+              e.preventDefault();
+              searchAddressToCoordinate(address, false);
+              if (onClickToggleMap) {
+                onClickToggleMap();
+              }
+            }}
+          >
+            <img src={Pin1} />
+            {address}
+          </li>
+        ))}
+      </RecentSearchList>
+    );
 
   const SearchComponent = componentCheck ? (
     <SearchResult
@@ -89,11 +98,7 @@ const MyLocationSearchBar = ({
       {searchJibunAddress && <div>[지번 주소] {searchJibunAddress}</div>}
     </SearchResult>
   ) : (
-    <RecentSearchList>
-      <li>최근</li>
-      <li>검색</li>
-      <li>내용</li>
-    </RecentSearchList>
+    <>{RecentSearchBox}</>
   );
 
   return (
@@ -175,14 +180,32 @@ const GoToMap = styled.div`
 const RecentSearchList = styled.ul`
   margin-left: 30px;
   margin-top: 15px;
+  margin-right: 30px;
   > li {
+    display: flex;
     margin-bottom: 15px;
     font-size: var(--body-text);
+    height: 52px;
+    align-items: center;
+    > img {
+      margin-top: auto;
+      margin-bottom: auto;
+      height: 30px;
+      margin-right: 10px;
+    }
   }
 `;
 
 const SearchResult = styled.div`
   margin: 15px 30px;
+  > div {
+    font-size: var(--body-text);
+  }
+`;
+
+const NoRecent = styled.div`
+  margin: 15px 50px;
+  color: var(--gray-color);
   > div {
     font-size: var(--body-text);
   }

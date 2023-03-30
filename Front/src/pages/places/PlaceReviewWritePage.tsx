@@ -14,8 +14,9 @@ export const PlaceReviewWritePage = (props: Props) => {
     e.preventDefault();
   };
   return (
-    <form action="post" className="px-4 grid justify-center space-y-5" onSubmit={handleSubmit}>
-      <div className="[&>*>*]:text-2xl">
+    <div className="grid h-[calc(100vh-122px)]">
+    <form action="post" className="px-4 grid self-center space-y-5" onSubmit={handleSubmit}>
+      <div className="flex [&>*>*]:text-3xl justify-center items-center">
         <button
           onClick={() => {
             setRating(1);
@@ -63,5 +64,7 @@ export const PlaceReviewWritePage = (props: Props) => {
         <button className="border w-full rounded-md h-10">제출</button>
       </div>
     </form>
+      
+      </div>
   );
 };

@@ -9,6 +9,7 @@ import com.ssafy.specialized.domain.entity.User;
 import com.ssafy.specialized.repository.ReservationRepository;
 import com.ssafy.specialized.repository.StoreRepository;
 import com.ssafy.specialized.repository.UserRepository;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,12 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringSerializer;
+
+import java.util.Properties;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -58,16 +65,21 @@ public class ReservationServiceImpl implements ReservationService {
                 .build();
         reservationRepository.save(reservation);
 
-        // 예약 알림 메시지 생성 및 저장
-//        String message = String.format("%s님이 %s에 예약 요청을 보냈습니다.", reserver.getName(), store.getName());
-//        Notification reservationNotification = Notification.builder()
-//                .user(storeOwner)
-//                .message(message)
-//                .link("/store/" + storeId + "/reservation")
-//                .checked(false)
-//                .createdAt(LocalDateTime.now())
-//                .build();
-//        notificationRepository.save(reservationNotification);
+        // Kafka Producer 생성
+        Properties props = new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "j8d110.p.ssafy.io:9092");
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        Producer<String, String> producer = new KafkaProducer<>(props);
+
+        // 메시지 보내기
+        String topicName = "test_topic";
+        String message = "이거 새로 보내는 메시지 맞나요?";
+        ProducerRecord<String, String> record = new ProducerRecord<>(topicName, message);
+        producer.send(record);
+
+        // Kafka Producer 종료
+        producer.close();
 
         return new ReservationDto(
                 reservation.getIdx(),

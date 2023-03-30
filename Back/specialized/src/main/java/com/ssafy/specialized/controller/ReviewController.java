@@ -6,6 +6,9 @@ import com.ssafy.specialized.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +34,7 @@ public class ReviewController {
         return ResponseEntity.ok(null);
     }
 
-    @GetMapping("/{id}/reviews")
+    @GetMapping("/{id}/reviewsList")
     public ResponseEntity<?> getReviewList(@PathVariable int id) throws Exception {
         return ResponseEntity.ok(reviewService.getStoreReviwList(id));
     }
@@ -54,6 +57,12 @@ public class ReviewController {
     public  ResponseEntity<?> deleteReview(@PathVariable int id) throws  Exception {
         reviewService.deleteReview(id);
         return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<?> getReviewListPage(@PathVariable int id,
+                                               @PageableDefault(size = 10, sort = "idx",direction = Sort.Direction.DESC ) Pageable pageable) throws Exception {
+        return ResponseEntity.ok(reviewService.getStoreReviewListPage(id, pageable));
     }
 
 }

@@ -45,7 +45,4 @@ public class Store {
 
     private boolean isClosedOnHolidays;
 
-    @OneToMany(mappedBy = "store")
-    private List<Reservation> reservations = new ArrayList<>();
-
 }

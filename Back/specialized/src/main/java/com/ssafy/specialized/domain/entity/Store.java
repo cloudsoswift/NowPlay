@@ -3,8 +3,6 @@ package com.ssafy.specialized.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -45,7 +43,5 @@ public class Store {
 
     private boolean isClosedOnHolidays;
 
-    @OneToMany(mappedBy = "store")
-    private List<Reservation> reservations = new ArrayList<>();
 
 }

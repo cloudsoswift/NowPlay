@@ -1,6 +1,6 @@
 server:
-  #  host: localhost
-  #  port: 8085
+  host: localhost
+  port: 8085
   servlet:
     context-path: /spring
 
@@ -19,10 +19,12 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
-#    properties:
-#      hibernate:
-#        show_sql: true
-#        format_sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+
 
   profiles:
     include: key
@@ -36,16 +38,10 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-
-cloud:
-  aws:
-    credentials:
-      access-key: ESCb1U9YUC1iPdriv1Qc
-      secret-key: 1M49n1x3q4COn0KtlZ2rKt63AQ4ermzvsCg9yk3l
-    stack:
-      auto: false
-    region:
-      static: ap-northeast-2
-    s3:
-      endpoint: https://kr.object.ncloudstorage.com
-      bucket: d110
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace

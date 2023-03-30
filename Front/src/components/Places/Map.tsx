@@ -38,7 +38,6 @@ export const filterState = atom<TFilter>({
 });
 export const Map = (props: Props) => {
   useEffect(()=>{
-    console.log(useRecoilValue(categoriesSelector));
   }, [])
   const [isFilterShown, setIsFilterShown] = useState(false);
   const [isCardlistShown, setIsCardlistShown] = useState(false);
@@ -51,6 +50,7 @@ export const Map = (props: Props) => {
     setIsCardlistShown((prevState) => !prevState);
   };
   useEffect(() => {
+    console.log(useRecoilValue(categoriesSelector));
     const map = new window.naver.maps.Map("map", {
       center: new window.naver.maps.LatLng(37.3595704, 127.105399),
       zoom: 10,

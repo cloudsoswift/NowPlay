@@ -1,7 +1,9 @@
 import {useState} from 'react';
+import { Link } from 'react-router-dom';
 import { PlaceDetailInfo } from '../../components/Places/Detail/PlaceDetailInfo';
 import { PlaceMapInfo } from '../../components/Places/Detail/PlaceMapInfo';
 import { ReviewInfo } from '../../components/Places/Detail/ReviewInfo';
+import { StarRating } from '../../components/Places/StarRating';
 import { TPlaceDetail } from '../../components/Places/Types';
 type Props = {
   
@@ -27,19 +29,22 @@ export const PlaceDetailPage = (props: Props) => {
     isClosedOnHolidays: false,
   }
   const [tabIndex, setTabIndex] = useState(0);
-  const tabButton = "border rounded-xl p-2"
+  const tabButton = "p-2"
   const selectedTabButton = `${tabButton} bg-[var(--primary-color)] text-white`
   return (
-    <div className="px-4">
+    <div className="px-4 h-[calc(100vh-128px)] overflow-y-scroll">
       <div>
-        <div>사진 {TEST_DATA.imageURL}</div>
-        <div>사업장 이름 {TEST_DATA.name}</div>
-        <div>평균 별점 {TEST_DATA.averageRating}</div>
+        <div className='flex justify-center'><img src={`/pics/${TEST_DATA.imageURL}`}/></div>
+        <div className='text-3xl text-center'>{TEST_DATA.name}</div>
+        <StarRating rating={TEST_DATA.averageRating} className={"justify-center"}/>
+        <div className="flex justify-center">
+        <Link to="reservation" className="w-full border my-2 text-center">예약</Link>
+        </div>
       </div>
-      <div className="space-x-2 flex justify-center">
-        <button className={tabIndex === 0 ? selectedTabButton : tabButton} onClick={()=>{setTabIndex(0)}}>가게 정보</button>
-        <button className={tabIndex === 1 ? selectedTabButton : tabButton} onClick={()=>{setTabIndex(1)}}>위치 / 주차</button>
-        <button className={tabIndex === 2 ? selectedTabButton : tabButton} onClick={()=>{setTabIndex(2)}}>리뷰</button>
+      <div className="flex justify-center border-y-2 [&>*]:mx-2">
+        <div className={tabIndex === 0 ? selectedTabButton : tabButton} onClick={()=>{setTabIndex(0)}}>가게 정보</div>
+        <div className={tabIndex === 1 ? selectedTabButton : tabButton} onClick={()=>{setTabIndex(1)}}>위치 / 주차</div>
+        <div className={tabIndex === 2 ? selectedTabButton : tabButton} onClick={()=>{setTabIndex(2)}}>리뷰</div>
       </div>
       <div>
         {tabIndex === 0 && <PlaceDetailInfo placeDetail={TEST_DATA}/>}

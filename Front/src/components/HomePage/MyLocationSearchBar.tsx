@@ -1,9 +1,9 @@
 import styled, { keyframes } from "styled-components";
-import { PropsWithChildren, useEffect, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import Search from "../SearchPage/Search";
 import Aim from "../../svg/aim.svg";
 import Vector from "../../svg/vector.svg";
-import { List } from "postcss/lib/list";
+import Pin1 from "../../svg/mini-pin.svg";
 
 interface ModalType {
   onClickToggleMap: () => void;
@@ -17,12 +17,14 @@ interface ModalType {
         }
     >
   >;
+  recentAddressData: string[];
 }
 
 const MyLocationSearchBar = ({
   onClickToggleMap,
   isMap,
   setSelectLocation,
+  recentAddressData,
   children,
 }: PropsWithChildren<ModalType>) => {
   const [searchRoadAddress, setSearchRoadAddress] = useState<string>("");
@@ -33,7 +35,8 @@ const MyLocationSearchBar = ({
     { latitude: number; longitude: number } | string
   >("");
 
-  function searchAddressToCoordinate(address: string) {
+  function searchAddressToCoordinate(address: string, check: boolean) {
+
     naver.maps.Service.geocode(
       {
         query: address,
@@ -56,11 +59,21 @@ const MyLocationSearchBar = ({
           setSearchJibunAddress(item.jibunAddress);
         }
         // htmlAddresses.push([item.x, item.y]);
-        setsearchLocation({
-          latitude: Number(item.y),
-          longitude: Number(item.x),
-        });
-        setComponentCheck(true);
+        if (check) {
+          setsearchLocation({
+            latitude: Number(item.y),
+            longitude: Number(item.x),
+          });
+          setComponentCheck(true);
+        } else {
+          setSelectLocation({
+            latitude: Number(item.y),
+            longitude: Number(item.x),
+          });
+          if (onClickToggleMap) {
+            onClickToggleMap();
+          }
+        }
       }
     );
   }
@@ -72,7 +85,7 @@ const MyLocationSearchBar = ({
   }, [searchMapText]);
 
   const searchSubmit = () => {
-    searchAddressToCoordinate(searchMapText);
+    searchAddressToCoordinate(searchMapText, true);
   };
 
   const SearchComponent = componentCheck ? (
@@ -90,9 +103,15 @@ const MyLocationSearchBar = ({
     </SearchResult>
   ) : (
     <RecentSearchList>
-      <li>최근</li>
-      <li>검색</li>
-      <li>내용</li>
+      {recentAddressData.map((address) => 
+        <li onClick={(e: React.MouseEvent) => {
+          e.preventDefault();
+          searchAddressToCoordinate(address, false)
+        }}>
+          <img src={Pin1}/>
+          {address}
+        </li>
+      )}
     </RecentSearchList>
   );
 
@@ -175,9 +194,19 @@ const GoToMap = styled.div`
 const RecentSearchList = styled.ul`
   margin-left: 30px;
   margin-top: 15px;
+  margin-right: 30px;
   > li {
+    display: flex;
     margin-bottom: 15px;
     font-size: var(--body-text);
+    height: 52px;
+    align-items: center;
+    > img {
+      margin-top: auto;
+      margin-bottom: auto;
+      height: 30px;
+      margin-right: 10px;
+    }
   }
 `;
 

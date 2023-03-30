@@ -27,4 +27,6 @@ public interface ReservationService {
     // 날짜 기준 예약 내역 불러오기
     List<ReservationDto> getReservationsByStoreAndDate(int storeIdx, LocalDate reservationDate);
 
+    ReservationDto confirmReservation(int reservationId);
+
 }

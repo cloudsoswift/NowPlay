@@ -198,7 +198,7 @@ function RotateCard({
   return (
     <TextDiv
       ref={textref}
-      style={{ transform: `perspective(1000px) rotateY(${-rotateYdeg}deg)` }}
+      style={{ transform: ` perspective(2000px) rotateY(${-rotateYdeg}deg)` }}
       onClick={selectHandler}
       selected={selected}
     >

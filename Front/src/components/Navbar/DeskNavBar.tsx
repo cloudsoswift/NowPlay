@@ -31,7 +31,12 @@ const DeskNavbar = () => {
     <NavContainer>
       <NavBox>
         <NavHeader>
-          <Link to={"/owner"}>여가어때</Link>
+          <Link to={"/owner"}>
+            <TitleTextAni delay={1}>여</TitleTextAni>
+            <TitleTextAni delay={2}>가</TitleTextAni>
+            <TitleTextAni delay={3}>어</TitleTextAni>
+            <TitleTextAni delay={4}>때</TitleTextAni>
+          </Link>
         </NavHeader>
         <NavStyle to="" end>
           <BiHome />
@@ -71,9 +76,16 @@ const NavBox = styled.nav`
 `;
 
 const NavHeader = styled.div`
+  display: flex;
   text-align: center;
   height: 100px;
   a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
     font-family: LINESeedKRBd;
     font-size: 50px;
     color: var(--primary-color);
@@ -127,4 +139,33 @@ const Indicatior = styled.div<{ movement: number }>`
 
   transition: 0.5s;
   transform: ${(props) => `translateY(${105 + props.movement * 110}px)`};
+`;
+
+const titlehover = keyframes`
+  0% {
+    transform: translate3d(-20px, 80px, 0px) rotateX(-60deg) rotateY(-20deg) rotateZ(-10deg);
+    opacity: 0;
+  }
+  30%{
+    transform: translate3d(0px, -0px, 0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    opacity: 1;
+  }
+  70%{
+    transform: translate3d(0px, -0px, 0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(20px, -80px, 0px) rotateX(60deg) rotateY(20deg) rotateZ(10deg);
+    opacity: 0;
+  }
+`;
+
+const TitleTextAni = styled.div<{ delay: number }>`
+  
+  font-family: LINESeedKRBd;
+  font-size: 50px;
+  color: var(--primary-color);
+
+  animation: ${titlehover} 4s ease infinite;
+  animation-delay: ${(props) => `0.${props.delay}s`};
 `;

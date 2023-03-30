@@ -13,6 +13,7 @@ import { PlacesPage } from "./pages/places/PlacesPage";
 import { PlaceDetailPage } from "./pages/places/PlaceDetailPage";
 import { PlaceReviewWritePage } from "./pages/places/PlaceReviewWritePage";
 import { PlaceReservationPage } from "./pages/places/PlaceReservationPage";
+import HobbyPage from './pages/user/SelectHobby';
 
 function Mobile() {
   return (
@@ -30,6 +31,7 @@ function Mobile() {
           >
             <Route path="/mypage/signup" element={<SignupPage />} />
           </Route>
+          <Route path="/mypage/hobby" element={<HobbyPage />} />
           <Route element={<PrivateRoute authentication={true} type="mobile" />}>
             <Route path="/mypage/*" element={<MyPage />} />
           </Route>

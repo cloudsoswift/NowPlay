@@ -36,7 +36,6 @@ const MyLocationSearchBar = ({
   >("");
 
   function searchAddressToCoordinate(address: string, check: boolean) {
-
     naver.maps.Service.geocode(
       {
         query: address,
@@ -88,6 +87,26 @@ const MyLocationSearchBar = ({
     searchAddressToCoordinate(searchMapText, true);
   };
 
+  const RecentSearchBox =
+    recentAddressData.length === 0 ? (
+      <NoRecent>최근 검색 기록이 없습니다.</NoRecent>
+    ) : (
+      <RecentSearchList>
+        {recentAddressData.map((address) => (
+          <li
+            key={address}
+            onClick={(e: React.MouseEvent) => {
+              e.preventDefault();
+              searchAddressToCoordinate(address, false);
+            }}
+          >
+            <img src={Pin1} />
+            {address}
+          </li>
+        ))}
+      </RecentSearchList>
+    );
+
   const SearchComponent = componentCheck ? (
     <SearchResult
       onClick={(e: React.MouseEvent) => {
@@ -102,17 +121,7 @@ const MyLocationSearchBar = ({
       {searchJibunAddress && <div>[지번 주소] {searchJibunAddress}</div>}
     </SearchResult>
   ) : (
-    <RecentSearchList>
-      {recentAddressData.map((address) => 
-        <li onClick={(e: React.MouseEvent) => {
-          e.preventDefault();
-          searchAddressToCoordinate(address, false)
-        }}>
-          <img src={Pin1}/>
-          {address}
-        </li>
-      )}
-    </RecentSearchList>
+    <>{RecentSearchBox}</>
   );
 
   return (
@@ -212,6 +221,14 @@ const RecentSearchList = styled.ul`
 
 const SearchResult = styled.div`
   margin: 15px 30px;
+  > div {
+    font-size: var(--body-text);
+  }
+`;
+
+const NoRecent = styled.div`
+  margin: 15px 50px;
+  color: var(--gray-color);
   > div {
     font-size: var(--body-text);
   }

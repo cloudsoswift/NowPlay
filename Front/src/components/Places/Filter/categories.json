@@ -1,79 +1,82 @@
 {
   "categories": [
     {
-      "category": "culture",
+      "category": "문화",
       "imageURL": "main-culture.svg",
       "subCategory": [
-        {"category" : "concert", "imageURL": "sub(culture)-concert.svg"},
-        {"category" : "gallery", "imageURL": "sub(culture)-gallery.svg"},
-        {"category" : "museum", "imageURL": "sub(culture)-museum.svg"},
-        {"category" : "theater", "imageURL": "sub(culture)-theater.svg"}
+        {"category" : "공연장", "imageURL": "sub(culture)-concert.svg"},
+        {"category" : "미술관", "imageURL": "sub(culture)-gallery.svg"},
+        {"category" : "박물관", "imageURL": "sub(culture)-museum.svg"},
+        {"category" : "연극장", "imageURL": "sub(culture)-theater.svg"}
       ]
     }
     , {
-      "category": "game",
+      "category": "오락",
       "imageURL": "main-game.svg",
       "subCategory": [
-        {"category" : "arcade", "imageURL": "sub(game)-arcade.svg"},
-        {"category" : "boardgame", "imageURL": "sub(game)-boardgame.svg"},
-        {"category" : "coinkaraoke", "imageURL": "sub(game)-coinkaraoke.svg"},
-        {"category" : "dolldrawing", "imageURL": "sub(game)-dolldrawing.svg"},
-        {"category" : "pcroom", "imageURL": "sub(game)-pcroom.svg"},
-        {"category" : "playstation", "imageURL": "sub(game)-playstation.svg"}
+        {"category" : "오락실", "imageURL": "sub(game)-arcade.svg"},
+        {"category" : "보드게임방", "imageURL": "sub(game)-boardgame.svg"},
+        {"category" : "동전노래방", "imageURL": "sub(game)-coinkaraoke.svg"},
+        {"category" : "인형뽑기", "imageURL": "sub(game)-dolldrawing.svg"},
+        {"category" : "PC방", "imageURL": "sub(game)-pcroom.svg"},
+        {"category" : "플스방", "imageURL": "sub(game)-playstation.svg"}
       ]
     }
     ,{
-      "category": "healing",
+      "category": "힐링",
       "imageURL": "main-healing.svg",
       "subCategory": [
-        {"category" : "arboretum", "imageURL": "sub(healing)-arboretum.svg"},
-        {"category" : "baths", "imageURL": "sub(healing)-baths.svg"},
-        {"category" : "carwash", "imageURL": "sub(healing)-carwash.svg"},
-        {"category" : "flowergarden", "imageURL": "sub(healing)-flowergarden.svg"},
-        {"category" : "spa", "imageURL": "sub(healing)-spa.svg"}
+        {"category" : "수목원", "imageURL": "sub(healing)-arboretum.svg"},
+        {"category" : "목욕탕", "imageURL": "sub(healing)-baths.svg"},
+        {"category" : "세차장", "imageURL": "sub(healing)-carwash.svg"},
+        {"category" : "화원", "imageURL": "sub(healing)-flowergarden.svg"},
+        {"category" : "온천", "imageURL": "sub(healing)-spa.svg"}
       ]
     }, {
-      "category": "leisure",
+      "category": "레저",
       "imageURL": "main-leisure.svg",
       "subCategory": [
-        {"category" : "climbing", "imageURL": "sub(leisure)-climbing.svg"},
-        {"category" : "fishing", "imageURL": "sub(leisure)-fishing.svg"},
-        {"category" : "rafting", "imageURL": "sub(leisure)-rafting.svg"},
-        {"category" : "riding", "imageURL": "sub(leisure)-riding.svg"},
-        {"category" : "scubadiving", "imageURL": "sub(leisure)-scubadiving.svg"},
-        {"category" : "skindiving", "imageURL": "sub(leisure)-skindiving.svg"},
-        {"category" : "surfing", "imageURL": "sub(leisure)-surfing.svg"},
-        {"category" : "waterski", "imageURL": "sub(leisure)-waterski.svg"},
-        {"category" : "yacht", "imageURL": "sub(leisure)-yacht.svg"}
+        {"category" : "클라이밍", "imageURL": "sub(leisure)-climbing.svg"},
+        {"category" : "낚시", "imageURL": "sub(leisure)-fishing.svg"},
+        {"category" : "래프팅", "imageURL": "sub(leisure)-rafting.svg"},
+        {"category" : "승마", "imageURL": "sub(leisure)-riding.svg"},
+        {"category" : "스쿠버다이빙", "imageURL": "sub(leisure)-scubadiving.svg"},
+        {"category" : "스킨다이빙", "imageURL": "sub(leisure)-skindiving.svg"},
+        {"category" : "서핑장", "imageURL": "sub(leisure)-surfing.svg"},
+        {"category" : "수상스키", "imageURL": "sub(leisure)-waterski.svg"},
+        {"category" : "양궁장", "imageURL": "sub(leisure)-archery.svg"},
+        {"category" : "사격장", "imageURL": "sub(leisure)-shooting.svg"},
+        {"category" : "요트장", "imageURL": "sub(leisure)-yacht.svg"}
       ]
     },{
-      "category": "sports",
+      "category": "체육",
       "imageURL": "main-sports.svg",
       "subCategory": [
-        {"category" : "badminton", "imageURL": "sub(sports)-badminton.svg"},
-        {"category" : "basketball", "imageURL": "sub(sports)-basketball.svg"},
-        {"category" : "billiards", "imageURL": "sub(sports)-billiards.svg"},
-        {"category" : "futsal", "imageURL": "sub(sports)-futsal.svg"},
-        {"category" : "icerink", "imageURL": "sub(sports)-icerink.svg"},
-        {"category" : "pingpong", "imageURL": "sub(sports)-pingpong.svg"},
-        {"category" : "rollerskates", "imageURL": "sub(sports)-rollerskates.svg"},
-        {"category" : "screengolf", "imageURL": "sub(sports)-screengolf.svg"},
-        {"category" : "soccer", "imageURL": "sub(sports)-soccer.svg"},
-        {"category" : "squash", "imageURL": "sub(sports)-squash.svg"},
-        {"category" : "tennis", "imageURL": "sub(sports)-tennis.svg"}
+        {"category" : "배드민턴", "imageURL": "sub(sports)-badminton.svg"},
+        {"category" : "농구", "imageURL": "sub(sports)-basketball.svg"},
+        {"category" : "당구", "imageURL": "sub(sports)-billiards.svg"},
+        {"category" : "풋살", "imageURL": "sub(sports)-futsal.svg"},
+        {"category" : "아이스링크장", "imageURL": "sub(sports)-icerink.svg"},
+        {"category" : "탁구", "imageURL": "sub(sports)-pingpong.svg"},
+        {"category" : "롤러장", "imageURL": "sub(sports)-rollerskates.svg"},
+        {"category" : "스크린 골프", "imageURL": "sub(sports)-screengolf.svg"},
+        {"category" : "축구", "imageURL": "sub(sports)-soccer.svg"},
+        {"category" : "스쿼시", "imageURL": "sub(sports)-squash.svg"},
+        {"category" : "테니스", "imageURL": "sub(sports)-tennis.svg"},
+        {"category" : "야구장", "imageURL": "sub(sports)-baseball.svg"}
       ]
     },{
-      "category": "theme",
+      "category": "테마",
       "imageURL": "main-theme.svg",
       "subCategory": [
-        {"category" : "amusementpark", "imageURL": "sub(theme)-amusementpark.svg"},
-        {"category" : "escape", "imageURL": "sub(theme)-escape.svg"},
-        {"category" : "folkvillage", "imageURL": "sub(theme)-folkvillage.svg"},
-        {"category" : "glamping", "imageURL": "sub(theme)-glamping.svg"},
-        {"category" : "hiking", "imageURL": "sub(theme)-hiking.svg"},
-        {"category" : "park", "imageURL": "sub(theme)-park.svg"},
-        {"category" : "vrroom", "imageURL": "sub(theme)-vrroom.svg"},
-        {"category" : "zoo", "imageURL": "sub(theme)-zoo.svg"}
+        {"category" : "놀이공원", "imageURL": "sub(theme)-amusementpark.svg"},
+        {"category" : "방탈출", "imageURL": "sub(theme)-escape.svg"},
+        {"category" : "민속촌", "imageURL": "sub(theme)-folkvillage.svg"},
+        {"category" : "글램핑", "imageURL": "sub(theme)-glamping.svg"},
+        {"category" : "등산로", "imageURL": "sub(theme)-hiking.svg"},
+        {"category" : "공원", "imageURL": "sub(theme)-park.svg"},
+        {"category" : "VR방", "imageURL": "sub(theme)-vrroom.svg"},
+        {"category" : "동물원", "imageURL": "sub(theme)-zoo.svg"}
       ]
     }
   ]

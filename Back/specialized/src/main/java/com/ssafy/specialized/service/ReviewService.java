@@ -3,6 +3,8 @@ package com.ssafy.specialized.service;
 import com.ssafy.specialized.domain.dto.review.ResponReviewsDto;
 import com.ssafy.specialized.domain.dto.review.ReviewDetailDto;
 import com.ssafy.specialized.domain.dto.review.ReviewDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -20,4 +22,5 @@ public interface ReviewService {
 
     void deleteReview(int pk) throws IOException;
 
+    Page<?> getStoreReviewListPage(int id, Pageable pageable);
 }

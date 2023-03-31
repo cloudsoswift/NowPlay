@@ -61,7 +61,10 @@
 #
 #
 type Query {
-    getNearbyStoreList(nearbyStoreInput: NearbyStoreInput): [StoreOutput]
+#    getNearbyStoreList(nearbyStoreInput: NearbyStoreInput): [StoreOutput]
+    getNearbyStoreList(nearbyStoreInput: NearbyStoreInput): StoreOutputWithTotalCount
+    searchStore(searchInput: String, count: Int): [StoreOutput]
+    storeDetail(store: String): Store
 }
 
 input NearbyStoreInput {
@@ -95,6 +98,11 @@ type StoreOutput {
     reviewCount: Int
     averageRating: Float
     isBookmark: Boolean
+}
+
+type StoreOutputWithTotalCount{
+    storeOutput: [StoreOutput]
+    totalCount: Int
 }
 
 type BusinessHour {

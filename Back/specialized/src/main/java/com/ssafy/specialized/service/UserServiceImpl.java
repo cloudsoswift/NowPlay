@@ -1,6 +1,7 @@
 package com.ssafy.specialized.service;
 
 import com.ssafy.specialized.common.enums.Authority;
+import com.ssafy.specialized.common.enums.UserType;
 import com.ssafy.specialized.common.exception.CustomException;
 import com.ssafy.specialized.common.exception.ErrorCode;
 import com.ssafy.specialized.common.jwt.JwtTokenProvider;
@@ -126,6 +127,37 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(login.getUserId()).orElse(null);
         // 회원 정보 조회
         if (user == null) {
+            throw new CustomException(ErrorCode.USER_LOGIN_INFO_INVALID);
+        }
+        // 로그인시 토큰 생성
+        UsernamePasswordAuthenticationToken authenticationToken = login.toAuthentication();
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        TokenDTO tokenDto = jwtTokenProvider.generateToken(authentication);
+        // 토큰 정보 설정
+//        redisTemplate.opsForValue()
+//                .set("RT:" + authentication.getName(), tokenDto.getRefreshToken(),
+//                        tokenDto.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+        ResponseCookie cookie = ResponseCookie.from("refresh", tokenDto.getRefreshToken())
+                .path("/")
+                .sameSite("None")
+                .httpOnly(true)
+                .secure(true)
+                .build();
+        LoginResponseDto loginResponseDto = new LoginResponseDto();
+        loginResponseDto.setAccessToken(tokenDto.getAccessToken());
+        loginResponseDto.setUserDistance(null);
+        loginResponseDto.setUserNickname(user.getNickname());
+        loginResponseDto.setUserName(user.getName());
+        loginResponseDto.setUserAddress(user.getAddress());
+        loginResponseDto.setRefreshToken(tokenDto.getRefreshToken());
+        return loginResponseDto;
+    }
+    // 사업자 로그인 서비스
+    @Override
+    public LoginResponseDto businessLogin(UserLoginDTO login) {
+        User user = userRepository.findById(login.getUserId()).orElse(null);
+        // 회원 정보 조회
+        if (user == null || user.getType() != UserType.Owner) {
             throw new CustomException(ErrorCode.USER_LOGIN_INFO_INVALID);
         }
         // 로그인시 토큰 생성

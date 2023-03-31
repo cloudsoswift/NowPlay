@@ -138,7 +138,7 @@ const Calendar = () => {
   );
 };
 
-export const DatePicker = (props: Props) => {
+export const DatePicker = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div

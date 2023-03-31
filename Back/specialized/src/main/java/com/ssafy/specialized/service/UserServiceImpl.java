@@ -47,6 +47,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final BookmarkRepository bookmarkRepository;
     @Autowired
+    private final StoreRepository storeRepository;
+    @Autowired
     private final PasswordEncoder passwordEncoder;
     @Autowired
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -154,7 +156,7 @@ public class UserServiceImpl implements UserService {
     }
     // 사업자 로그인 서비스
     @Override
-    public LoginResponseDto businessLogin(UserLoginDTO login) {
+    public BusinessLoginResponseDto businessLogin(UserLoginDTO login) {
         User user = userRepository.findById(login.getUserId()).orElse(null);
         // 회원 정보 조회
         if (user == null || user.getType() != UserType.Owner) {
@@ -164,6 +166,13 @@ public class UserServiceImpl implements UserService {
         UsernamePasswordAuthenticationToken authenticationToken = login.toAuthentication();
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         TokenDTO tokenDto = jwtTokenProvider.generateToken(authentication);
+        // 가게 정보 조회
+        Optional<Store> optstore = storeRepository.findByOwner(user);
+        Store store= null;
+        if (optstore.isPresent()) {
+            store = optstore.get();
+        }
+
         // 토큰 정보 설정
 //        redisTemplate.opsForValue()
 //                .set("RT:" + authentication.getName(), tokenDto.getRefreshToken(),
@@ -174,14 +183,15 @@ public class UserServiceImpl implements UserService {
                 .httpOnly(true)
                 .secure(true)
                 .build();
-        LoginResponseDto loginResponseDto = new LoginResponseDto();
-        loginResponseDto.setAccessToken(tokenDto.getAccessToken());
-        loginResponseDto.setUserDistance(null);
-        loginResponseDto.setUserNickname(user.getNickname());
-        loginResponseDto.setUserName(user.getName());
-        loginResponseDto.setUserAddress(user.getAddress());
-        loginResponseDto.setRefreshToken(tokenDto.getRefreshToken());
-        return loginResponseDto;
+        BusinessLoginResponseDto businessLoginResponseDto = new BusinessLoginResponseDto();
+        businessLoginResponseDto.setAccessToken(tokenDto.getAccessToken());
+        businessLoginResponseDto.setUserDistance(null);
+        businessLoginResponseDto.setStoreIdx(store.getIdx());
+        businessLoginResponseDto.setUserNickname(user.getNickname());
+        businessLoginResponseDto.setUserName(user.getName());
+        businessLoginResponseDto.setUserAddress(user.getAddress());
+        businessLoginResponseDto.setRefreshToken(tokenDto.getRefreshToken());
+        return businessLoginResponseDto;
     }
 
     // 로그아웃 서비스

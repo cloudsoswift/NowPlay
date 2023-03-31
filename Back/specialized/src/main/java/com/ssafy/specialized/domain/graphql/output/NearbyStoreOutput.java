@@ -1,14 +1,15 @@
 package com.ssafy.specialized.domain.graphql.output;
 
 import com.ssafy.specialized.domain.entity.BusinessHour;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class NearbyStoreOutput {
     private int idx;
     private String name;
@@ -21,7 +22,7 @@ public class NearbyStoreOutput {
     private String owner;
     private String contactNumber;
     private String homepage;
-    private String mainImagesUrl;
+    private String imagesUrl;
     private List<String> imageUrls;
     private String explanation;
     private Float latitude;

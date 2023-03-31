@@ -69,7 +69,7 @@ export const DistanceSlider = (props: Props) => {
         <span className="w-1 h-5 mt-8 flex justify-right">10km</span>
         <span className="w-1 h-5 mt-8 flex justify-right">20km</span>
         <span className="w-1 h-5 mt-8 flex justify-right">50km</span>
-        <span className="w-9 h-5 mt-8 flex justify-center">{"< 50"}</span>
+        <span className="w-9 h-5 mt-8 flex justify-right text-[var(--primary-color)]">MAX</span>
         {/* <span className="w-1 h-5 block bg-black" />
         <span className="w-1 h-5 block bg-black" />
         <span className="w-1 h-5 block bg-black" />

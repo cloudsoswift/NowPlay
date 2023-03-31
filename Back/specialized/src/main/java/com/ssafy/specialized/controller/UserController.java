@@ -9,6 +9,10 @@ import com.ssafy.specialized.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -157,9 +161,8 @@ public class UserController {
 
     //내 리뷰 목록
     @GetMapping("/reviews")
-    public ResponseEntity<?> getMyReviewList(@RequestParam String pageNo, HttpServletRequest request) {
-        List<Review> list = userService.getMyReviewList();
-        return ResponseEntity.ok(list);
+    public ResponseEntity<?> getMyReviewList(@PageableDefault(size = 10, sort = "idx",direction = Sort.Direction.DESC)Pageable  pageable, HttpServletRequest request) {
+        return ResponseEntity.ok(userService.getMyReviewList(pageable));
     }
 
     // 토큰 만료시 재발급

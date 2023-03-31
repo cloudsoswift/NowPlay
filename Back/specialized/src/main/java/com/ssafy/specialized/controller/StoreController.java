@@ -35,20 +35,20 @@ public class StoreController {
         return ResponseEntity.ok(null);
     }
 
-    @QueryMapping
-    public NearbyStoreOutputWithTotalCount getNearbyStoreList(@Argument NearbyStoreInput nearbyStoreInput) {
-        return storeService.getNearbyStoreList(nearbyStoreInput);
-    }
-
-    @QueryMapping
-    public NearbyStoreOutputWithTotalCount searchStore(@Argument String searchInput, @Argument int count, @Argument float lat, @Argument float lon) {
-        return storeService.searchStore(searchInput, count, lat, lon);
-    }
-
-    @QueryMapping
-    public List<NearbyStoreOutput> storeRecommendationByCoordinate(@Argument float lat, @Argument float lon){
-        return storeService.storeRecommendationByCoordinate(lat, lon);
-    }
+//    @QueryMapping
+//    public NearbyStoreOutputWithTotalCount getNearbyStoreList(@Argument NearbyStoreInput nearbyStoreInput) {
+//        return storeService.getNearbyStoreList(nearbyStoreInput);
+//    }
+//
+//    @QueryMapping
+//    public NearbyStoreOutputWithTotalCount searchStore(@Argument String searchInput, @Argument int count, @Argument float lat, @Argument float lon) {
+//        return storeService.searchStore(searchInput, count, lat, lon);
+//    }
+//
+//    @QueryMapping
+//    public List<NearbyStoreOutput> storeRecommendationByCoordinate(@Argument float lat, @Argument float lon){
+//        return storeService.storeRecommendationByCoordinate(lat, lon);
+//    }
 
 
 }

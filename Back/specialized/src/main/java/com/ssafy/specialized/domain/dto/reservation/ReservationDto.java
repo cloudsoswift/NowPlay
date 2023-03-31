@@ -22,7 +22,7 @@ public class ReservationDto {
 
     private LocalDateTime time;
 
-    private boolean isConfirmed;
+    private int isConfirmed;
 
     private LocalDateTime createdAt;
 

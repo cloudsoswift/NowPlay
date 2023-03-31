@@ -22,7 +22,7 @@ public class StoreController {
     @Autowired
     private final StoreService storeService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/store")
     public ResponseEntity<?> getStoreDetail(@PathVariable int id) throws Exception{
         return ResponseEntity.ok(storeService.getStoreDetail(id));
     }

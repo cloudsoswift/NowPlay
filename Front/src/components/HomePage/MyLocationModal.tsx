@@ -5,8 +5,8 @@ import MyLocationSearchMap from "./MyLocationSearchMap";
 
 interface ModalDefaultType {
   onClickToggleModal: () => void;
-  selectAddress: string;
-  setSelectAddress: React.Dispatch<React.SetStateAction<string>>;
+  selectAddress: string | null;
+  setSelectAddress: React.Dispatch<React.SetStateAction<string | null>>;
   findAddress: (
     latlng: naver.maps.LatLng,
     map: naver.maps.Map,
@@ -125,11 +125,12 @@ const SlideUp = keyframes`
 
 const ModalBox = styled.div`
   width: 100%;
-  height: 100%;
+  height: 80%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: fixed;
+  overflow-y: auto;
 `;
 
 const ModalContent = styled.dialog<{ isOpenModal: boolean }>`

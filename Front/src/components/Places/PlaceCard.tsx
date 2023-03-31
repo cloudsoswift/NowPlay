@@ -11,7 +11,161 @@ import { StarRating } from "./StarRating";
 type PlaceCardProps = {
   place: TPlaceCard;
 };
-export const PlaceCard = ({ place }: PlaceCardProps) => {
+
+export const PlaceCard2 = ({ place }: PlaceCardProps) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`${place.id}`);
+  };
+  const percentRating = place.averageRating * 20;
+
+  return (
+    <CardBox onClick={handleClick}>
+      <img src={`/pics/${place.imageURL}`} />
+      <div>
+        <Top>
+          <Name>{place.name}</Name>
+          <Category>{place.subCategory}</Category>
+        </Top>
+        <Middle>
+          <Address>{place.address}</Address>
+        </Middle>
+        <Bottom>
+          <Distance>
+            {place.distance < 1
+              ? `${place.distance * 1000}m`
+              : `${place.distance.toFixed(2)}km`}
+          </Distance>
+          <ReviewNum>리뷰 {place.reviewCount}개</ReviewNum>
+          <Star>
+            <Small>{place.averageRating}</Small>
+            <StarRatinga>
+              <StarRatingFill style={{ width: percentRating + "%" }}>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </StarRatingFill>
+              <StarRatingBase>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </StarRatingBase>
+            </StarRatinga>
+          </Star>
+        </Bottom>
+      </div>
+    </CardBox>
+  );
+};
+
+const CardBox = styled.div`
+  width: 100%;
+  padding: 20px;
+  > img {
+    width: 100%;
+    border-radius: 20px;
+  }
+  > div {
+    margin-bottom: 10px;
+  }
+`;
+
+const Top = styled.div`
+  height: 45px;
+  justify-content: space-between;
+  display: flex;
+  align-items: baseline;
+  margin-top: 15px;
+`;
+
+const Name = styled.div`
+  width: auto;
+  font-size: var(--large-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 15px;
+`;
+
+const Category = styled.div`
+  width: auto;
+  font-size: var(--title-2);
+  color: var(--gray-color);
+`;
+
+const Middle = styled.div`
+  margin-top: 5px;
+`;
+
+const Address = styled.div`
+  width: 100%;
+  font-size: var(--body-text);
+`;
+
+const Bottom = styled.div`
+  justify-content: start;
+  display: flex;
+  align-items: baseline;
+  margin-top: 5px;
+`;
+
+const Distance = styled.div`
+  font-size: var(--caption);
+  margin-inline: 5px;
+  color: var(--primary-color);
+`;
+
+const ReviewNum = styled.div`
+  margin-left: 20px;
+`
+
+const Star = styled.div`
+  margin-left: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const Small = styled.div`
+  font-size: var(--body-text);
+  margin-right: 5px;
+`;
+
+const StarRatinga = styled.div`
+  position: relative;
+  unicode-bidi: bidi-override;
+  width: max-content;
+  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 0.2px;
+  -webkit-text-stroke-color: #2b2a29;
+`;
+
+const StarRatingFill = styled.div`
+  padding: 0;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  left: 0;
+  overflow: hidden;
+  -webkit-text-fill-color: var(--primary-color);
+  > span {
+    font-size: var(--title-2);
+  }
+`;
+
+const StarRatingBase = styled.div`
+  z-index: 0;
+  padding: 0;
+  > span {
+    font-size: var(--title-2);
+  }
+`;
+
+export const PlaceCard1 = ({ place }: PlaceCardProps) => {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`${place.id}`);
@@ -34,7 +188,7 @@ export const PlaceCard = ({ place }: PlaceCardProps) => {
             : `${place.distance.toFixed(2)}km`}
         </div>
         <div>{`리뷰 ${place.reviewCount}개`}</div>
-        <StarRating rating={place.averageRating}/>
+        <StarRating rating={place.averageRating} />
       </div>
       <div>{place.isBookmark}</div>
     </div>
@@ -49,7 +203,7 @@ const TEST_DATA: Array<TPlaceCard> = [
     subCategory: "노래방",
     address: "경북 구미시 인동중앙로1길 5",
     distance: 0.513,
-    averageRating: 4.0,
+    averageRating: 3.5,
     reviewCount: 4,
     isBookmark: true,
   },
@@ -108,7 +262,7 @@ export const PlaceCardSheet = (props: PlaceCardsProps) => {
         ref={content}
       >
         {TEST_DATA.map((data) => (
-          <PlaceCard key={data.id} place={data} />
+          <PlaceCard2 key={data.id} place={data} />
         ))}
       </div>
     </Wrapper>

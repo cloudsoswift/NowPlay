@@ -4,8 +4,12 @@ import styled from "styled-components";
 import { BsBellFill } from "react-icons/bs";
 
 import { useOwnerLogout } from "../../utils/hooks/useOwnerLogout";
+import { useRecoilValue } from 'recoil';
+import { userInfoAtom } from '../../utils/recoil/userAtom';
 
 const OwnerTopbar = () => {
+  const ownerInfo = useRecoilValue(userInfoAtom)
+
   const logoutMutation = useOwnerLogout();
 
   const logoutHandler = () => {
@@ -25,7 +29,7 @@ const OwnerTopbar = () => {
       <TopbarContainer>
         {Cookie.accessToken !== undefined ? (
           <>
-            <h1>XXX사장님 환영합니다</h1>
+            <h1>{ownerInfo.userName || "이름없음"}사장님 환영합니다</h1>
             <ButtonSet>
               <AlarmPopover>
                 <button onClick={popHandler}>

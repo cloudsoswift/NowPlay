@@ -7,9 +7,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
 const OwnerReviewPage = () => {
   const { data, isSuccess, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery(
-      ["repos"],
+      ["storeReviews"],
       async ({ pageParam = 0 }) => {
-        console.log({ pageParam });
         const { data } = await ownerapi({
           method: "GET",
           url: `/places/1/reviews?page=${pageParam}`,
@@ -19,7 +18,6 @@ const OwnerReviewPage = () => {
       {
         getNextPageParam: (lastPage, pages) => {
           const NextPage = lastPage.number + 1;
-          console.log(NextPage);
           return NextPage;
         },
       }
@@ -29,7 +27,6 @@ const OwnerReviewPage = () => {
 
   const handleObserver = useCallback(
     (entries: any) => {
-      console.log(entries);
       const [target] = entries;
       if (target.isIntersecting) {
         fetchNextPage();
@@ -48,6 +45,8 @@ const OwnerReviewPage = () => {
       return () => observer.unobserve(element);
     }
   }, [fetchNextPage, hasNextPage, handleObserver]);
+
+  console.log(data)
 
   return (
     <>

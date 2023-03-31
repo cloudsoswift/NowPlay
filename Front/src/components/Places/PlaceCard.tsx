@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { StarRating } from "./StarRating";
+import { BsBookmarkHeart, BsBookmarkHeartFill } from 'react-icons/bs'
 
 type PlaceCardProps = {
   place: TPlaceCard;
@@ -26,6 +27,9 @@ export const PlaceCard2 = ({ place }: PlaceCardProps) => {
         <Top>
           <Name>{place.name}</Name>
           <Category>{place.subCategory}</Category>
+          <BookmarkDiv>
+            {place.isBookmark ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
+          </BookmarkDiv>
         </Top>
         <Middle>
           <Address>{place.address}</Address>
@@ -36,7 +40,9 @@ export const PlaceCard2 = ({ place }: PlaceCardProps) => {
               ? `${place.distance * 1000}m`
               : `${place.distance.toFixed(2)}km`}
           </Distance>
+          <div>/</div>
           <ReviewNum>리뷰 {place.reviewCount}개</ReviewNum>
+          <div>/</div>
           <Star>
             <Small>{place.averageRating}</Small>
             <StarRatinga>
@@ -64,21 +70,20 @@ export const PlaceCard2 = ({ place }: PlaceCardProps) => {
 
 const CardBox = styled.div`
   width: 100%;
-  padding: 20px;
+  padding: 30px 30px 15px 30px;
   > img {
     width: 100%;
     border-radius: 20px;
   }
   > div {
-    margin-bottom: 10px;
   }
+  border-top: 10px solid var(--gray-color-light);
 `;
 
 const Top = styled.div`
   height: 45px;
-  justify-content: space-between;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   margin-top: 15px;
 `;
 
@@ -92,6 +97,7 @@ const Name = styled.div`
 `;
 
 const Category = styled.div`
+  margin-left: auto;
   width: auto;
   font-size: var(--title-2);
   color: var(--gray-color);
@@ -109,22 +115,22 @@ const Address = styled.div`
 const Bottom = styled.div`
   justify-content: start;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   margin-top: 5px;
 `;
 
 const Distance = styled.div`
   font-size: var(--caption);
-  margin-inline: 5px;
+  margin-inline: 10px;
   color: var(--primary-color);
 `;
 
 const ReviewNum = styled.div`
-  margin-left: 20px;
+margin-inline: 10px;
 `
 
 const Star = styled.div`
-  margin-left: 20px;
+margin-inline: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -164,6 +170,16 @@ const StarRatingBase = styled.div`
     font-size: var(--title-2);
   }
 `;
+
+const BookmarkDiv = styled.div`
+  margin-left: 5px;
+  margin-bottom: 5px;
+  > svg {
+    width: 30px;
+    height: 30px;
+    fill: var(--primary-color)
+  }
+`
 
 export const PlaceCard1 = ({ place }: PlaceCardProps) => {
   const navigate = useNavigate();
@@ -216,7 +232,7 @@ const TEST_DATA: Array<TPlaceCard> = [
     distance: 0.513,
     averageRating: 4.0,
     reviewCount: 4,
-    isBookmark: true,
+    isBookmark: false,
   },
   {
     id: 3,
@@ -238,7 +254,7 @@ const TEST_DATA: Array<TPlaceCard> = [
     distance: 0.513,
     averageRating: 4.0,
     reviewCount: 4,
-    isBookmark: true,
+    isBookmark: false,
   },
 ];
 
@@ -253,12 +269,12 @@ export const PlaceCardSheet = (props: PlaceCardsProps) => {
 
   return (
     <Wrapper ref={sheet}>
-      <div className="h-12 rounded-t-lg pt-4 pb-1" id="bottomSheetHeader">
-        <div className="w-8 h-1 rounded-sm m-auto bg-slate-500"></div>
+      <div className="h-20 rounded-t-lg pt-4 pb-1 bg-[var(--gray-color-light)]" id="bottomSheetHeader">
+        <div className="w-8 h-1 rounded-sm m-auto bg-[var(--primary-color)]"></div>
       </div>
       <div
         id="bottomSheetContent"
-        className="overflow-auto p-4 space-y-4"
+        className="overflow-auto"
         ref={content}
       >
         {TEST_DATA.map((data) => (

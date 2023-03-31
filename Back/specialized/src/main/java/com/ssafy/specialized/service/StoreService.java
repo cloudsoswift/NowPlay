@@ -5,7 +5,8 @@ import com.ssafy.specialized.domain.dto.store.UpdateStoreDto;
 import com.ssafy.specialized.domain.entity.Store;
 import com.ssafy.specialized.domain.graphql.input.NearbyStoreInput;
 import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutput;
-import software.amazon.ion.IonException;
+import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutputWithTotalCount;
+
 
 import java.util.List;
 
@@ -17,10 +18,13 @@ public interface StoreService {
 
     void getAllExistingCategories();
 
-    List<NearbyStoreOutput> getNearbyStoreList(NearbyStoreInput nearbyStoreInput);
+    NearbyStoreOutputWithTotalCount getNearbyStoreList(NearbyStoreInput nearbyStoreInput);
 
     List<Store> getStoreListByCategory(NearbyStoreInput nearbyStoreInput);
     List<NearbyStoreOutput> getStoreListByPosition(NearbyStoreInput nearbyStoreInput);
 
     void updateStore(UpdateStoreDto updateStoreDto) throws Exception;
+    NearbyStoreOutputWithTotalCount searchStore(String searchInput, int count, float lat, float lon);
+
+    List<NearbyStoreOutput> storeRecommendationByCoordinate(float lat, float lon);
 }

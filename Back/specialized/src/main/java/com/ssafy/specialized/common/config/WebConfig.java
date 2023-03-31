@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry
-                .addMapping("https://j8d110.ssafy.p.io")
+                .addMapping("https://j8d110.p.ssafy.io")
 //                .addMapping("")
                 .allowedOriginPatterns("/**")
                 .allowedMethods(

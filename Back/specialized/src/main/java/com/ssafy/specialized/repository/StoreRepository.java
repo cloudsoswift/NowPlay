@@ -7,17 +7,39 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public interface StoreRepository extends JpaRepository<Store, Integer> {
+
+
+    Optional<Store> findByOwner(User owner);
+
+
     Optional<Store> findById(int id);
     List<Store> findAllByName(String name);
+
+
+    @Query(value = "SELECT *" +
+            ", (select (ST_Distance_Sphere(POINT(:y, :x), POINT(longitude, latitude)))/1000) as DISTANCE" +
+            ", (select exists(select * from bookmark where bookmark.store_idx = store.idx and user_idx = :userIdx)) as bookmark " +
+            "from store LEFT JOIN (SELECT review.store_idx AS id, COUNT(*) as reviewCount, AVG(rating) as averageRating FROM review GROUP BY review.store_idx) as reviewData ON reviewData.id = store.idx " +
+            "HAVING (store.name like %:name%) " +
+            "order by distance", nativeQuery = true)
+    List<NearbyStoreOutputInterface> findAllByNameQuery(@Param("name") String name, @Param("x") float x, @Param("y") float y, @Param("userIdx") int userIndex);
+
+    @Query(value = "SELECT *" +
+            ", (select (ST_Distance_Sphere(POINT(:y, :x), POINT(longitude, latitude)))/1000) as DISTANCE" +
+            ", (select exists(select * from bookmark where bookmark.store_idx = store.idx and user_idx = :userIdx)) as bookmark " +
+            "from store LEFT JOIN (SELECT review.store_idx AS id, COUNT(*) as reviewCount, AVG(rating) as averageRating FROM review GROUP BY review.store_idx) as reviewData ON reviewData.id = store.idx " +
+            "order by distance", nativeQuery = true)
+    List<NearbyStoreOutputInterface> findAllByCoordinateQuery(@Param("x") float x, @Param("y") float y, @Param("userIdx") int userIndex);
 
     List<Store> findAllBySubcategory(int subcategory);
 
     @Query(value = "SELECT *" +
-            ", (select SQRT((latitude - :x) * (latitude - :x) + (longitude - :y) * (longitude - :y))) as DISTANCE" +
+            ", (select (ST_Distance_Sphere(POINT(:y, :x), POINT(longitude, latitude)))/1000) as DISTANCE" +
             ", (select exists(select * from bookmark where bookmark.store_idx = store.idx and user_idx = :userIdx)) as bookmark " +
             "from store LEFT JOIN (SELECT review.store_idx AS id, COUNT(*) as reviewCount, AVG(rating) as averageRating FROM review GROUP BY review.store_idx) as reviewData ON reviewData.id = store.idx " +
             "HAVING (main_category_idx in(:mainCategoryArr) or subcategory_idx in(:subcategoryArr)) and distance < :maxDist " +

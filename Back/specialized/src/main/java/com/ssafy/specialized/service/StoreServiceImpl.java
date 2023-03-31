@@ -15,6 +15,7 @@ import com.ssafy.specialized.domain.dto.store.UpdateStoreDto;
 import com.ssafy.specialized.domain.entity.*;
 import com.ssafy.specialized.domain.graphql.input.NearbyStoreInput;
 import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutput;
+import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutputWithTotalCount;
 import com.ssafy.specialized.domain.mapping.NearbyStoreOutputInterface;
 import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +28,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class StoreServiceImpl implements StoreService{
+public class StoreServiceImpl implements StoreService {
 
     @Autowired
     private final StoreRepository storeRepository;
@@ -77,7 +77,7 @@ public class StoreServiceImpl implements StoreService{
         User user = userRepository.findByName(username);
         Optional<Store> optstore = storeRepository.findById(Storeid);
         Store store = null;
-        if (optstore.isPresent()){
+        if (optstore.isPresent()) {
             store = optstore.get();
         }
         List<BusinessHour> businessHourList = businessHourRepository.findAllByStore(store);
@@ -98,7 +98,7 @@ public class StoreServiceImpl implements StoreService{
         storeDto.setBusinessHourList(businessHourList);
         try {
             storeDto.setAverageRating(reviewRepository.findAvgByStore(Storeid));
-        } catch (Exception e){
+        } catch (Exception e) {
         }
         storeDto.setFaverite(bookmarkRepository.existsAllByStoreAndUser(store, user));
         System.out.println("3");
@@ -116,7 +116,7 @@ public class StoreServiceImpl implements StoreService{
         }
         Optional<Bookmark> optBookmark = bookmarkRepository.findAllByStoreAndUser(store, user);
         Bookmark bookmark = null;
-        if (optBookmark.isPresent()){
+        if (optBookmark.isPresent()) {
             bookmark = optBookmark.get();
             bookmarkRepository.delete(bookmark);
         } else {
@@ -136,10 +136,10 @@ public class StoreServiceImpl implements StoreService{
     }
 
     @Override
-    public List<NearbyStoreOutput> getNearbyStoreList(NearbyStoreInput nearbyStoreInput) {
+    public NearbyStoreOutputWithTotalCount getNearbyStoreList(NearbyStoreInput nearbyStoreInput) {
         String name = SecurityUtil.getLoginUsername();
         User user = userRepository.findByName(name);
-        List<NearbyStoreOutput> list = null;
+
         List<Integer> subIndex = new ArrayList<>();
         boolean isEmpty = true;
         System.out.println(nearbyStoreInput);
@@ -167,13 +167,6 @@ public class StoreServiceImpl implements StoreService{
         int i = (nearbyStoreInput.getCount() - 1) * 20;
         int j = i + 19;
         List<NearbyStoreOutput> retrieveList = new ArrayList<>();
-        System.out.println("=========================================================================");
-        System.out.println("getCount: " + nearbyStoreInput.getCount());
-        System.out.println("i: " + i);
-        System.out.println("j: " + j);
-        System.out.println("size: " + storeList.size());
-        System.out.println("toString: " + nearbyStoreInput.toString());
-        System.out.println("=========================================================================");
         while (storeList.size() > i && i <= j) {
             Store store = storeRepository.findById(storeList.get(i).getIdx()).get();
             List<Review> reviewList = reviewRepository.findAllByStore(store);
@@ -186,15 +179,7 @@ public class StoreServiceImpl implements StoreService{
             nearbyStoreOutput.setStore(store);
             if (reviewCount == 0) {
                 nearbyStoreOutput.setAverageRating(0);
-                System.out.println("=========================================================");
-                System.out.println(store.getIdx());
-                System.out.println("리뷰 점수 0 개");
-                System.out.println("=========================================================");
             } else {
-                System.out.println("=========================================================");
-                System.out.println("리뷰 점수" + reviewList.get(0).getRating());
-                System.out.println("=========================================================");
-
                 nearbyStoreOutput.setAverageRating(ratings / reviewCount);
             }
             nearbyStoreOutput.setDistance((float) storeList.get(i).getDistance());
@@ -210,7 +195,11 @@ public class StoreServiceImpl implements StoreService{
             retrieveList.add(nearbyStoreOutput);
             i++;
         }
-        return retrieveList;
+
+        NearbyStoreOutputWithTotalCount nearbyStoreOutputWithTotalCount = new NearbyStoreOutputWithTotalCount();
+        nearbyStoreOutputWithTotalCount.setStoreOutput(retrieveList);
+        nearbyStoreOutputWithTotalCount.setTotalCount(storeList.size());
+        return nearbyStoreOutputWithTotalCount;
     }
 
     @Override
@@ -234,7 +223,7 @@ public class StoreServiceImpl implements StoreService{
     }
 
     @Override
-    public void updateStore(UpdateStoreDto updateStoreDto) throws Exception{
+    public void updateStore(UpdateStoreDto updateStoreDto) throws Exception {
         String username = SecurityUtil.getLoginUsername();
         User user = userRepository.findByName(username);
         Optional<Store> optStore = storeRepository.findByOwner(user);
@@ -245,22 +234,22 @@ public class StoreServiceImpl implements StoreService{
         List<StoreImage> storeImageList = storeImageRepository.findAllByStore(store);
         for (StoreImage storeImage : storeImageList) {
             try {
-                s3.deleteObject(bucketName,storeImage.getStoreImageFileName());
+                s3.deleteObject(bucketName, storeImage.getStoreImageFileName());
             } catch (AmazonS3Exception e) {
                 e.printStackTrace();
-            } catch(SdkClientException e) {
+            } catch (SdkClientException e) {
                 e.printStackTrace();
             }
             storeImageRepository.delete(storeImage);
         }
         Optional<HobbyMain> optionalHobbyMain = hobbyMainRepository.findByMainCategory(updateStoreDto.getMainCategory());
         HobbyMain hobbyMain = null;
-        if (optionalHobbyMain.isPresent()){
+        if (optionalHobbyMain.isPresent()) {
             hobbyMain = optionalHobbyMain.get();
         }
         Optional<HobbySubcategory> optionalHobbySubcategory = hobbySubcategoryRepository.findBySubcategory(updateStoreDto.getSubcategory());
         HobbySubcategory hobbySubcategory = null;
-        if (optionalHobbySubcategory.isPresent()){
+        if (optionalHobbySubcategory.isPresent()) {
             hobbySubcategory = optionalHobbySubcategory.get();
         }
         store.setMainCategory(hobbyMain);
@@ -286,14 +275,14 @@ public class StoreServiceImpl implements StoreService{
                 s3.putObject(bucketName, newName1, new File(newfilePath));
                 s3.setObjectAcl(bucketName, newName1, CannedAccessControlList.PublicRead);
                 System.out.format("Object %s has been created.\n", newName1);
-                store.setImagesUrl("https://kr.object.ncloudstorage.com/d110/store/"+newName1);
+                store.setImagesUrl("https://kr.object.ncloudstorage.com/d110/store/" + newName1);
             } catch (AmazonS3Exception e) {
                 e.printStackTrace();
-            } catch(SdkClientException e) {
+            } catch (SdkClientException e) {
                 e.printStackTrace();
             }
 
-            for (int i = 1; i < updateStoreDto.getMultipartFiles().size() ; i++){
+            for (int i = 1; i < updateStoreDto.getMultipartFiles().size(); i++) {
                 MultipartFile file = updateStoreDto.getMultipartFiles().get(i);
                 String originalfileName = file.getOriginalFilename();
                 String newName = username + store.getName() + originalfileName;
@@ -305,12 +294,12 @@ public class StoreServiceImpl implements StoreService{
                     s3.setObjectAcl(bucketName, newName, CannedAccessControlList.PublicRead);
                 } catch (AmazonS3Exception e) {
                     e.printStackTrace();
-                } catch(SdkClientException e) {
+                } catch (SdkClientException e) {
                     e.printStackTrace();
                 }
                 StoreImage storeImage = StoreImage.builder()
                         .store(store)
-                        .storeImageUrl("https://kr.object.ncloudstorage.com/d110/store/"+newName)
+                        .storeImageUrl("https://kr.object.ncloudstorage.com/d110/store/" + newName)
                         .storeImageFileName(newName)
                         .build();
                 storeImageRepository.save(storeImage);
@@ -318,7 +307,7 @@ public class StoreServiceImpl implements StoreService{
         }
         storeRepository.save(store);
 
-        for (BusinessHourDto businessHourDto : updateStoreDto.getBusinessHourDtoList()){
+        for (BusinessHourDto businessHourDto : updateStoreDto.getBusinessHourDtoList()) {
             BusinessHour businessHour = BusinessHour.builder()
                     .store(store)
                     .dayOfWeek(businessHourDto.getDayOfWeek())
@@ -329,7 +318,91 @@ public class StoreServiceImpl implements StoreService{
                     .build();
             businessHourRepository.save(businessHour);
         }
+    }
 
+    @Override
+    public NearbyStoreOutputWithTotalCount searchStore(String searchInput, int count, float lat, float lon) {
+        String name = SecurityUtil.getLoginUsername();
+        User user = userRepository.findByName(name);
 
+        List<NearbyStoreOutputInterface> storeList = storeRepository.findAllByNameQuery(searchInput, lat, lon, 1);
+        ;
+        int i = (count - 1) * 20;
+        int j = i + 19;
+        List<NearbyStoreOutput> retrieveList = new ArrayList<>();
+        while (storeList.size() > i && i <= j) {
+            Store store = storeRepository.findById(storeList.get(i).getIdx()).get();
+            List<Review> reviewList = reviewRepository.findAllByStore(store);
+            float ratings = 0;
+            int reviewCount = reviewList.size();
+            for (Review review : reviewList) {
+                ratings += review.getRating();
+            }
+            NearbyStoreOutput nearbyStoreOutput = new NearbyStoreOutput();
+            nearbyStoreOutput.setStore(store);
+            if (reviewCount == 0) {
+                nearbyStoreOutput.setAverageRating(0);
+            } else {
+                nearbyStoreOutput.setAverageRating(ratings / reviewCount);
+            }
+            nearbyStoreOutput.setDistance((float) storeList.get(i).getDistance());
+            if (user == null) {
+                nearbyStoreOutput.setIsBookmark(false);
+            } else {
+                Optional<Bookmark> optionalBookmark = bookmarkRepository.findByUser(user);
+                if (optionalBookmark.isPresent()) {
+                    nearbyStoreOutput.setIsBookmark(true);
+                }
+            }
+            nearbyStoreOutput.setReviewCount(reviewCount);
+            retrieveList.add(nearbyStoreOutput);
+            i++;
+        }
+
+        NearbyStoreOutputWithTotalCount nearbyStoreOutputWithTotalCount = new NearbyStoreOutputWithTotalCount();
+        nearbyStoreOutputWithTotalCount.setStoreOutput(retrieveList);
+        nearbyStoreOutputWithTotalCount.setTotalCount(storeList.size());
+        return nearbyStoreOutputWithTotalCount;
+    }
+
+    @Override
+    public List<NearbyStoreOutput> storeRecommendationByCoordinate(float lat, float lon) {
+        String name = SecurityUtil.getLoginUsername();
+        User user = userRepository.findByName(name);
+
+        List<NearbyStoreOutputInterface> storeList = storeRepository.findAllByCoordinateQuery(lat, lon, 1);
+        ;
+        int i = 0;
+        int j = 9;
+        List<NearbyStoreOutput> retrieveList = new ArrayList<>();
+        while (storeList.size() > i && i <= j) {
+            Store store = storeRepository.findById(storeList.get(i).getIdx()).get();
+            List<Review> reviewList = reviewRepository.findAllByStore(store);
+            float ratings = 0;
+            int reviewCount = reviewList.size();
+            for (Review review : reviewList) {
+                ratings += review.getRating();
+            }
+            NearbyStoreOutput nearbyStoreOutput = new NearbyStoreOutput();
+            nearbyStoreOutput.setStore(store);
+            if (reviewCount == 0) {
+                nearbyStoreOutput.setAverageRating(0);
+            } else {
+                nearbyStoreOutput.setAverageRating(ratings / reviewCount);
+            }
+            nearbyStoreOutput.setDistance((float) storeList.get(i).getDistance());
+            if (user == null) {
+                nearbyStoreOutput.setIsBookmark(false);
+            } else {
+                Optional<Bookmark> optionalBookmark = bookmarkRepository.findByUser(user);
+                if (optionalBookmark.isPresent()) {
+                    nearbyStoreOutput.setIsBookmark(true);
+                }
+            }
+            nearbyStoreOutput.setReviewCount(reviewCount);
+            retrieveList.add(nearbyStoreOutput);
+            i++;
+        }
+        return retrieveList;
     }
 }

@@ -3,6 +3,7 @@ package com.ssafy.specialized.controller;
 import com.ssafy.specialized.domain.dto.store.UpdateStoreDto;
 import com.ssafy.specialized.domain.graphql.input.NearbyStoreInput;
 import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutput;
+import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutputWithTotalCount;
 import com.ssafy.specialized.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,20 +26,15 @@ public class StoreController {
     private final StoreService storeService;
 
     @GetMapping("/{id}/store")
-    public ResponseEntity<?> getStoreDetail(@PathVariable int id) throws Exception{
+    public ResponseEntity<?> getStoreDetail(@PathVariable int id) throws Exception {
         System.out.println("1");
         return ResponseEntity.ok(storeService.getStoreDetail(id));
     }
 
-        @PostMapping("/{id}/favorite")
-    public ResponseEntity<?> bookMark(@PathVariable int id) throws Exception{
+    @PostMapping("/{id}/favorite")
+    public ResponseEntity<?> bookMark(@PathVariable int id) throws Exception {
         storeService.bookMark(id);
         return ResponseEntity.ok(null);
-    }
-
-    @QueryMapping
-    public List<NearbyStoreOutput> getNearbyStoreList(@Argument NearbyStoreInput nearbyStoreInput) {
-        return storeService.getNearbyStoreList(nearbyStoreInput);
     }
 
     @PutMapping("/owners")
@@ -46,4 +42,21 @@ public class StoreController {
         storeService.updateStore(updateStoreDto);
         return ResponseEntity.ok(null);
     }
+
+//    @QueryMapping
+//    public NearbyStoreOutputWithTotalCount getNearbyStoreList(@Argument NearbyStoreInput nearbyStoreInput) {
+//        return storeService.getNearbyStoreList(nearbyStoreInput);
+//    }
+//
+//    @QueryMapping
+//    public NearbyStoreOutputWithTotalCount searchStore(@Argument String searchInput, @Argument int count, @Argument float lat, @Argument float lon) {
+//        return storeService.searchStore(searchInput, count, lat, lon);
+//    }
+//
+//    @QueryMapping
+//    public List<NearbyStoreOutput> storeRecommendationByCoordinate(@Argument float lat, @Argument float lon){
+//        return storeService.storeRecommendationByCoordinate(lat, lon);
+//    }
+
+
 }

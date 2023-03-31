@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { BiX } from "react-icons/bi";
+import { useMutation } from '@tanstack/react-query';
+import { queryClient } from '../../main';
+import { ownerapi } from '../../utils/api/api';
 
 type TreviewData = {
   review_index: number;
@@ -16,23 +19,16 @@ type TreviewData = {
   };
 };
 
-const dummyReview = {
-  review_index: 1,
-  review_content:
-    "진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~진짜 잘먹었습니다! 다음에 또올게요~~",
-  review_rate: 5,
-  review_created_at: "2023-03-28",
-  review_is_hidden: false,
-  owner_comments: {
-    owner_comment_index: 1,
-    owner_comment_content:
-      "감사합니다! 항상 발전하는 스테이크 하우스가 되도록 하겠습니다! 다음에 또 방문해주세요 ^^",
-    owner_comment_created_at: "2023-03-29",
-  },
-};
-
-const OwnerReviewModal = ({ modalclose }: { modalclose: () => void }) => {
+const OwnerReviewModal = ({
+  modalclose,
+  review,
+}: {
+  modalclose: () => void;
+  review: any;
+}) => {
   const [modalOpacity, setModalOpacity] = useState(0);
+
+  const [comment, setComment] = useState<string>("")
 
   useEffect(() => {
     setModalOpacity(1);
@@ -46,21 +42,41 @@ const OwnerReviewModal = ({ modalclose }: { modalclose: () => void }) => {
     setTimeout(() => modalclose(), 500);
   };
 
+  const commentPostMutation = useMutation(({id, comment}: {id: number, comment: string}) =>  ownerapi({method: "POST", url: `places/${id}/comments`, data: {comment}}), {onSuccess: () => {
+    queryClient.invalidateQueries([`storeReviews`])
+  }})
+
+  const commentPutMutation = useMutation(({id, comment}: {id: number, comment: string}) =>  ownerapi({method: "PUT", url: `places/${id}/comments`, data: {comment}}), {onSuccess: () => {
+    queryClient.invalidateQueries([`storeReviews`])
+  }})
+
+  const commentHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setComment(e.currentTarget.value)
+  }
+
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (review[2]) {
+      console.log(comment)
+      commentPutMutation.mutate({id: review[0].idx, comment})
+    } else {
+      commentPostMutation.mutate({id: review[0].idx, comment})
+    }
+  }
+
   return (
     <>
       <ReviewModal opacity={modalOpacity}>
         <BiX onClick={modalClosehandler} />
         <ReviewInfo>
           <h1>
-            XXX님의 리뷰
-            <p>{dummyReview.review_created_at}</p>
+            {review[0].writer ? review[0].writer.name : "이름없음"}님의 리뷰
+            <p>{review[0].createdAt.slice(0, 10)}</p>
           </h1>
-          <p>
+          <div>
             평점{" "}
             <StarRating>
-              <StarRatingFill
-                style={{ width: dummyReview.review_rate * 20 + "%" }}
-              >
+              <StarRatingFill style={{ width: review[0].rating * 20 + "%" }}>
                 <span>★</span>
                 <span>★</span>
                 <span>★</span>
@@ -75,23 +91,29 @@ const OwnerReviewModal = ({ modalclose }: { modalclose: () => void }) => {
                 <span>★</span>
               </StarRatingBase>
             </StarRating>
-          </p>
-          <p>리뷰 공개 여부 : {dummyReview.review_is_hidden.toString()}✔❌</p>
+          </div>
+          <p>리뷰 공개 여부 : {review[0].hidden ? "❌" : "✔"}</p>
         </ReviewInfo>
         <ReviewChat>
-          <ReviewerChatting>
-            <img
-              src='https://www.hawksmoornyc.com/wp-content/uploads/Prime-rib-with-sides-2--1024x683.jpg'
-              alt=''
-            />
-          </ReviewerChatting>
-          <ReviewerChatting>{dummyReview.review_content}</ReviewerChatting>
-          <OwnerChatting>
-            {dummyReview.owner_comments.owner_comment_content}
-          </OwnerChatting>
-          <ChattingInput>
-            <input type='text' />
-            <button>제출</button>
+          <ChatRoom>
+            {review[1] ? (
+              <ReviewerChatting>
+                <img src={review[1] && review[1].reviewImageUrl} alt="" />
+              </ReviewerChatting>
+            ) : (
+              <></>
+            )}
+
+            <ReviewerChatting>{review[0].content}</ReviewerChatting>
+            {review[2] ? (
+              <OwnerChatting>
+                {review[2].content}
+              </OwnerChatting>
+            ) : null}
+          </ChatRoom>
+          <ChattingInput onSubmit={submitHandler}>
+            <input type="text" name='comment' value={comment} onChange={commentHandler} />
+            <button type='submit'>제출</button>
           </ChattingInput>
         </ReviewChat>
       </ReviewModal>
@@ -176,13 +198,14 @@ const ReviewChat = styled.div`
 
   width: 60%;
 
+  min-height: calc(60vh - 80px);
+
   overflow: auto;
 
   background-color: var(--primary-color-light);
   border-radius: 10px;
 
   &::-webkit-scrollbar-track {
-    
     background-color: var(--body-color);
   }
 
@@ -197,10 +220,15 @@ const ReviewChat = styled.div`
   }
 `;
 
+const ChatRoom = styled.div`
+  height: 100%;
+  width: 100%;
+`
+
 const ReviewerChatting = styled.div`
   position: relative;
   background-color: #f9e000;
-  width: fit-content;
+  
   max-width: 350px;
 
   padding: 10px;
@@ -233,8 +261,10 @@ const ReviewerChatting = styled.div`
 const OwnerChatting = styled.div`
   position: relative;
   background-color: #afdfdc;
-  width: fit-content;
+  width: 100%;
   max-width: 350px;
+
+  word-break:break-all;
 
   margin: 20px;
   margin-left: auto;
@@ -256,7 +286,7 @@ const OwnerChatting = styled.div`
   }
 `;
 
-const ChattingInput = styled.div`
+const ChattingInput = styled.form`
   position: sticky;
 
   bottom: 0;

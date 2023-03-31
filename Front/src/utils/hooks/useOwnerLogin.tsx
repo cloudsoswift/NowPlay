@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { ownerInfoAtion } from "../recoil/userAtom";
-import { ownerloginAPI } from "../api/authApiFunctions";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { ownerInfoAtion, userIsLogin } from "../recoil/userAtom";
+import { ownerloginAPI, } from "../api/authApiFunctions";
 import { TAxoisOwnerInfo } from "../api/authApiFunctions";
 import { TinitialValues } from "./useForm";
 
@@ -12,16 +12,22 @@ export const useOwnerLogin = () => {
   const [cookies, setCookies, removeCooke] = useCookies(["accessToken"]);
   const navigation = useNavigate();
 
+  const [isLogin, setIsLogin] = useRecoilState(userIsLogin)
+
   return useMutation((values: TinitialValues) => ownerloginAPI(values), {
     onSuccess: (data: TAxoisOwnerInfo) => {
-      if (data.access_token) {
-        setCookies("accessToken", data.access_token, { path: "/owner" });
+      if (data.accessToken) {
+        setCookies("accessToken", data.accessToken, { path: "/owner" });
       }
+      setIsLogin(true)
       setOwnerInfo({
-        userName: data.user_name,
-        userNickname: data.user_nickname,
+        storeIndex: data.storeIndex,
+        userName: data.userName,
+        userNickname: data.userNickname,
+        userAddress: data.userAddress,
+        userDistance: data.userDistance
       });
-      navigation("/mypage");
+      navigation("/owner/");
     },
   });
 };

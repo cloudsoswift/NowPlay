@@ -23,3 +23,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     </CookiesProvider>
   // </React.StrictMode>
 );
+
+export {queryClient}

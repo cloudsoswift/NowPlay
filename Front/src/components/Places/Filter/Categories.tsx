@@ -22,22 +22,33 @@ export const Category = ({ subCategory }: CategoryProps) => {
     });
   };
   return (
-    <div className="border-2 rounded-full p-2 inline">
-      <span className="" >
+    <div className="mx-2 border-2 rounded-full p-2 inline border-[var(--primary-color)]"  onClick={handleCategoryClick} >
+      <span className="text-[var(--primary-color)]" >
         {subCategory.category}
       </span>
-      <button type="button" onClick={handleCategoryClick} className="align-middle"><RxCross2 /></button>
+      <button type="button" className="align-middle text-[var(--primary-color)]"><RxCross2 /></button>
     </div>
   );
 };
 
 export const Categories = (props: CategoriesProps) => {
   const { selectedCategories } = useRecoilValue(filterState);
-  return (
-    <div className="w-full overflow-x-scroll space-x-2 whitespace-nowrap p-2 my-2">
+
+  const CategoryBox = selectedCategories.length === 0 ? (
+    <div className="mx-4 text-[var(--gray-color)] text-[20px]">
+      카테고리를 선택하여 주세요.
+    </div>
+  ) : (
+    <>
       {selectedCategories.map((data) => (
         <Category key={data.category} subCategory={data} />
       ))}
+    </>
+  )
+
+  return (
+    <div className="w-full overflow-x-scroll space-x-2 whitespace-nowrap p-2 h-[48px]">
+      {CategoryBox}
     </div>
   );
 };

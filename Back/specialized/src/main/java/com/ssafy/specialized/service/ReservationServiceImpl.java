@@ -61,7 +61,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .history(reservationRequestDto.getHistory())
                 .time(reservationRequestDto.getTime())
                 .createdAt(LocalDateTime.now())
-                .isConfirmed(false)
+                .isConfirmed(0)
                 .build();
         reservationRepository.save(reservation);
 
@@ -85,9 +85,10 @@ public class ReservationServiceImpl implements ReservationService {
                 reservation.getIdx(),
                 reservation.getHistory(),
                 reservation.getReserver().getIdx(),
+                reservation.getReserver().getName(),
                 reservation.getStore().getIdx(),
                 reservation.getTime(),
-                reservation.isConfirmed(),
+                reservation.getIsConfirmed(),
                 reservation.getCreatedAt()
         );
     }
@@ -118,9 +119,10 @@ public class ReservationServiceImpl implements ReservationService {
                         reservation.getIdx(),
                         reservation.getHistory(),
                         reservation.getReserver().getIdx(),
+                        reservation.getReserver().getName(),
                         reservation.getStore().getIdx(),
                         reservation.getTime(),
-                        reservation.isConfirmed(),
+                        reservation.getIsConfirmed(),
                         reservation.getCreatedAt()
                 ))
                 .collect(Collectors.toList());
@@ -137,9 +139,10 @@ public class ReservationServiceImpl implements ReservationService {
                         reservation.getIdx(),
                         reservation.getHistory(),
                         reservation.getReserver().getIdx(),
+                        reservation.getReserver().getName(),
                         reservation.getStore().getIdx(),
                         reservation.getTime(),
-                        reservation.isConfirmed(),
+                        reservation.getIsConfirmed(),
                         reservation.getCreatedAt()
                 ))
                 .collect(Collectors.toList());
@@ -160,18 +163,38 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("예약 정보가 없습니다."));
 
-        reservation.setConfirmed(true);
+        reservation.setIsConfirmed(1);
         reservationRepository.save(reservation);
 
         return new ReservationDto(
                 reservation.getIdx(),
                 reservation.getHistory(),
                 reservation.getReserver().getIdx(),
+                reservation.getReserver().getName(),
                 reservation.getStore().getIdx(),
                 reservation.getTime(),
-                reservation.isConfirmed(),
+                reservation.getIsConfirmed(),
                 reservation.getCreatedAt()
         );
     }
 
+    @Override
+    public ReservationDto rejectReservation(int reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("예약 정보가 없습니다."));
+
+        reservation.setIsConfirmed(2);
+        reservationRepository.save(reservation);
+
+        return new ReservationDto(
+                reservation.getIdx(),
+                reservation.getHistory(),
+                reservation.getReserver().getIdx(),
+                reservation.getReserver().getName(),
+                reservation.getStore().getIdx(),
+                reservation.getTime(),
+                reservation.getIsConfirmed(),
+                reservation.getCreatedAt()
+        );
+    }
 }

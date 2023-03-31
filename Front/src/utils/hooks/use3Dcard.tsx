@@ -2,7 +2,7 @@ import {useState, useEffect} from "react"
 
 const use3Dcard = (CardWrapperRef: React.RefObject<HTMLDivElement>) => {
 
-  const [cardOffset, setCardOffset] = useState({
+  const [cardOffset, setCardOffset] = useState<{width: number, height: number, mouseX: number, mouseY: number, mouseLeaveDelay: number | NodeJS.Timeout}>({
     width: 0,
     height: 0,
     mouseX: 0,

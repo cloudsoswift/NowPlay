@@ -34,6 +34,7 @@ public class Reservation {
 
     private LocalDateTime createdAt;
 
-    private boolean isConfirmed;
+    //예약대기 = 0 확인 = 1 거절 = 2
+    private int isConfirmed;
 
 }

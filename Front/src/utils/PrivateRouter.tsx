@@ -21,37 +21,37 @@ export default function PrivateRoute({authentication, type}:PrivateRouteProps):R
    */
   const [cookie, setCookie, removeCookie] = useCookies(["accessToken"])
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(cookie.accessToken !== undefined)
 
   const [isLogin, setIsLogin] = useRecoilState(userIsLogin)
 
 
-  useEffect(() => {
-    setIsAuthenticated(isLogin)
-    if (cookie.accessToken !== undefined){
-      setIsAuthenticated(true)
-    }
-  }, [])
+  // useEffect(() => {
+  //   setIsAuthenticated(isLogin)
+  //   if (cookie.accessToken !== undefined){
+  //     setIsAuthenticated(true)
+  //   }
+  // }, [])
 
-  useEffect(() => {
-    setIsAuthenticated(isLogin)
-    if (cookie.accessToken !== undefined){
-      setIsAuthenticated(true)
-    }
-  }, [isLogin])
+  // useEffect(() => {
+  //   setIsAuthenticated(isLogin)
+  //   if (cookie.accessToken !== undefined){
+  //     setIsAuthenticated(true)
+  //   }
+  // }, [isLogin])
   
   if(authentication) {
     // 인증이 반드시 필요한 페이지
   
     // 인증을 안했을 경우 로그인 페이지로, 했을 경우 해당 페이지로
-    if (type === "mobile") return (!isAuthenticated) ? <Navigate to="/mobile/mypage/login"/> : <Outlet/>;
-    return (!isAuthenticated) ? <Navigate to="/owner/login"/> : <Outlet/>;
+    if (type === "mobile") return (!(isAuthenticated || isLogin)) ? <Navigate to="/mobile/mypage/login"/> : <Outlet/>;
+    return (!(isAuthenticated || isLogin)) ? <Navigate to="/owner/login"/> : <Outlet/>;
 
   } else {
     // 인증이 반드시 필요 없는 페이지
 
     // 인증을 안햇을 경우 해당 페이지로 인증을 한 상태일 경우 main페이지로
-    if (type === "mobile") return (!isAuthenticated) ? <Outlet/> : <Navigate to='/mobile/mypage'/>;  
-    return (!isAuthenticated) ? <Outlet/> : <Navigate to='/owner'/>;  
+    if (type === "mobile") return (!(isAuthenticated || isLogin)) ? <Outlet/> : <Navigate to='/mobile/mypage'/>;  
+    return (!(isAuthenticated || isLogin)) ? <Outlet/> : <Navigate to='/owner'/>;  
   }
 }

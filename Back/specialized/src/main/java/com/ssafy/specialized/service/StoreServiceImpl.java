@@ -1,11 +1,12 @@
 package com.ssafy.specialized.service;
 
+import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.store.StoreDto;
+import com.ssafy.specialized.domain.entity.Bookmark;
 import com.ssafy.specialized.domain.entity.BusinessHour;
 import com.ssafy.specialized.domain.entity.Store;
-import com.ssafy.specialized.repository.BusinessHourRepository;
-import com.ssafy.specialized.repository.ReviewRepository;
-import com.ssafy.specialized.repository.StoreRepository;
+import com.ssafy.specialized.domain.entity.User;
+import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,14 @@ public class StoreServiceImpl implements StoreService{
 
     final BusinessHourRepository businessHourRepository;
 
+    final BookmarkRepository bookmarkRepository;
+
+    final UserRepository userRepository;
+
     @Override
     public StoreDto getStoreDetail(int Storeid) {
+        String username = SecurityUtil.getLoginUsername();
+        User user = userRepository.findByName(username);
         Optional<Store> optstore = storeRepository.findById(Storeid);
         Store store = null;
         if (optstore.isPresent()){
@@ -48,7 +55,30 @@ public class StoreServiceImpl implements StoreService{
         storeDto.setClosedOnHolidays(store.isClosedOnHolidays());
         storeDto.setBusinessHourList(businessHourList);
         storeDto.setAverageRating(reviewRepository.findAvgByStore(Storeid));
-
+        storeDto.setFaverite(bookmarkRepository.existsAllByStoreAndUser(store, user));
         return storeDto;
+    }
+
+    @Override
+    public void bookMark(int storeid) {
+        String username = SecurityUtil.getLoginUsername();
+        User user = userRepository.findByName(username);
+        Optional<Store> optStore = storeRepository.findById(storeid);
+        Store store = null;
+        if (optStore.isPresent()) {
+            store = optStore.get();
+        }
+        Optional<Bookmark> optBookmark = bookmarkRepository.findAllByStoreAndUser(store, user);
+        Bookmark bookmark = null;
+        if (optBookmark.isPresent()){
+            bookmark = optBookmark.get();
+            bookmarkRepository.delete(bookmark);
+        } else {
+            Bookmark newBookmark = Bookmark.builder()
+                    .user(user)
+                    .store(store)
+                    .build();
+            bookmarkRepository.save(newBookmark);
+        }
     }
 }

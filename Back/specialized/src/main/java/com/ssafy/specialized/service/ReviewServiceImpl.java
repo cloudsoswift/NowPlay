@@ -233,7 +233,7 @@ public class ReviewServiceImpl implements ReviewService {
             } catch(SdkClientException e) {
                 e.printStackTrace();
             }
-            reviewImageRepository.delete((reviewImage));
+            reviewImageRepository.delete(reviewImage);
         }
         reviewRepository.delete(review);
     }

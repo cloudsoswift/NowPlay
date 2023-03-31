@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -50,8 +51,12 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@Validated @RequestBody UserLoginDTO login, HttpServletResponse response) throws Exception {
         LoginResponseDto loginResponseDto = userService.login(login);
-
-        response.addHeader("Set-Cookie", loginResponseDto.getRefreshToken().toString());
+        String test = new String();
+        test = loginResponseDto.getRefreshToken().toString();
+        Cookie cookie = new Cookie("refreshToken", test);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(3600);
+        response.addCookie(cookie);
         loginResponseDto.setRefreshToken(null);
         return ResponseEntity.ok(loginResponseDto);
     }

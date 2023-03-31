@@ -59,9 +59,9 @@ export const DistanceSlider = (props: Props) => {
           dragElastic={0.1}
           dragTransition={{ modifyTarget, power: 0.1, min: 0, max: 200, timeConstant: 100 }}
           ref={draggableTarget}
-          className="absolute"
+          className="absolute w-7 h-7 p-1.5"
         >
-          <span className="w-4 h-4 block bg-white rounded-full border-2 border-black"/>
+          <span className="w-4 h-4 block bg-[var(--primary-color)] rounded-full border-2 border-black"/>
         </motion.div>
         <div className="absolute w-full h-1 bg-gray-500 -z-10" />
         <span className="w-1 h-5 mt-8 flex justify-right">2km</span>

@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import Vector from "../../svg/vector.svg";
 import Pin2 from "../../svg/pin2.svg";
 import NowMap from "./NowMap";
@@ -7,8 +7,8 @@ import NowMap from "./NowMap";
 interface ModalType {
   onClickToggleMap: () => void;
   onClickToggleModal: () => void;
-  selectAddress: string;
-  setSelectAddress: React.Dispatch<React.SetStateAction<string>>;
+  selectAddress: string | null;
+  setSelectAddress: React.Dispatch<React.SetStateAction<string | null>>;
   findAddress: (
     latlng: naver.maps.LatLng,
     map: naver.maps.Map,
@@ -43,11 +43,17 @@ const MyLocationSearchMap = ({
   children,
 }: PropsWithChildren<ModalType>) => {
 
-  const [nowAddress, setNowAddress] = useState<string>(selectAddress);
-
+  const [nowAddress, setNowAddress] = useState<string>("");
+  
   const [nowLocation, setNowLocation] = useState<
     { latitude: number; longitude: number } | string
   >("");
+
+  useEffect(() => {
+    if (selectAddress !== null) {
+      setNowAddress(selectAddress)
+    }
+  }, [])
 
   const setMap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
@@ -56,7 +62,9 @@ const MyLocationSearchMap = ({
     if (duplicationAddress !== -1) {
       recentAddressData.splice(duplicationAddress, 1)
     }
-    recentAddressData.unshift(nowAddress)
+    if (nowAddress !== null) {
+      recentAddressData.unshift(nowAddress)
+    }
     if (recentAddressData.length > 5) {
       recentAddressData.pop()
     }

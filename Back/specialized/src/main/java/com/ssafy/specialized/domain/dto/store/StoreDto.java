@@ -7,7 +7,6 @@ import com.ssafy.specialized.domain.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.LifecycleState;
 
 import java.util.List;
 
@@ -44,5 +43,5 @@ public class StoreDto {
 
     private List<BusinessHour> businessHourList;
 
-    private int averageRating;
+    private float averageRating;
 }

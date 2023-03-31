@@ -46,6 +46,7 @@ public class StoreServiceImpl implements StoreService{
 
     @Override
     public StoreDto getStoreDetail(int Storeid) {
+        System.out.println("2");
         String username = SecurityUtil.getLoginUsername();
         User user = userRepository.findByName(username);
         Optional<Store> optstore = storeRepository.findById(Storeid);
@@ -69,8 +70,12 @@ public class StoreServiceImpl implements StoreService{
         storeDto.setLongitude(store.getLongitude());
         storeDto.setClosedOnHolidays(store.isClosedOnHolidays());
         storeDto.setBusinessHourList(businessHourList);
-        storeDto.setAverageRating(reviewRepository.findAvgByStore(Storeid));
+        try {
+            storeDto.setAverageRating(reviewRepository.findAvgByStore(Storeid));
+        } catch (Exception e){
+        }
         storeDto.setFaverite(bookmarkRepository.existsAllByStoreAndUser(store, user));
+        System.out.println("3");
         return storeDto;
     }
 

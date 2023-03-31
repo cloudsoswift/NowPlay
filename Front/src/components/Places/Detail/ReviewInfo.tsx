@@ -13,22 +13,22 @@ type ReviewProps = {
 type ReviewInfoProps = {};
 
 export const Review = ({ review }: ReviewProps) => {
-  const date = review.created_at;
+  const date = new Date(review.createdAt);
   const dateString = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`;
   return (
     <div className="border p-4 w-full h-[30vh] shadow-sm">
       <div>
-        <span className="text-lg">{review.nickname}</span>{" "}
+        <span className="text-lg">{review.writer.nickname}</span>{" "}
         <span className="text-sm">{dateString}</span>{" "}
         <span>
           <AiFillStar className="inline text-[var(--primary-color)]" />
-          {review.rate}
+          {review.rating}
         </span>
       </div>
       <div className="flex w-full h-[20vh] space-x-2 flex-col">
         {/* <img src={review.imageURL} alt="" className="max-h-[20vh]" /> */}
         <PopupImage
-          imageURL={review.imageURL}
+          imageURL={review.reviewImageUrl}
           imageClass="max-h-[15vh] w-full object-cover"
         />
         <ReviewBox>{review.content}</ReviewBox>
@@ -38,36 +38,6 @@ export const Review = ({ review }: ReviewProps) => {
 };
 
 export const ReviewInfo = (props: ReviewInfoProps) => {
-  const TEMP_REVIEWS: Array<TReview> = [
-    {
-      id: 1,
-      nickname: "김덕배",
-      content:
-        "리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?리뷰입니다?",
-      created_at: new Date(),
-      imageURL:
-        "https://fastly.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U",
-      rate: 4,
-    },
-    {
-      id: 2,
-      nickname: "김덕배",
-      content: "리뷰입니다?잉?",
-      created_at: new Date(),
-      imageURL:
-        "https://fastly.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U",
-      rate: 4,
-    },
-    {
-      id: 3,
-      nickname: "김덕배",
-      content: "리뷰입니다잉??",
-      created_at: new Date(),
-      imageURL:
-        "https://fastly.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U",
-      rate: 4,
-    },
-  ];
   const { id } = useParams();
   const fetchReviewList = async ({ pageParam = 0 }) => {
     const {data} = await api.get(`places/${id}/reviews?page=${pageParam}`);
@@ -95,12 +65,16 @@ export const ReviewInfo = (props: ReviewInfoProps) => {
       </Link>
       <div className="space-y-4">
         {data?.pages.map((page) => (
-          page.content.map((reviewList: Array<any>)=>(
-            reviewList.map((review)=>
-              <Review review={review} />
-            )
-          ))
-        ))}
+          page.content.map((reviewList: Array<any>)=>{
+            const ReviewData = reviewList.at(0);
+            const {reviewImageUrl} = reviewList.at(1) !== null ? reviewList.at(1) : {reviewImageUrl: ""};
+            const review = {
+              ...ReviewData,
+              reviewImageUrl
+            }
+            return <Review key={ReviewData.idx} review={review} />
+          }
+        )))}
       </div>
     </div>
   );

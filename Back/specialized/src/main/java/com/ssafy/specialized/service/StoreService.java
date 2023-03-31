@@ -1,9 +1,11 @@
 package com.ssafy.specialized.service;
 
 import com.ssafy.specialized.domain.dto.store.StoreDto;
+import com.ssafy.specialized.domain.dto.store.UpdateStoreDto;
 import com.ssafy.specialized.domain.entity.Store;
 import com.ssafy.specialized.domain.graphql.input.NearbyStoreInput;
 import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutput;
+import software.amazon.ion.IonException;
 
 import java.util.List;
 
@@ -20,4 +22,5 @@ public interface StoreService {
     List<Store> getStoreListByCategory(NearbyStoreInput nearbyStoreInput);
     List<NearbyStoreOutput> getStoreListByPosition(NearbyStoreInput nearbyStoreInput);
 
+    void updateStore(UpdateStoreDto updateStoreDto) throws Exception;
 }

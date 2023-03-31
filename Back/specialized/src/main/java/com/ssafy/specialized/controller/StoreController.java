@@ -1,10 +1,12 @@
 package com.ssafy.specialized.controller;
 
+import com.ssafy.specialized.domain.dto.store.UpdateStoreDto;
 import com.ssafy.specialized.domain.graphql.input.NearbyStoreInput;
 import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutput;
 import com.ssafy.specialized.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -37,5 +39,11 @@ public class StoreController {
     @QueryMapping
     public List<NearbyStoreOutput> getNearbyStoreList(@Argument NearbyStoreInput nearbyStoreInput) {
         return storeService.getNearbyStoreList(nearbyStoreInput);
+    }
+
+    @PutMapping("/owners")
+    public ResponseEntity<?> updateStore(@RequestBody UpdateStoreDto updateStoreDto) throws Exception {
+        storeService.updateStore(updateStoreDto);
+        return ResponseEntity.ok(null);
     }
 }

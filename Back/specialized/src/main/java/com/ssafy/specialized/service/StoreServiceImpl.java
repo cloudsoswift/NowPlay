@@ -1,7 +1,17 @@
 package com.ssafy.specialized.service;
 
+import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.ssafy.specialized.common.security.SecurityUtil;
+import com.ssafy.specialized.domain.dto.store.BusinessHourDto;
 import com.ssafy.specialized.domain.dto.store.StoreDto;
+import com.ssafy.specialized.domain.dto.store.UpdateStoreDto;
 import com.ssafy.specialized.domain.entity.*;
 import com.ssafy.specialized.domain.graphql.input.NearbyStoreInput;
 import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutput;
@@ -11,7 +21,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +55,20 @@ public class StoreServiceImpl implements StoreService{
     private final HobbySubcategoryRepository hobbySubcategoryRepository;
     @Autowired
     private UserHobbyRepository userHobbyRepository;
+    @Autowired
+    private StoreImageRepository storeImageRepository;
+    final String endPoint = "https://kr.object.ncloudstorage.com";
+    final String regionName = "kr-standard";
+    final String accessKey = "ESCb1U9YUC1iPdriv1Qc";
+    final String secretKey = "1M49n1x3q4COn0KtlZ2rKt63AQ4ermzvsCg9yk3l";
+
+    // S3 client
+    final AmazonS3 s3 = AmazonS3ClientBuilder.standard()
+            .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, regionName))
+            .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
+            .build();
+
+    String bucketName = "d110/store";
 
     @Override
     public StoreDto getStoreDetail(int Storeid) {
@@ -205,5 +231,105 @@ public class StoreServiceImpl implements StoreService{
 //        List<NearbyStoreOutput> storeList = storeRepository.getStoreListByPosition(nearbyStoreInput.getLatitude(), nearbyStoreInput.getLongitude(), nearbyStoreInput.getMaxDistance());
         return null;
 //        return storeList;
+    }
+
+    @Override
+    public void updateStore(UpdateStoreDto updateStoreDto) throws Exception{
+        String username = SecurityUtil.getLoginUsername();
+        User user = userRepository.findByName(username);
+        Optional<Store> optStore = storeRepository.findByOwner(user);
+        Store store = null;
+        if (optStore.isPresent()) {
+            store = optStore.get();
+        }
+        List<StoreImage> storeImageList = storeImageRepository.findAllByStore(store);
+        for (StoreImage storeImage : storeImageList) {
+            try {
+                s3.deleteObject(bucketName,storeImage.getStoreImageFileName());
+            } catch (AmazonS3Exception e) {
+                e.printStackTrace();
+            } catch(SdkClientException e) {
+                e.printStackTrace();
+            }
+            storeImageRepository.delete(storeImage);
+        }
+        Optional<HobbyMain> optionalHobbyMain = hobbyMainRepository.findByMainCategory(updateStoreDto.getMainCategory());
+        HobbyMain hobbyMain = null;
+        if (optionalHobbyMain.isPresent()){
+            hobbyMain = optionalHobbyMain.get();
+        }
+        Optional<HobbySubcategory> optionalHobbySubcategory = hobbySubcategoryRepository.findBySubcategory(updateStoreDto.getSubcategory());
+        HobbySubcategory hobbySubcategory = null;
+        if (optionalHobbySubcategory.isPresent()){
+            hobbySubcategory = optionalHobbySubcategory.get();
+        }
+        store.setMainCategory(hobbyMain);
+        store.setSubcategory(hobbySubcategory);
+        store.setName(updateStoreDto.getName());
+        store.setAddress(updateStoreDto.getAddress());
+        store.setContactNumber(updateStoreDto.getContactNumber());
+        store.setHomepage(updateStoreDto.getHomepage());
+        store.setImagesUrl(updateStoreDto.getImagesUrl());
+        store.setExplanation(updateStoreDto.getExplanation());
+        store.setLatitude(updateStoreDto.getLatitude());
+        store.setLongitude(updateStoreDto.getLongitude());
+        store.setClosedOnHolidays(updateStoreDto.isClosedOnHolidays());
+
+        if (updateStoreDto.getMultipartFiles().size() > 0) {
+            MultipartFile newfile = updateStoreDto.getMultipartFiles().get(0);
+            String neworiginalfileName = newfile.getOriginalFilename();
+            String newName1 = username + store.getName() + neworiginalfileName;
+            File dest1 = new File("/", newName1);
+            newfile.transferTo(dest1);
+            String newfilePath = "/" + newName1;
+            try {
+                s3.putObject(bucketName, newName1, new File(newfilePath));
+                s3.setObjectAcl(bucketName, newName1, CannedAccessControlList.PublicRead);
+                System.out.format("Object %s has been created.\n", newName1);
+                store.setImagesUrl("https://kr.object.ncloudstorage.com/d110/store/"+newName1);
+            } catch (AmazonS3Exception e) {
+                e.printStackTrace();
+            } catch(SdkClientException e) {
+                e.printStackTrace();
+            }
+
+            for (int i = 1; i < updateStoreDto.getMultipartFiles().size() ; i++){
+                MultipartFile file = updateStoreDto.getMultipartFiles().get(i);
+                String originalfileName = file.getOriginalFilename();
+                String newName = username + store.getName() + originalfileName;
+                File dest = new File("/", newName);
+                file.transferTo(dest);
+                String filePath = "/" + newName;
+                try {
+                    s3.putObject(bucketName, newName, new File(filePath));
+                    s3.setObjectAcl(bucketName, newName, CannedAccessControlList.PublicRead);
+                } catch (AmazonS3Exception e) {
+                    e.printStackTrace();
+                } catch(SdkClientException e) {
+                    e.printStackTrace();
+                }
+                StoreImage storeImage = StoreImage.builder()
+                        .store(store)
+                        .storeImageUrl("https://kr.object.ncloudstorage.com/d110/store/"+newName)
+                        .storeImageFileName(newName)
+                        .build();
+                storeImageRepository.save(storeImage);
+            }
+        }
+        storeRepository.save(store);
+
+        for (BusinessHourDto businessHourDto : updateStoreDto.getBusinessHourDtoList()){
+            BusinessHour businessHour = BusinessHour.builder()
+                    .store(store)
+                    .dayOfWeek(businessHourDto.getDayOfWeek())
+                    .openAt(businessHourDto.getOpenAt())
+                    .closeAt(businessHourDto.getCloseAt())
+                    .reservationInterval(businessHourDto.getReservationInterval())
+                    .isDayOff(businessHourDto.isDayOff())
+                    .build();
+            businessHourRepository.save(businessHour);
+        }
+
+
     }
 }

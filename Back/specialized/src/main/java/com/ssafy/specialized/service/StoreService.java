@@ -22,4 +22,6 @@ public interface StoreService {
     List<NearbyStoreOutput> getStoreListByPosition(NearbyStoreInput nearbyStoreInput);
 
     NearbyStoreOutputWithTotalCount searchStore(String searchInput, int count, float lat, float lon);
+
+    List<NearbyStoreOutput> storeRecommendationByCoordinate(float lat, float lon);
 }

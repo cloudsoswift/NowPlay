@@ -1,6 +1,8 @@
-import { ReactElement } from 'react';
+import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { Navigate, Outlet } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { userIsLogin } from './recoil/userAtom';
 
 
 interface PrivateRouteProps {
@@ -17,22 +19,39 @@ export default function PrivateRoute({authentication, type}:PrivateRouteProps):R
    * 로그인 했을 경우 : true 라는 텍스트 반환
    * 로그인 안했을 경우 : null or false(로그아웃 버튼 눌렀을경우 false로 설정) 반환
    */
-  const [cookie, setCookie, removeCookie] = useCookies(['accessToken'])
+  const [cookie, setCookie, removeCookie] = useCookies(["accessToken"])
 
-  const isAuthenticated = cookie.accessToken;
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  const [isLogin, setIsLogin] = useRecoilState(userIsLogin)
+
+
+  useEffect(() => {
+    setIsAuthenticated(isLogin)
+    if (cookie.accessToken !== undefined){
+      setIsAuthenticated(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    setIsAuthenticated(isLogin)
+    if (cookie.accessToken !== undefined){
+      setIsAuthenticated(true)
+    }
+  }, [isLogin])
   
   if(authentication) {
     // 인증이 반드시 필요한 페이지
   
     // 인증을 안했을 경우 로그인 페이지로, 했을 경우 해당 페이지로
-    if (type === "mobile") return (isAuthenticated === "" || isAuthenticated === undefined) ? <Navigate to="/mobile/mypage/login"/> : <Outlet/>;
-    return (isAuthenticated === "" || isAuthenticated === undefined) ? <Navigate to="/owner/login"/> : <Outlet/>;
+    if (type === "mobile") return (!isAuthenticated) ? <Navigate to="/mobile/mypage/login"/> : <Outlet/>;
+    return (!isAuthenticated) ? <Navigate to="/owner/login"/> : <Outlet/>;
 
   } else {
     // 인증이 반드시 필요 없는 페이지
 
     // 인증을 안햇을 경우 해당 페이지로 인증을 한 상태일 경우 main페이지로
-    if (type === "mobile") return (isAuthenticated === "" || isAuthenticated === undefined) ? <Outlet/> : <Navigate to='/mobile/mypage'/>;  
-    return (isAuthenticated === "" || isAuthenticated === undefined) ? <Outlet/> : <Navigate to='/owner'/>;  
+    if (type === "mobile") return (!isAuthenticated) ? <Outlet/> : <Navigate to='/mobile/mypage'/>;  
+    return (!isAuthenticated) ? <Outlet/> : <Navigate to='/owner'/>;  
   }
 }

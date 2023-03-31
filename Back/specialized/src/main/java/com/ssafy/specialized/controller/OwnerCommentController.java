@@ -12,6 +12,7 @@ import java.rmi.server.ExportException;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@CrossOrigin(origins = {"https://j8d110.p.ssafy.io", "http://127.0.0.1:5173", "http://localhost:5173", "http://172.30.1.95"}, allowCredentials = "true")
 @RequestMapping("/places")
 public class OwnerCommentController {
 

@@ -37,9 +37,9 @@ public class StoreController {
         return ResponseEntity.ok(null);
     }
 
-    @PutMapping("/owners")
-    public ResponseEntity<?> updateStore(@RequestBody UpdateStoreDto updateStoreDto) throws Exception {
-        storeService.updateStore(updateStoreDto);
+    @PostMapping("/owners/{id}")
+    public ResponseEntity<?> updateStore(@PathVariable int id, @RequestBody UpdateStoreDto updateStoreDto) throws Exception {
+        storeService.updateStore(id, updateStoreDto);
         return ResponseEntity.ok(null);
     }
 

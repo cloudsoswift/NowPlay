@@ -223,10 +223,10 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public void updateStore(UpdateStoreDto updateStoreDto) throws Exception {
+    public void updateStore(int id, UpdateStoreDto updateStoreDto) throws Exception {
         String username = SecurityUtil.getLoginUsername();
         User user = userRepository.findByName(username);
-        Optional<Store> optStore = storeRepository.findByOwner(user);
+        Optional<Store> optStore = storeRepository.findById(id);
         Store store = null;
         if (optStore.isPresent()) {
             store = optStore.get();

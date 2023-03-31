@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 
 import { BiRightArrowAlt, BiLeftArrowAlt } from "react-icons/bi";
 import styled, { keyframes } from "styled-components";
+import { queryClient } from '../../main';
 import { ownerapi } from "../../utils/api/api";
 
 const OwnerReservePage = () => {
@@ -33,6 +34,24 @@ const OwnerReservePage = () => {
     return data;
   });
 
+  console.log(data)
+
+  const confirmMutation = useMutation((id: number) =>  ownerapi({method: "PUT", url: `reservation/${id}/confirm`}), {onSuccess: () => {
+    queryClient.invalidateQueries([`storeReservation${dateInfo}`])
+  }})
+
+  const rejectMutation = useMutation((id: number) => ownerapi({method: "PUT", url: `reservation/${id}/reject`}), {onSuccess: () => {
+    queryClient.invalidateQueries([`storeReservation${dateInfo}`])
+  }})
+
+  const confirmHandler = (id: number) => {
+    confirmMutation.mutate(id)
+  }
+
+  const rejectHandler = (id: number) => {
+    rejectMutation.mutate(id)
+  }
+
   return (
     <>
       <DateHeader>
@@ -62,15 +81,9 @@ const OwnerReservePage = () => {
               <div>
                 {reserve.isConfirmed === 0 && (
                   <>
-                    <button className='accept'>승낙</button>
-                    <button className='decline'>거절</button>
+                    <button className='accept' onClick={() => confirmHandler(reserve.idx)}>승낙</button>
+                    <button className='decline' onClick={() => rejectHandler(reserve.idx)}>거절</button>
                   </>
-                )}
-                {reserve.isConfirmed === 1 && (
-                  <button className='decline'>거절</button>
-                )}
-                {reserve.isConfirmed === 2 && (
-                  <button className='accept'>승낙</button>
                 )}
               </div>
             </ReserveCard>

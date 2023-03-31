@@ -11,10 +11,12 @@ export type TAxoisUserInfo = {
 };
 
 export type TAxoisOwnerInfo = {
-  access_token: string;
-  user_name: string;
-  user_nickname: string;
-  user_type: string;
+  storeIndex: number;
+  accessToken: string;
+  userName: string;
+  userNickname: string;
+  userAddress: string;
+  userDistance: string;
 };
 
 export const loginAPI = async (values: TinitialValues) => {
@@ -55,7 +57,7 @@ export const logoutAPI = async () => {
 };
 
 export const ownerloginAPI = async (values: TinitialValues) => {
-  const { data } = await ownerapi<TAxoisUserInfo>({
+  const { data } = await ownerapi<TAxoisOwnerInfo>({
     url: "accounts/businesslogin",
     method: "POST",
     data: {

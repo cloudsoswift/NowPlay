@@ -16,7 +16,6 @@ const OwnerStorePage = () => {
         method: "GET",
         url: "place/1/store",
       });
-      console.log(data);
       return {
         storeName: data.name,
         storeAddress: data.address,
@@ -77,21 +76,19 @@ const OwnerStorePage = () => {
     { suspense: true }
   );
 
-  // console.log(isSuccess)
-
   const toUpdate = () => {
     setIsUpdate((prev) => !prev);
   };
 
   return (
     <>
-      <Suspense fallback={<StoreInfoSuspense />}>
-        {isUpdate
-          ? data && (
-              <StoreInfoForm initialValues={data} updateHandle={toUpdate} />
-            )
-          : data && <StoreInfo values={data} updateHandle={toUpdate} />}
-      </Suspense>
+      {isUpdate
+        ? data && <StoreInfoForm initialValues={data} updateHandle={toUpdate} />
+        : data && (
+            <Suspense fallback={<StoreInfoSuspense />}>
+              <StoreInfo values={data} updateHandle={toUpdate} />
+            </Suspense>
+          )}
     </>
   );
 };

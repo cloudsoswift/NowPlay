@@ -2,32 +2,47 @@ package com.ssafy.specialized.service;
 
 import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.store.StoreDto;
-import com.ssafy.specialized.domain.entity.Bookmark;
-import com.ssafy.specialized.domain.entity.BusinessHour;
-import com.ssafy.specialized.domain.entity.Store;
-import com.ssafy.specialized.domain.entity.User;
+import com.ssafy.specialized.domain.entity.*;
+import com.ssafy.specialized.domain.graphql.input.NearbyStoreInput;
+import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutput;
+import com.ssafy.specialized.domain.mapping.NearbyStoreOutputInterface;
 import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class StoreServiceImpl implements StoreService{
 
-    final StoreRepository storeRepository;
+    @Autowired
+    private final StoreRepository storeRepository;
 
-    final ReviewRepository reviewRepository;
+    @Autowired
+    private final ReviewRepository reviewRepository;
 
-    final BusinessHourRepository businessHourRepository;
+    @Autowired
+    private final BusinessHourRepository businessHourRepository;
 
-    final BookmarkRepository bookmarkRepository;
+    @Autowired
+    private final BookmarkRepository bookmarkRepository;
 
-    final UserRepository userRepository;
+    @Autowired
+    private final UserRepository userRepository;
+    @Autowired
+    private final HobbyMainRepository hobbyMainRepository;
+
+    @Autowired
+    private final HobbySubcategoryRepository hobbySubcategoryRepository;
+    @Autowired
+    private UserHobbyRepository userHobbyRepository;
 
     @Override
     public StoreDto getStoreDetail(int Storeid) {
@@ -80,5 +95,110 @@ public class StoreServiceImpl implements StoreService{
                     .build();
             bookmarkRepository.save(newBookmark);
         }
+    }
+
+    public void getAllExistingCategories() {
+        List<HobbyMain> mainList = hobbyMainRepository.findAll();
+        for (int i = 0; i < mainList.size(); i++) {
+            List<HobbySubcategory> subList = hobbySubcategoryRepository.findAllByMainCategory(mainList.get(i));
+        }
+    }
+
+    @Override
+    public List<NearbyStoreOutput> getNearbyStoreList(NearbyStoreInput nearbyStoreInput) {
+        String name = SecurityUtil.getLoginUsername();
+        User user = userRepository.findByName(name);
+        List<NearbyStoreOutput> list = null;
+        List<Integer> subIndex = new ArrayList<>();
+        boolean isEmpty = true;
+        System.out.println(nearbyStoreInput);
+        if (nearbyStoreInput.getSubcategory() != null && nearbyStoreInput.getSubcategory().size() != 0) {
+            isEmpty = false;
+            List<HobbySubcategory> subList = hobbySubcategoryRepository.findAllBySubcategories(nearbyStoreInput.getSubcategory());
+            for (HobbySubcategory subcategory : subList) {
+                subIndex.add(subcategory.getIdx());
+            }
+        }
+        List<Integer> mainIndex = new ArrayList<>();
+        if (nearbyStoreInput.getMainHobby() != null && nearbyStoreInput.getMainHobby().size() != 0) {
+            isEmpty = false;
+            List<HobbyMain> mainList = hobbyMainRepository.findAllByMains(nearbyStoreInput.getMainHobby());
+            for (HobbyMain mainCategory : mainList) {
+                mainIndex.add(mainCategory.getIdx());
+            }
+        }
+        List<NearbyStoreOutputInterface> storeList = null;
+        if (isEmpty) {
+            storeList = storeRepository.getStoreListByPosition(nearbyStoreInput.getLatitude(), nearbyStoreInput.getLongitude(), nearbyStoreInput.getMaxDistance());
+        } else {
+            storeList = storeRepository.getNearbyStoreList(mainIndex, subIndex, nearbyStoreInput.getLatitude(), nearbyStoreInput.getLongitude(), nearbyStoreInput.getMaxDistance(), 1);
+        }
+        int i = (nearbyStoreInput.getCount() - 1) * 20;
+        int j = i + 19;
+        List<NearbyStoreOutput> retrieveList = new ArrayList<>();
+        System.out.println("=========================================================================");
+        System.out.println("getCount: " + nearbyStoreInput.getCount());
+        System.out.println("i: " + i);
+        System.out.println("j: " + j);
+        System.out.println("size: " + storeList.size());
+        System.out.println("toString: " + nearbyStoreInput.toString());
+        System.out.println("=========================================================================");
+        while (storeList.size() > i && i <= j) {
+            Store store = storeRepository.findById(storeList.get(i).getIdx()).get();
+            List<Review> reviewList = reviewRepository.findAllByStore(store);
+            float ratings = 0;
+            int reviewCount = reviewList.size();
+            for (Review review : reviewList) {
+                ratings += review.getRating();
+            }
+            NearbyStoreOutput nearbyStoreOutput = new NearbyStoreOutput();
+            nearbyStoreOutput.setStore(store);
+            if (reviewCount == 0) {
+                nearbyStoreOutput.setAverageRating(0);
+                System.out.println("=========================================================");
+                System.out.println(store.getIdx());
+                System.out.println("리뷰 점수 0 개");
+                System.out.println("=========================================================");
+            } else {
+                System.out.println("=========================================================");
+                System.out.println("리뷰 점수" + reviewList.get(0).getRating());
+                System.out.println("=========================================================");
+
+                nearbyStoreOutput.setAverageRating(ratings / reviewCount);
+            }
+            nearbyStoreOutput.setDistance((float) storeList.get(i).getDistance());
+            if (user == null) {
+                nearbyStoreOutput.setIsBookmark(false);
+            } else {
+                Optional<Bookmark> optionalBookmark = bookmarkRepository.findByUser(user);
+                if (optionalBookmark.isPresent()) {
+                    nearbyStoreOutput.setIsBookmark(true);
+                }
+            }
+            nearbyStoreOutput.setReviewCount(reviewCount);
+            retrieveList.add(nearbyStoreOutput);
+            i++;
+        }
+        return retrieveList;
+    }
+
+    @Override
+    public List<Store> getStoreListByCategory(NearbyStoreInput nearbyStoreInput) {
+        String name = SecurityUtil.getLoginUsername();
+        User user = userRepository.findByName(name);
+        List<UserHobby> userHobbyList = userHobbyRepository.findAllByUser(user);
+        for (UserHobby userHobby : userHobbyList) {
+            nearbyStoreInput.getSubcategory().add(userHobby.getSubcategory().getSubcategory());
+        }
+
+//        nearbyStoreInput.set
+        return null;
+    }
+
+    @Override
+    public List<NearbyStoreOutput> getStoreListByPosition(NearbyStoreInput nearbyStoreInput) {
+//        List<NearbyStoreOutput> storeList = storeRepository.getStoreListByPosition(nearbyStoreInput.getLatitude(), nearbyStoreInput.getLongitude(), nearbyStoreInput.getMaxDistance());
+        return null;
+//        return storeList;
     }
 }

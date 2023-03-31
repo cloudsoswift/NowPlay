@@ -11,10 +11,12 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
-    List<Review> findAllByWriter(User writer);
 
     List<Review> findAllByStore(Store store);
 
     @Query(value = "SELECT r, ri, oc FROM Review r LEFT JOIN FETCH ReviewImage ri on ri.review.idx = r.idx LEFT JOIN OwnerComment oc on oc.review.idx = r.idx WHERE r.store.idx = :storeid")
     Page<Object[]> findAllByStorePage(int storeid, Pageable pageable);
+
+    @Query(value = "SELECT r, ri, oc FROM Review r LEFT JOIN FETCH ReviewImage ri on ri.review.idx = r.idx LEFT JOIN OwnerComment oc on oc.review.idx = r.idx WHERE r.writer.id = :userid")
+    Page<Object[]> findAllByWriter(int userid, Pageable pageable);
 }

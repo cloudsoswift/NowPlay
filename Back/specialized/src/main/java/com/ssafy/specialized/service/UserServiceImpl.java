@@ -11,6 +11,8 @@ import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -112,9 +114,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Review> getMyReviewList() {
+    public Page<?> getMyReviewList(Pageable pageable) {
         User user = userRepository.findByName(SecurityUtil.getLoginUsername());
-        List<Review> list = reviewRepository.findAllByWriter(user);
+        Page<Object[]> list = reviewRepository.findAllByWriter(user.getIdx(), pageable);
         return list;
     }
 

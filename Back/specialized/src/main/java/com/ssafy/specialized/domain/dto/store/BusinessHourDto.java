@@ -9,11 +9,11 @@ public class BusinessHourDto {
 
     private String dayOfWeek;
 
-    private String openAt;
+    private String open;
 
-    private String closeAt;
+    private String close;
 
     private String reservationInterval;
 
-    private boolean isDayOff;
+    private boolean storeHoliday;
 }

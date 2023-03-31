@@ -4,7 +4,7 @@ import use3Dcard from "../../utils/hooks/use3Dcard";
 
 import OwnerReviewModal from "./OwnerReviewModal";
 
-const ReviewCard = () => {
+const ReviewCard = ({review}: any) => {
   const CardWrapperRef = useRef<HTMLDivElement>(null);
 
   const { event, wrapperStyle, backgroundStyle } = use3Dcard(CardWrapperRef);
@@ -22,17 +22,17 @@ const ReviewCard = () => {
         <div
           className="card-bg"
           style={{
-            backgroundImage: `url("https://www.hawksmoornyc.com/wp-content/uploads/Prime-rib-with-sides-2--1024x683.jpg")`,
+            backgroundImage: `url("${review[1] && review[1].reviewImageUrl}")`,
             transform: backgroundStyle,
           }}
         />
         <CardInfo>
-          <h1>XXXX님의 리뷰</h1>
-          <p>정말 맛있네요~~~~~</p>
+          <h1>{review[0].writer ? review[0].writer.name : "이름없음"}님의 리뷰</h1>
+          <p>{review[0].content}</p>
         </CardInfo>
       </Card>
     </CardWrap>
-    {modalOpen ? <OwnerReviewModal modalclose={modalHandler}/> : null}
+    {modalOpen && <OwnerReviewModal modalclose={modalHandler} review={review}/>}
     </>
   );
 };

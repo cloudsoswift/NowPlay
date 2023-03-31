@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { filterState } from "../Map";
 import { TFilter, TMainCategory, TSubCategory } from "../Types";
+
 type sCategoryProps = {
   category: TMainCategory | TSubCategory;
   onClick: Function;
@@ -45,9 +46,9 @@ export const SelectableCategory = ({
   return (
     <div
       onClick={handleSelectCategory}
-      className={ `grid text-center justify-center p-1 ${className}`}
+      className={ `grid text-center justify-center p-1 ${className} transition-all duration-300`}
     >
-      <img src={`/svg/${category.imageURL}`} className={isMainCategory ? "h-[20vw] w-[20vw] m-0 " : "h-[10vw] w-[10vw] justify-self-center"}/>
+      <img src={`/svg/${category.imageURL}`} className={isMainCategory ? "h-[20vw] w-[20vw] mt-1 " : "h-[10vw] w-[10vw] justify-self-center mt-2"}/>
       {category.category}
     </div>
   );
@@ -59,6 +60,7 @@ const selectedCategoryClass = "bg-[var(--body-color)] m-1 border-b-4 border-b-[v
 export const SelectableCategories = (props: sCategoriesProps) => {
   const [{ categories, selectedCategories }, setFilter] = useRecoilState(filterState);
   const [subCategories, setSubcategories] = useState<subCategoryList>();
+
   return (
     <div className="w-full p-1 grid grid-cols-3">
       {categories.map((category, index) => {
@@ -91,7 +93,7 @@ export const SelectableCategories = (props: sCategoriesProps) => {
                         id={i}
                         category={sbC}
                         onClick={setFilter}
-                        className={ isSelected ? "m-1 bg-[var(--primary-color)] text-white [&>img]:invert" : "m-1"}
+                        className={ isSelected ? "m-1 bg-[var(--primary-color)] text-white [&>img]:invert transition-color" : "m-1"}
                       />
                     );
                   })}

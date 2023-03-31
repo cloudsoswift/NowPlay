@@ -14,4 +14,6 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Integer> {
     Optional<Bookmark> findAllByStoreAndUser(Store store, User user);
 
     Boolean existsAllByStoreAndUser(Store store, User user);
+
+    Optional<Bookmark> findByUser(User user);
 }

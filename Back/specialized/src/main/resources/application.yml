@@ -31,10 +31,10 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
-#    properties:
-#      hibernate:
-#        show_sql: true
-#        format_sql: true
+  #    properties:
+  #      hibernate:
+  #        show_sql: true
+  #        format_sql: true
 
   profiles:
     include: key
@@ -42,8 +42,8 @@ spring:
   redis:
     host: j8d110.p.ssafy.io
     port: 7963
-#    host: localhost
-#    port: 6379
+  #    host: localhost
+  #    port: 6379
 
   mvc:
     pathmatch:

@@ -24,6 +24,7 @@ public class StoreController {
 
     @GetMapping("/{id}/store")
     public ResponseEntity<?> getStoreDetail(@PathVariable int id) throws Exception{
+        System.out.println("1");
         return ResponseEntity.ok(storeService.getStoreDetail(id));
     }
 

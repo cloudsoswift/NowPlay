@@ -61,9 +61,9 @@
 #
 #
 type Query {
-#    getNearbyStoreList(nearbyStoreInput: NearbyStoreInput): [StoreOutput]
     getNearbyStoreList(nearbyStoreInput: NearbyStoreInput): StoreOutputWithTotalCount
     searchStore(searchInput: String, count: Int, lat: Float, lon: Float): StoreOutputWithTotalCount
+    storeRecommendationByCoordinate(lat: Float,lon: Float): [StoreOutput]
     storeDetail(store: String): Store
 }
 
@@ -136,8 +136,6 @@ type NearbyStoreOutput{
     longitude: Float
     maxDistance: Int
 }
-
-
 
 
 ## 박규영

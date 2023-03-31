@@ -22,6 +22,13 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
             "order by distance", nativeQuery = true)
     List<NearbyStoreOutputInterface> findAllByNameQuery(@Param("name") String name, @Param("x") float x, @Param("y") float y, @Param("userIdx") int userIndex);
 
+    @Query(value = "SELECT *" +
+            ", (select SQRT((latitude - :x) * (latitude - :x) + (longitude - :y) * (longitude - :y))) as DISTANCE" +
+            ", (select exists(select * from bookmark where bookmark.store_idx = store.idx and user_idx = :userIdx)) as bookmark " +
+            "from store LEFT JOIN (SELECT review.store_idx AS id, COUNT(*) as reviewCount, AVG(rating) as averageRating FROM review GROUP BY review.store_idx) as reviewData ON reviewData.id = store.idx " +
+            "order by distance", nativeQuery = true)
+    List<NearbyStoreOutputInterface> findAllByCoordinateQuery(@Param("x") float x, @Param("y") float y, @Param("userIdx") int userIndex);
+
     List<Store> findAllBySubcategory(int subcategory);
 
     @Query(value = "SELECT *" +

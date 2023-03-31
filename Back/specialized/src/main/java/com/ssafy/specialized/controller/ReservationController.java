@@ -62,7 +62,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
-    @GetMapping("/store/{storeIdx}/date/{date}")
+    @GetMapping("/store/{storeIdx}/date")
     public ResponseEntity<List<ReservationDto>> getReservationsByStoreAndDate(
             @PathVariable int storeIdx,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate reservationDate) {
@@ -72,6 +72,11 @@ public class ReservationController {
     @PutMapping("/{reservationId}/confirm")
     public ResponseEntity<ReservationDto> confirmReservation(@PathVariable("reservationId") int reservationId) {
         ReservationDto reservationDto = reservationService.confirmReservation(reservationId);
+        return ResponseEntity.ok(reservationDto);
+    }
+    @PutMapping("/{reservationId}/reject")
+    public ResponseEntity<ReservationDto> rejectReservation(@PathVariable("reservationId") int reservationId) {
+        ReservationDto reservationDto = reservationService.rejectReservation(reservationId);
         return ResponseEntity.ok(reservationDto);
     }
 }

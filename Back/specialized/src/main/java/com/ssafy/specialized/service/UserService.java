@@ -19,7 +19,7 @@ public interface UserService {
     LoginResponseDto login(UserLoginDTO login) throws Exception;
 
     // 사업자 로그인
-    LoginResponseDto businessLogin(UserLoginDTO login) throws Exception;
+    BusinessLoginResponseDto businessLogin(UserLoginDTO login) throws Exception;
 
     void logout(UserLogoutDTO logout) throws Exception;
 

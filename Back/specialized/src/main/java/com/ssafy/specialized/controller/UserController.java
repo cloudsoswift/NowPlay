@@ -62,16 +62,16 @@ public class UserController {
     }
     // 사업자로그인
     @PostMapping("/businesslogin")
-    public ResponseEntity<LoginResponseDto> businessLogin(@Validated @RequestBody UserLoginDTO login, HttpServletResponse response) throws Exception {
-        LoginResponseDto loginResponseDto = userService.businessLogin(login);
+    public ResponseEntity<BusinessLoginResponseDto> businessLogin(@Validated @RequestBody UserLoginDTO login, HttpServletResponse response) throws Exception {
+        BusinessLoginResponseDto businessLoginResponseDto = userService.businessLogin(login);
         String test = new String();
-        test = loginResponseDto.getRefreshToken().toString();
+        test = businessLoginResponseDto.getRefreshToken().toString();
         Cookie cookie = new Cookie("refreshToken", test);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
-        loginResponseDto.setRefreshToken(null);
-        return ResponseEntity.ok(loginResponseDto);
+        businessLoginResponseDto.setRefreshToken(null);
+        return ResponseEntity.ok(businessLoginResponseDto);
     }
 
     // 로그아웃

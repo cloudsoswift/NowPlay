@@ -18,7 +18,6 @@ export type TAxoisOwnerInfo = {
 };
 
 export const loginAPI = async (values: TinitialValues) => {
-  console.log(1)
   const { data } = await api<TAxoisUserInfo>({
     url: "accounts/login",
     method: "POST",
@@ -56,8 +55,8 @@ export const logoutAPI = async () => {
 };
 
 export const ownerloginAPI = async (values: TinitialValues) => {
-  const { data } = await ownerapi<TAxoisOwnerInfo>({
-    url: "accounts/owners/login",
+  const { data } = await ownerapi<TAxoisUserInfo>({
+    url: "accounts/businesslogin",
     method: "POST",
     data: {
       userId: values.userId,

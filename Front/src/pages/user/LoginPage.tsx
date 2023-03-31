@@ -5,7 +5,7 @@ const LoginPage = () => {
   return (
     <>
       <LoginAuthForm />
-      <OAuthLoginForm />
+      {/* <OAuthLoginForm /> */}
     </>
   );
 };

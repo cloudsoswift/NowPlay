@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { userInfoAtom } from "../recoil/userAtom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { userInfoAtom, userIsLogin } from "../recoil/userAtom";
 import { logoutAPI } from "../api/authApiFunctions";
 import { TAxoisUserInfo } from "../api/authApiFunctions";
 
@@ -11,16 +11,19 @@ export const useLogout = () => {
   const [cookies, setCookies, removeCookie] = useCookies(["accessToken"]);
   const navigation = useNavigate();
 
+  const [isLogin, setIsLogin] = useRecoilState(userIsLogin)
+
   return useMutation(() => logoutAPI(), {
-    onSuccess: () => {
+    onError: () => {
       removeCookie("accessToken", { path: "/mobile" });
+      setIsLogin(false)
       setUserInfo({
         userNickname: "",
         userAddress: "",
         userName: "",
         userDistance: "",
       });
-      navigation("/moblie/mypage");
+      navigation("/mobile/homepage");
     },
   });
 };

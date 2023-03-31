@@ -43,18 +43,18 @@ const StoreInfo = ({
   values,
   updateHandle,
 }: {
-  values: TstoreInfo;
+  values: TinitialValues;
   updateHandle: () => void;
 }) => {
-  // const imgs = values.imagesUrl
-  //   ? values.imagesUrl.map((img, idx) => {
-  //       return (
-  //         <StoreImageCard key={idx}>
-  //           <img src={img} draggable={false} />
-  //         </StoreImageCard>
-  //       );
-  //     })
-  //   : null;
+  const imgs = values.storeBrcImages
+    ? values.storeBrcImages.map((img, idx) => {
+        return (
+          <StoreImageCard key={idx}>
+            <img src={img} draggable={false} />
+          </StoreImageCard>
+        );
+      })
+    : null;
 
   const scrollRef =
     useRef<HTMLDivElement>() as MutableRefObject<HTMLInputElement>;
@@ -64,10 +64,8 @@ const StoreInfo = ({
   const daysHour = Object.keys(weekdays).map((days, idx) => {
     return (
       <div key={idx}>
-        {/* <p>{weekdays[days]}</p>
-        {values.businessHourList?.[days].storeHoliday ? (
-          <span>"휴무일"</span>
-        ) : (
+        <p>{weekdays[days]}</p>
+        {values.businessHour  && values.businessHour?.[days] ?  (
           <>
             <span>OPEN : {values.businessHour?.[days].open}</span>
             <span>CLOSE : {values.businessHour?.[days].close}</span>
@@ -75,7 +73,9 @@ const StoreInfo = ({
               예약 간격 {values.businessHour?.[days].reservationInterval} 분
             </span>
           </>
-        )} */}
+        ) : (
+          <span>"휴무일"</span>
+        )}
       </div>
     );
   });
@@ -83,33 +83,33 @@ const StoreInfo = ({
   return (
     <StoreInfoContainer>
       <StoreTitleHeader>
-        {values.name}
+        {values.storeName}
         <button onClick={updateHandle}>
           <BiPencil />
         </button>
       </StoreTitleHeader>
       <StoreImageContainer {...event} ref={scrollRef}>
-        {/* {imgs} */}
+        {imgs}
       </StoreImageContainer>
       <StoreTextbox>
         <BiCategoryAlt />
         <p>주 카테고리</p>
-        <span>{values.mainCategory.mainCategory}</span>
+        <span>{values.hobbyMainCategory}</span>
       </StoreTextbox>
       <StoreTextbox>
         <BiCategory />
         <p>부 카테고리</p>
-        <span>{values.subcategory.subcategory}</span>
+        <span>{values.hobbyMajorCategory}</span>
       </StoreTextbox>
       <StoreTextbox>
         <BiMapAlt />
         <p>주소</p>
-        <span>{values.address}</span>
+        <span>{values.storeAddress}</span>
       </StoreTextbox>
       <StoreTextbox>
         <BiBookAlt />
         <p>가게 설명</p>
-        <span>{values.explanation}</span>
+        <span>{values.storeExplanation}</span>
       </StoreTextbox>
       <StoreTextbox>
         <BiCalendarCheck />

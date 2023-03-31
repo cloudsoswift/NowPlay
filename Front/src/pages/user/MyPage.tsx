@@ -9,29 +9,9 @@ import {
   UserInfoCard,
   MyPageCategory,
 } from "../../components/MyPage/MyPageHeader";
-import { useEffect, useRef } from "react";
 
-import SockJS from "sockjs-client";
-import * as StompJS from "@stomp/stompjs";
-
-
-const socket = new SockJS("http://j8d110.p.ssafy.io:9092")
 
 const MyPage = () => {
-
-  const client = new StompJS.Client({
-    brokerURL: 'ws://j8d110.p.ssafy.io:9092',
-    connectHeaders: {
-      login: 'user',
-      password: 'password'
-  },
-    
-  })
-
-  client.activate()
-
-  
-
   return (
     <>
       <UserInfoCard />

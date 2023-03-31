@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"https://j8d110.p.ssafy.io", "http://127.0.0.1:5173", "http://localhost:5173", "http://172.30.1.95"}, allowCredentials = "true")
-@RequestMapping("/store")
+@RequestMapping("/place")
 public class StoreController {
     @Autowired
     private final StoreService storeService;
@@ -19,5 +19,11 @@ public class StoreController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getStoreDetail(@PathVariable int id) throws Exception{
         return ResponseEntity.ok(storeService.getStoreDetail(id));
+    }
+
+        @PostMapping("/{id}/favorite")
+    public ResponseEntity<?> bookMark(@PathVariable int id) throws Exception{
+        storeService.bookMark(id);
+        return ResponseEntity.ok(null);
     }
 }

@@ -37,24 +37,18 @@ export const filterState = atom<TFilter>({
   },
 });
 export const Map = (props: Props) => {
-  useEffect(()=>{
-  }, [])
   const [isFilterShown, setIsFilterShown] = useState(false);
-  const [isCardlistShown, setIsCardlistShown] = useState(false);
   const [markerList, setMarkerList] = useState<Array<naver.maps.Marker>>([]);
-
+  const [mapInstance, setMapInstance] = useState<naver.maps.Map>();
   const handleFilterToggle = () => {
     setIsFilterShown((prevState) => !prevState);
   };
-  const handleCardListToggle = () => {
-    setIsCardlistShown((prevState) => !prevState);
-  };
   useEffect(() => {
-    console.log(useRecoilValue(categoriesSelector));
     const map = new window.naver.maps.Map("map", {
       center: new window.naver.maps.LatLng(37.3595704, 127.105399),
       zoom: 10,
     });
+    setMapInstance(map);
   }, []);
   return (
     <>
@@ -73,12 +67,6 @@ export const Map = (props: Props) => {
           />
         )}
       </AnimatePresence>
-      {/* <button
-        className="absolute bottom-20 left-1/2 -translate-x-1/2 border-2 border-black"
-        onClick={handleCardListToggle}
-        >
-        카드리스트 호출 버튼
-      </button> */}
       <PlaceCardSheet />
     </>
   );

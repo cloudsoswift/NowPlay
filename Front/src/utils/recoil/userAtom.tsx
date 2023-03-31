@@ -41,3 +41,8 @@ export const selectHobbyAction = atom<string[]>({
   key: "hobbyInfo",
   default: []
 })
+
+export const userIsLogin = atom<boolean>({
+  key: "userIsLogin",
+  default: false
+})

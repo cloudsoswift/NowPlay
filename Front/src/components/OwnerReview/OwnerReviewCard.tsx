@@ -32,7 +32,7 @@ const ReviewCard = ({review}: any) => {
         </CardInfo>
       </Card>
     </CardWrap>
-    {modalOpen ? <OwnerReviewModal modalclose={modalHandler} review={review}/> : null}
+    {modalOpen && <OwnerReviewModal modalclose={modalHandler} review={review}/>}
     </>
   );
 };

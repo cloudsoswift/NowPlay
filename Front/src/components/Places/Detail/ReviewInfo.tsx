@@ -1,8 +1,9 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { AiFillStar } from "react-icons/ai";
 import { HiPencilAlt } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
+import api from "../../../utils/api/api";
 import { PopupImage } from "../PopupImage";
 import { TReview } from "../Types";
 
@@ -26,7 +27,10 @@ export const Review = ({ review }: ReviewProps) => {
       </div>
       <div className="flex w-full h-[20vh] space-x-2 flex-col">
         {/* <img src={review.imageURL} alt="" className="max-h-[20vh]" /> */}
-        <PopupImage imageURL={review.imageURL} imageClass="max-h-[15vh] w-full object-cover" />
+        <PopupImage
+          imageURL={review.imageURL}
+          imageClass="max-h-[15vh] w-full object-cover"
+        />
         <ReviewBox>{review.content}</ReviewBox>
       </div>
     </div>
@@ -34,7 +38,7 @@ export const Review = ({ review }: ReviewProps) => {
 };
 
 export const ReviewInfo = (props: ReviewInfoProps) => {
-  const reviews: Array<TReview> = [
+  const TEMP_REVIEWS: Array<TReview> = [
     {
       id: 1,
       nickname: "김덕배",
@@ -64,19 +68,38 @@ export const ReviewInfo = (props: ReviewInfoProps) => {
       rate: 4,
     },
   ];
+  const { id } = useParams();
+  const fetchReviewList = async ({ pageParam = 0 }) => {
+    const {data} = await api.get(`places/${id}/reviews?page=${pageParam}`);
+    return data;
+  };
+  const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status } = useInfiniteQuery({
+    queryKey: ["getReviewList"],
+    queryFn: fetchReviewList,
+    getNextPageParam: (lastPage, pages)=> lastPage.number + 1 < lastPage.totalPages ? lastPage.number + 1 : undefined,
+  });
+  console.log(data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status);
+  console.log(data?.pages.at(0));
+  
   return (
     <div className="h-full overflow-y-scroll">
+      <button onClick={()=>{fetchNextPage()}}>dd</button>
       <Link
         to={"review"}
         className="grid h-14 w-full border rounded-xl shadow-sm my-2 justify-items-center items-center"
       >
         <div className="text-xl">
-          <HiPencilAlt className="inline text-[var(--primary-color)] text-xl" /> 글 등록
+          <HiPencilAlt className="inline text-[var(--primary-color)] text-xl" />{" "}
+          글 등록
         </div>
       </Link>
       <div className="space-y-4">
-        {reviews.map((review) => (
-          <Review review={review} />
+        {data?.pages.map((page) => (
+          page.content.map((reviewList: Array<any>)=>(
+            reviewList.map((review)=>
+              <Review review={review} />
+            )
+          ))
         ))}
       </div>
     </div>
@@ -84,8 +107,8 @@ export const ReviewInfo = (props: ReviewInfoProps) => {
 };
 
 const ReviewBox = styled.div`
-display: -webkit-box;
--webkit-box-orient: vertical;
--webkit-line-clamp: 2;
-overflow: hidden;
-`
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+`;

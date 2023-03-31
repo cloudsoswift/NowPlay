@@ -23,7 +23,7 @@ public interface StoreService {
     List<Store> getStoreListByCategory(NearbyStoreInput nearbyStoreInput);
     List<NearbyStoreOutput> getStoreListByPosition(NearbyStoreInput nearbyStoreInput);
 
-    void updateStore(UpdateStoreDto updateStoreDto) throws Exception;
+    void updateStore(int id, UpdateStoreDto updateStoreDto) throws Exception;
     NearbyStoreOutputWithTotalCount searchStore(String searchInput, int count, float lat, float lon);
 
     List<NearbyStoreOutput> storeRecommendationByCoordinate(float lat, float lon);

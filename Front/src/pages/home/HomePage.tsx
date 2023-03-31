@@ -12,11 +12,26 @@ import Title from "../../components/HomePage/Title";
 
 const HomePage = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [isOpenModalBox, setIsOpenModalBox] = useState<boolean>(false);
+  const [selectAddress, setSelectAddress] = useState<string | null>("");
+  const [selectLocation, setSelectLocation] = useState<
+    { latitude: number; longitude: number } | string
+  >("");
 
   return (
     <HomeBox isOpenModal={isOpenModal}>
       <TitleBox>
-        <Title isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
+        <Title
+          isOpenModal={isOpenModal}
+          setIsOpenModal={setIsOpenModal}
+          selectAddress={selectAddress}
+          setSelectAddress={setSelectAddress}
+          isOpenModalBox={isOpenModalBox}
+          setIsOpenModalBox={setIsOpenModalBox}
+          selectLocation={selectLocation}
+          setSelectLocation={setSelectLocation}
+          textBoolean={true}
+        />
       </TitleBox>
       <hr />
       <MainBox>
@@ -97,4 +112,3 @@ const MainBox = styled.div`
 const TitleBox = styled.div`
   width: 100%;
 `;
-

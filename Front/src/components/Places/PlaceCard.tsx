@@ -1,104 +1,285 @@
 import { TPlaceCard } from "./Types";
 import { ImCross } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useBottomSheet } from "../../utils/hooks/useBottomSheet";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { StarRating } from "./StarRating";
 
 type PlaceCardProps = {
   place: TPlaceCard;
 };
-export const PlaceCard = ({ place }: PlaceCardProps) => {
+
+export const PlaceCard2 = ({ place }: PlaceCardProps) => {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`${place.id}`);
-  }
+  };
+  const percentRating = place.averageRating * 20;
+
   return (
-    <div className="w-[90vw] h-[40vh] grid justify-self-center border rounded-xl" onClick={handleClick}>
-      <img src={`/pics/${place.imageURL}`} alt="" />
-      <div className="grid grid-cols-2">
-        <div>{place.name}</div>
-        <div>{place.subCategory}</div>
+    <CardBox onClick={handleClick}>
+      <img src={`/pics/${place.imageURL}`} />
+      <div>
+        <Top>
+          <Name>{place.name}</Name>
+          <Category>{place.subCategory}</Category>
+        </Top>
+        <Middle>
+          <Address>{place.address}</Address>
+        </Middle>
+        <Bottom>
+          <Distance>
+            {place.distance < 1
+              ? `${place.distance * 1000}m`
+              : `${place.distance.toFixed(2)}km`}
+          </Distance>
+          <ReviewNum>리뷰 {place.reviewCount}개</ReviewNum>
+          <Star>
+            <Small>{place.averageRating}</Small>
+            <StarRatinga>
+              <StarRatingFill style={{ width: percentRating + "%" }}>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </StarRatingFill>
+              <StarRatingBase>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </StarRatingBase>
+            </StarRatinga>
+          </Star>
+        </Bottom>
+      </div>
+    </CardBox>
+  );
+};
+
+const CardBox = styled.div`
+  width: 100%;
+  padding: 20px;
+  > img {
+    width: 100%;
+    border-radius: 20px;
+  }
+  > div {
+    margin-bottom: 10px;
+  }
+`;
+
+const Top = styled.div`
+  height: 45px;
+  justify-content: space-between;
+  display: flex;
+  align-items: baseline;
+  margin-top: 15px;
+`;
+
+const Name = styled.div`
+  width: auto;
+  font-size: var(--large-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 15px;
+`;
+
+const Category = styled.div`
+  width: auto;
+  font-size: var(--title-2);
+  color: var(--gray-color);
+`;
+
+const Middle = styled.div`
+  margin-top: 5px;
+`;
+
+const Address = styled.div`
+  width: 100%;
+  font-size: var(--body-text);
+`;
+
+const Bottom = styled.div`
+  justify-content: start;
+  display: flex;
+  align-items: baseline;
+  margin-top: 5px;
+`;
+
+const Distance = styled.div`
+  font-size: var(--caption);
+  margin-inline: 5px;
+  color: var(--primary-color);
+`;
+
+const ReviewNum = styled.div`
+  margin-left: 20px;
+`
+
+const Star = styled.div`
+  margin-left: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const Small = styled.div`
+  font-size: var(--body-text);
+  margin-right: 5px;
+`;
+
+const StarRatinga = styled.div`
+  position: relative;
+  unicode-bidi: bidi-override;
+  width: max-content;
+  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 0.2px;
+  -webkit-text-stroke-color: #2b2a29;
+`;
+
+const StarRatingFill = styled.div`
+  padding: 0;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  left: 0;
+  overflow: hidden;
+  -webkit-text-fill-color: var(--primary-color);
+  > span {
+    font-size: var(--title-2);
+  }
+`;
+
+const StarRatingBase = styled.div`
+  z-index: 0;
+  padding: 0;
+  > span {
+    font-size: var(--title-2);
+  }
+`;
+
+export const PlaceCard1 = ({ place }: PlaceCardProps) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`${place.id}`);
+  };
+  return (
+    <div
+      className="w-full h-[40vh] grid justify-self-center border rounded-xl p-2 shadow-md"
+      onClick={handleClick}
+    >
+      <img src={`/pics/${place.imageURL}`} alt="" className="h-[25vh] w-full" />
+      <div className="flex space-x-2">
+        <span className="text-xl">{place.name}</span>
+        <span className="text-[var(--gray-color)]">{place.subCategory}</span>
       </div>
       <div>{place.address}</div>
-      <div className="grid grid-cols-3">
-        <div>{place.distance}</div>
-        <div>{place.reviewCount}</div>
-        <div>{place.averageRating}</div>
+      <div className="flex space-x-2 items-center">
+        <div className="text-[var(--primary-color)]">
+          {place.distance < 1
+            ? `${place.distance * 1000}m`
+            : `${place.distance.toFixed(2)}km`}
+        </div>
+        <div>{`리뷰 ${place.reviewCount}개`}</div>
+        <StarRating rating={place.averageRating} />
       </div>
       <div>{place.isBookmark}</div>
     </div>
   );
 };
 
-type PlaceCardsProps = {
-  onClose: React.Dispatch<React.SetStateAction<boolean>>;
-};
+const TEST_DATA: Array<TPlaceCard> = [
+  {
+    id: 1,
+    imageURL: "place_test_image.png",
+    name: "스파크 노래타운",
+    subCategory: "노래방",
+    address: "경북 구미시 인동중앙로1길 5",
+    distance: 0.513,
+    averageRating: 3.5,
+    reviewCount: 4,
+    isBookmark: true,
+  },
+  {
+    id: 2,
+    imageURL: "place_test_image.png",
+    name: "스파크 노래타운",
+    subCategory: "노래방",
+    address: "경북 구미시 인동중앙로1길 5",
+    distance: 0.513,
+    averageRating: 4.0,
+    reviewCount: 4,
+    isBookmark: true,
+  },
+  {
+    id: 3,
+    imageURL: "place_test_image.png",
+    name: "스파크 노래타운",
+    subCategory: "노래방",
+    address: "경북 구미시 인동중앙로1길 5",
+    distance: 0.513,
+    averageRating: 4.0,
+    reviewCount: 4,
+    isBookmark: true,
+  },
+  {
+    id: 4,
+    imageURL: "place_test_image.png",
+    name: "스파크 노래타운",
+    subCategory: "노래방",
+    address: "경북 구미시 인동중앙로1길 5",
+    distance: 0.513,
+    averageRating: 4.0,
+    reviewCount: 4,
+    isBookmark: true,
+  },
+];
 
-export const PlaceCards = (props: PlaceCardsProps) => {
-  const TEST_DATA: Array<TPlaceCard> = [
-    {
-      id: 1,
-      imageURL: "place_test_image.png",
-      name: "스파크 노래타운",
-      subCategory: "노래방",
-      address: "경북 구미시 인동중앙로1길 5",
-      distance: 0.513,
-      averageRating: 4.0,
-      reviewCount: 4,
-      isBookmark: true,
-    },
-    {
-      id: 2,
-      imageURL: "place_test_image.png",
-      name: "스파크 노래타운",
-      subCategory: "노래방",
-      address: "경북 구미시 인동중앙로1길 5",
-      distance: 0.513,
-      averageRating: 4.0,
-      reviewCount: 4,
-      isBookmark: true,
-    },
-    {
-      id: 3,
-      imageURL: "place_test_image.png",
-      name: "스파크 노래타운",
-      subCategory: "노래방",
-      address: "경북 구미시 인동중앙로1길 5",
-      distance: 0.513,
-      averageRating: 4.0,
-      reviewCount: 4,
-      isBookmark: true,
-    },
-    {
-      id: 4,
-      imageURL: "place_test_image.png",
-      name: "스파크 노래타운",
-      subCategory: "노래방",
-      address: "경북 구미시 인동중앙로1길 5",
-      distance: 0.513,
-      averageRating: 4.0,
-      reviewCount: 4,
-      isBookmark: true,
-    },
-  ];
+type PlaceCardsProps = {};
+
+export const MIN_Y = 120; // 바텀시트가 최대로 높이 올라갔을 때의 y 값
+export const MAX_Y = window.innerHeight - 60; // 바텀시트가 최소로 내려갔을 때의 y 값
+export const BOTTOM_SHEET_HEIGHT = window.innerHeight; // 바텀시트의 세로 길이
+
+export const PlaceCardSheet = (props: PlaceCardsProps) => {
+  const { sheet, content } = useBottomSheet();
+
   return (
-    <div
-      className="w-screen h-[79vh] px-4 bg-white border-4 absolute bottom-20 left-0 grid overflow-y-scroll"
-      style={{ zIndex: "100" }}
-    >
-      <div className="sticky top-1 text-end">
-        <button
-          onClick={() => {
-            props.onClose(false);
-          }}
-          className="mr-1 mt-1"
-        >
-          <ImCross />
-        </button>
+    <Wrapper ref={sheet}>
+      <div className="h-12 rounded-t-lg pt-4 pb-1" id="bottomSheetHeader">
+        <div className="w-8 h-1 rounded-sm m-auto bg-slate-500"></div>
       </div>
-      <div className="space-y-2">
+      <div
+        id="bottomSheetContent"
+        className="overflow-auto p-4 space-y-4"
+        ref={content}
+      >
         {TEST_DATA.map((data) => (
-          <PlaceCard place={data} />
+          <PlaceCard2 key={data.id} place={data} />
         ))}
       </div>
-    </div>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  z-index: 0;
+  top: calc(100% - ${MIN_Y}px);
+  left: 0;
+  right: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+  height: ${BOTTOM_SHEET_HEIGHT - MIN_Y}px;
+`;

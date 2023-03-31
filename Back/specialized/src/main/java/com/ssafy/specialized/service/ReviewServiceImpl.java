@@ -15,6 +15,8 @@ import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +25,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -233,5 +236,11 @@ public class ReviewServiceImpl implements ReviewService {
             reviewImageRepository.delete((reviewImage));
         }
         reviewRepository.delete(review);
+    }
+
+    @Override
+    public Page<?> getStoreReviewListPage(int id, Pageable pageable) {
+        Page<Object[]> result = reviewRepository.findAllByStorePage(id, pageable);
+        return result;
     }
 }

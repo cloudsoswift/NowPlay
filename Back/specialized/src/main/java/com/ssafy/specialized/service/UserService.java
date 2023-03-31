@@ -4,6 +4,8 @@ package com.ssafy.specialized.service;
 import com.ssafy.specialized.domain.dto.user.*;
 import com.ssafy.specialized.domain.entity.Bookmark;
 import com.ssafy.specialized.domain.entity.Review;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,9 +14,12 @@ public interface UserService {
     void signUp(SignUpRequestDto signUpRequestDto);
     int checkIdDuplication(String userId);
     List<Bookmark> getMyBookmarkList();
-    List<Review> getMyReviewList();
+    Page<?> getMyReviewList(Pageable pageable);
 
     LoginResponseDto login(UserLoginDTO login) throws Exception;
+
+    // 사업자 로그인
+    LoginResponseDto businessLogin(UserLoginDTO login) throws Exception;
 
     void logout(UserLogoutDTO logout) throws Exception;
 

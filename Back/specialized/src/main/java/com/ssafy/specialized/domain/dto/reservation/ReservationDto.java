@@ -18,6 +18,8 @@ public class ReservationDto {
 
     private int reserverIdx;
 
+    private String reservername;
+
     private int storeIdx;
 
     private LocalDateTime time;

@@ -44,4 +44,6 @@ public class StoreDto {
     private List<BusinessHour> businessHourList;
 
     private float averageRating;
+
+    private boolean isFaverite;
 }

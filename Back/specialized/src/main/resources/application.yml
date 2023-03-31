@@ -1,6 +1,6 @@
 server:
-  host: localhost
-  port: 8085
+#  host: localhost
+#  port: 8085
   servlet:
     context-path: /spring
 

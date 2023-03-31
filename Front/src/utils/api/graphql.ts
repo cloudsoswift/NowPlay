@@ -1,11 +1,15 @@
 export const QGetNearbyStoreList = 
 `query NearbyStoreList($condition: NearbyStoreInput) {
   getNearbyStoreList(nearbyConditions: $condition) {
-    stores {
-      idx
-      name
-      subcategory
-      address
+    storeOutput {
+      store {
+        idx
+        name
+        subcategory {
+          subcategory
+        }
+        address
+      }
       distance
       reviewCount
       averageRating
@@ -21,7 +25,9 @@ export const QSearchStore =
     stores {
       idx
       name
-      subcategory
+      subcategory {
+        subcategory
+      }
       address
       distance
       reviewCount
@@ -90,66 +96,96 @@ fragment storesField on StoreSummary {
 
 
 // getFavoriteStoreList():
-getNearbyStoreList(nearbyConditions: NearbyStoreInput): output
-getRecommendByPosition(latitude: Float, longitude: Float): output
-getRecommendByCategory(): output
-searchStore(searchInput: String, count: Int): output
-storeDetail(storeID: ID!): Store
+// getNearbyStoreList(nearbyConditions: NearbyStoreInput): output
+// getRecommendByPosition(latitude: Float, longitude: Float): output
+// getRecommendByCategory(): output
+// searchStore(searchInput: String, count: Int): output
+// storeDetail(storeID: ID!): Store
 
-type output {
-  stores:[StoreSummary]
-  totalCount: Int
-}
-
-input NearbyStoreInput {
+type TNearbyStoreInput = {
   mainHobby: [String]
   subcategory: [String]
-  latitude: Float
-  longitude: Float
-  maxDistance: Int
-  afterHour: String // 시간을 "18:00" 와 같은 형태의 문자열.
-  count: Int # 페이징 카운트
+  latitude: number
+  longitude: number
+  maxDistance: number
+  // afterHour: String // 시간을 "18:00" 와 같은 형태의 문자열.
+  count: number // 페이징 카운트
+}
+// idx: ID!
+// name: String
+// subcategory: String
+// address: String
+// distance: Float
+// reviewCount: Int
+// averageRating: Int
+// isBookmark: Boolean
+// owner: String
+// contactNumber: String
+// homepage: String
+// mainImagesUrl: String # 메인 이미지 ( Store 테이블 )
+// imageUrls: [String] # 서브 이미지 ( StoreImage 테이블 )
+// explanation: String
+// latitude: Float
+// longitude: FloatbusinessHourList
+// isClosedOnHolidays: Boolean
+// businessHours: [BusinessHour]
+
+interface TStore implements StoreSummary {
+  idx: number 
+  // owner: User 
+  name: string 
+  mainCategory: THobbyMain 
+  subcategory: THobbySubcategory 
+  address: string 
+  contactNumber: string 
+  homepage: string 
+  imagesUrl: string 
+  explanation: string 
+  latitude: number 
+  longitude: number 
+  isClosedOnHolidays: boolean
 }
 
-type Store implements StoreSummary {
-  idx: ID!
-  name: String
-  subcategory: String
-  address: String
-  distance: Float
-  reviewCount: Int
-  averageRating: Int
-  isBookmark: Boolean
-  owner: String
-  contactNumber: String
-  homepage: String
-  mainImagesUrl: String # 메인 이미지 ( Store 테이블 )
-  imageUrls: [String] # 서브 이미지 ( StoreImage 테이블 )
-  explanation: String
-  latitude: Float
-  longitude: Float
-  isClosedOnHolidays: Boolean
-  businessHours: [BusinessHour]
+interface TStoreSummary {
+  idx: number
+  name: string  
+  subcategory : THobbySubcategory
+  address: string
+}
+type THobbyMain = {
+  idx: number;
+  mainCategory: string;
+  mainImageUrl: string;
+} 
+
+type THobbySubcategory = {
+  idx: number;
+  mainCategory: THobbyMain;
+  subcategory: string
+  subcategoryImageUrl: string;
 }
 
-type BusinessHour {
-  idx: ID!
-  store: String
-  dayOfWeek: String
-  openAt: String
-  closeAt: String
-  reservationInterval: String
-  isDayOff: Boolean
+type TBusinessHour = {
+  idx: number;
+  store: TStore;
+  dayOfWeek: string;
+  openAt: string;
+  closeAt: string;
+  reservationInterval: string;
+  isDayOff: boolean;
 }
 
-interface StoreSummary {
-  idx: ID!
-  name: String
-  subcategory: String
-  address: String
-  distance: Float
-  reviewCount: Int
-  averageRating: Int
-  isBookmark: Boolean
+interface TStoreOutput {
+  store: TStore
+  distance: number
+  reviewCount: number
+  averageRating: number
+  isBookmark: boolean
 }
 
+type TStoreOutputWithTotalCount = {
+  storeOutput: [TStoreOutput]
+  totalCount: number
+}
+
+export type { TNearbyStoreInput, TStore, TStoreSummary, THobbyMain, THobbySubcategory, TStoreOutput, TStoreOutputWithTotalCount } 

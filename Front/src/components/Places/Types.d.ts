@@ -1,5 +1,5 @@
 type TFilter = {
-  categories: Array<TMainCategory>,
+  categories: RecoilValueReadOnly<TMainCategory[]>,
   selectedCategories: Array<TSubCategory>,
   businessTime: string,
   distance: Number,
@@ -30,11 +30,11 @@ type TBusinessTime = {
   
   type TReview = {
     id: number,
-    nickname: string,
+    writer: object,
     content: string,
-    rate: number,
-    created_at: Date,
-    imageURL: string
+    rating: number,
+    createdAt: string,
+    reviewImageUrl: string
   }
 
 type TPlaceCard = {
@@ -59,5 +59,9 @@ type TPlaceDetail = TPlaceCard & {
   description: string,
   isClosedOnHolidays: boolean,
 }
+type TPosition = {
+  longitude: number,
+  latitude: number,
+}
 
-export type { TFilter, TMainCategory, TSubCategory, TBusinessTime, TReview, TPlaceCard, TPlaceDetail };
+export type { TFilter, TMainCategory, TSubCategory, TBusinessTime, TReview, TPlaceCard, TPlaceDetail, TPosition };

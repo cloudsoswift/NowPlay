@@ -55,6 +55,15 @@ public class UserController {
         loginResponseDto.setRefreshToken(null);
         return ResponseEntity.ok(loginResponseDto);
     }
+    // 사업자로그인
+    @PostMapping("/businesslogin")
+    public ResponseEntity<LoginResponseDto> businessLogin(@Validated @RequestBody UserLoginDTO login, HttpServletResponse response) throws Exception {
+        LoginResponseDto loginResponseDto = userService.businessLogin(login);
+
+        response.addHeader("Set-Cookie", loginResponseDto.getRefreshToken().toString());
+        loginResponseDto.setRefreshToken(null);
+        return ResponseEntity.ok(loginResponseDto);
+    }
 
     // 로그아웃
     @PostMapping("/logout")

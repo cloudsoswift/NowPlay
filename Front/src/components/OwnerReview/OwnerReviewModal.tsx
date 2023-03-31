@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { BiX } from "react-icons/bi";
+import { useMutation } from '@tanstack/react-query';
+import { queryClient } from '../../main';
+import { ownerapi } from '../../utils/api/api';
 
 type TreviewData = {
   review_index: number;
@@ -25,6 +28,8 @@ const OwnerReviewModal = ({
 }) => {
   const [modalOpacity, setModalOpacity] = useState(0);
 
+  const [comment, setComment] = useState<string>("")
+
   useEffect(() => {
     setModalOpacity(1);
     document.body.style.overflow = "hidden";
@@ -37,6 +42,28 @@ const OwnerReviewModal = ({
     setTimeout(() => modalclose(), 500);
   };
 
+  const commentPostMutation = useMutation(({id, comment}: {id: number, comment: string}) =>  ownerapi({method: "POST", url: `places/${id}/comments`, data: {comment}}), {onSuccess: () => {
+    queryClient.invalidateQueries([`storeReviews`])
+  }})
+
+  const commentPutMutation = useMutation(({id, comment}: {id: number, comment: string}) =>  ownerapi({method: "PUT", url: `places/${id}/comments`, data: {comment}}), {onSuccess: () => {
+    queryClient.invalidateQueries([`storeReviews`])
+  }})
+
+  const commentHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setComment(e.currentTarget.value)
+  }
+
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (review[2]) {
+      console.log(comment)
+      commentPutMutation.mutate({id: review[0].idx, comment})
+    } else {
+      commentPostMutation.mutate({id: review[0].idx, comment})
+    }
+  }
+
   return (
     <>
       <ReviewModal opacity={modalOpacity}>
@@ -46,7 +73,7 @@ const OwnerReviewModal = ({
             {review[0].writer ? review[0].writer.name : "이름없음"}님의 리뷰
             <p>{review[0].createdAt.slice(0, 10)}</p>
           </h1>
-          <p>
+          <div>
             평점{" "}
             <StarRating>
               <StarRatingFill style={{ width: review[0].rating * 20 + "%" }}>
@@ -64,7 +91,7 @@ const OwnerReviewModal = ({
                 <span>★</span>
               </StarRatingBase>
             </StarRating>
-          </p>
+          </div>
           <p>리뷰 공개 여부 : {review[0].hidden ? "❌" : "✔"}</p>
         </ReviewInfo>
         <ReviewChat>
@@ -80,13 +107,13 @@ const OwnerReviewModal = ({
             <ReviewerChatting>{review[0].content}</ReviewerChatting>
             {review[2] ? (
               <OwnerChatting>
-                {review[2].owner_comments.owner_comment_content}
+                {review[2].content}
               </OwnerChatting>
             ) : null}
           </ChatRoom>
-          <ChattingInput>
-            <input type="text" />
-            <button>제출</button>
+          <ChattingInput onSubmit={submitHandler}>
+            <input type="text" name='comment' value={comment} onChange={commentHandler} />
+            <button type='submit'>제출</button>
           </ChattingInput>
         </ReviewChat>
       </ReviewModal>
@@ -201,7 +228,7 @@ const ChatRoom = styled.div`
 const ReviewerChatting = styled.div`
   position: relative;
   background-color: #f9e000;
-  width: fit-content;
+  
   max-width: 350px;
 
   padding: 10px;
@@ -234,8 +261,10 @@ const ReviewerChatting = styled.div`
 const OwnerChatting = styled.div`
   position: relative;
   background-color: #afdfdc;
-  width: fit-content;
+  width: 100%;
   max-width: 350px;
+
+  word-break:break-all;
 
   margin: 20px;
   margin-left: auto;
@@ -257,7 +286,7 @@ const OwnerChatting = styled.div`
   }
 `;
 
-const ChattingInput = styled.div`
+const ChattingInput = styled.form`
   position: sticky;
 
   bottom: 0;

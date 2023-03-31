@@ -11,6 +11,7 @@ import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class StoreController {
         return ResponseEntity.ok(null);
     }
 
-    @PostMapping("/owners/{id}")
+    @PostMapping(value = "/owners/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> updateStore(@PathVariable int id, @RequestBody UpdateStoreDto updateStoreDto) throws Exception {
         storeService.updateStore(id, updateStoreDto);
         return ResponseEntity.ok(null);

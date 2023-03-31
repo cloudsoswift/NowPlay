@@ -113,7 +113,7 @@ public class StoreServiceImpl implements StoreService {
     public NearbyStoreOutputWithTotalCount getNearbyStoreList(NearbyStoreInput nearbyStoreInput) {
         String name = SecurityUtil.getLoginUsername();
         User user = userRepository.findByName(name);
-        List<NearbyStoreOutput> list = null;
+
         List<Integer> subIndex = new ArrayList<>();
         boolean isEmpty = true;
         System.out.println(nearbyStoreInput);
@@ -200,7 +200,6 @@ public class StoreServiceImpl implements StoreService {
     public NearbyStoreOutputWithTotalCount searchStore(String searchInput, int count, float lat, float lon) {
         String name = SecurityUtil.getLoginUsername();
         User user = userRepository.findByName(name);
-        List<NearbyStoreOutput> list = null;
 
         List<NearbyStoreOutputInterface> storeList = storeRepository.findAllByNameQuery(searchInput, lat, lon, 1);;
         int i = (count - 1) * 20;
@@ -239,5 +238,45 @@ public class StoreServiceImpl implements StoreService {
         nearbyStoreOutputWithTotalCount.setStoreOutput(retrieveList);
         nearbyStoreOutputWithTotalCount.setTotalCount(storeList.size());
         return nearbyStoreOutputWithTotalCount;
+    }
+
+    @Override
+    public List<NearbyStoreOutput> storeRecommendationByCoordinate(float lat, float lon) {
+        String name = SecurityUtil.getLoginUsername();
+        User user = userRepository.findByName(name);
+
+        List<NearbyStoreOutputInterface> storeList = storeRepository.findAllByCoordinateQuery(lat, lon, 1);;
+        int i = 0;
+        int j = 9;
+        List<NearbyStoreOutput> retrieveList = new ArrayList<>();
+        while (storeList.size() > i && i <= j) {
+            Store store = storeRepository.findById(storeList.get(i).getIdx()).get();
+            List<Review> reviewList = reviewRepository.findAllByStore(store);
+            float ratings = 0;
+            int reviewCount = reviewList.size();
+            for (Review review : reviewList) {
+                ratings += review.getRating();
+            }
+            NearbyStoreOutput nearbyStoreOutput = new NearbyStoreOutput();
+            nearbyStoreOutput.setStore(store);
+            if (reviewCount == 0) {
+                nearbyStoreOutput.setAverageRating(0);
+            } else {
+                nearbyStoreOutput.setAverageRating(ratings / reviewCount);
+            }
+            nearbyStoreOutput.setDistance((float) storeList.get(i).getDistance());
+            if (user == null) {
+                nearbyStoreOutput.setIsBookmark(false);
+            } else {
+                Optional<Bookmark> optionalBookmark = bookmarkRepository.findByUser(user);
+                if (optionalBookmark.isPresent()) {
+                    nearbyStoreOutput.setIsBookmark(true);
+                }
+            }
+            nearbyStoreOutput.setReviewCount(reviewCount);
+            retrieveList.add(nearbyStoreOutput);
+            i++;
+        }
+        return retrieveList;
     }
 }

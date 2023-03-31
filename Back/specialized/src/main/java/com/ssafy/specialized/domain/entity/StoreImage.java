@@ -22,4 +22,5 @@ public class StoreImage {
 
     private String storeImageUrl;
 
+    private String storeImageFileName;
 }

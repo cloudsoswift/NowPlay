@@ -21,5 +21,5 @@ public interface StoreService {
     List<Store> getStoreListByCategory(NearbyStoreInput nearbyStoreInput);
     List<NearbyStoreOutput> getStoreListByPosition(NearbyStoreInput nearbyStoreInput);
 
-    List<NearbyStoreOutput> searchStore(String searchInput, int count);
+    NearbyStoreOutputWithTotalCount searchStore(String searchInput, int count, float lat, float lon);
 }

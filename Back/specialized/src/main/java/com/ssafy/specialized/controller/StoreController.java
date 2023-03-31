@@ -1,7 +1,6 @@
 package com.ssafy.specialized.controller;
 
 import com.ssafy.specialized.domain.graphql.input.NearbyStoreInput;
-import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutput;
 import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutputWithTotalCount;
 import com.ssafy.specialized.service.StoreService;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +10,6 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -41,8 +38,8 @@ public class StoreController {
     }
 
     @QueryMapping
-    public List<NearbyStoreOutput> searchStore(@Argument String searchInput, @Argument int count){
-        return storeService.searchStore(searchInput, count);
+    public NearbyStoreOutputWithTotalCount searchStore(@Argument String searchInput, @Argument int count, @Argument float lat, @Argument float lon) {
+        return storeService.searchStore(searchInput, count, lat, lon);
     }
 
 

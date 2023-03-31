@@ -197,11 +197,12 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<NearbyStoreOutput> searchStore(String searchInput, int count) {
+    public NearbyStoreOutputWithTotalCount searchStore(String searchInput, int count, float lat, float lon) {
         String name = SecurityUtil.getLoginUsername();
         User user = userRepository.findByName(name);
         List<NearbyStoreOutput> list = null;
-        List<NearbyStoreOutputInterface> storeList = null;
+
+        List<NearbyStoreOutputInterface> storeList = storeRepository.findAllByNameQuery(searchInput, lat, lon, 1);;
         int i = (count - 1) * 20;
         int j = i + 19;
         List<NearbyStoreOutput> retrieveList = new ArrayList<>();
@@ -233,6 +234,10 @@ public class StoreServiceImpl implements StoreService {
             retrieveList.add(nearbyStoreOutput);
             i++;
         }
-        return retrieveList;
+
+        NearbyStoreOutputWithTotalCount nearbyStoreOutputWithTotalCount = new NearbyStoreOutputWithTotalCount();
+        nearbyStoreOutputWithTotalCount.setStoreOutput(retrieveList);
+        nearbyStoreOutputWithTotalCount.setTotalCount(storeList.size());
+        return nearbyStoreOutputWithTotalCount;
     }
 }

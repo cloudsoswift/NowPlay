@@ -63,7 +63,7 @@
 type Query {
 #    getNearbyStoreList(nearbyStoreInput: NearbyStoreInput): [StoreOutput]
     getNearbyStoreList(nearbyStoreInput: NearbyStoreInput): StoreOutputWithTotalCount
-    searchStore(searchInput: String, count: Int): [StoreOutput]
+    searchStore(searchInput: String, count: Int, lat: Float, lon: Float): StoreOutputWithTotalCount
     storeDetail(store: String): Store
 }
 

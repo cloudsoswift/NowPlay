@@ -4,9 +4,48 @@ import { TinitialValues } from "../../utils/hooks/useForm";
 import useHorizontalScroll from "../../utils/hooks/useHorizontalScroll";
 import { FiSettings } from "react-icons/fi";
 import { weekdays } from "../OwnerForm/OwnerAuthForm/OwnerAuthDescription";
-import {BiMapAlt, BiBookAlt, BiCalendarCheck, BiCategoryAlt, BiCategory, BiPencil} from 'react-icons/bi'
+import {
+  BiMapAlt,
+  BiBookAlt,
+  BiCalendarCheck,
+  BiCategoryAlt,
+  BiCategory,
+  BiPencil,
+} from "react-icons/bi";
 
-const StoreInfo = ({values, updateHandle}: {values: TinitialValues, updateHandle:()=>void}) => {
+type TstoreInfo = {
+  address: string;
+  averageRating: number;
+  businessHourList: string;
+  closedOnHolidays: boolean;
+  contactNumber: string;
+  explanation: string;
+  homepage: string;
+  idx: number;
+  imagesUrl: string[];
+  latitude: number;
+  longitude: number;
+  mainCategory: { idx: number; mainCategory: string; mainImageUrl: string };
+  name: string;
+  owner: {
+    idx: number;
+    name: string;
+    id: string;
+    password: string;
+    nickname: string;
+  };
+  subcategory: { idx: number; subcategory: string };
+};
+
+
+
+const StoreInfo = ({
+  values,
+  updateHandle,
+}: {
+  values: TinitialValues;
+  updateHandle: () => void;
+}) => {
   const imgs = values.storeBrcImages
     ? values.storeBrcImages.map((img, idx) => {
         return (
@@ -26,14 +65,16 @@ const StoreInfo = ({values, updateHandle}: {values: TinitialValues, updateHandle
     return (
       <div key={idx}>
         <p>{weekdays[days]}</p>
-        {values.businessHour?.[days].storeHoliday ? (
-          <span>"휴무일"</span>
-        ) : (
+        {values.businessHour  && values.businessHour?.[days] ?  (
           <>
-          <span>OPEN : {values.businessHour?.[days].open}</span>
-          <span>CLOSE : {values.businessHour?.[days].close}</span>
-          <span>예약 간격 {values.businessHour?.[days].reservationInterval} 분</span>
+            <span>OPEN : {values.businessHour?.[days].open}</span>
+            <span>CLOSE : {values.businessHour?.[days].close}</span>
+            <span>
+              예약 간격 {values.businessHour?.[days].reservationInterval} 분
+            </span>
           </>
+        ) : (
+          <span>"휴무일"</span>
         )}
       </div>
     );
@@ -90,7 +131,7 @@ const faidIn = keyframes`
   100% {
     opacity: 1;
   }
-`
+`;
 
 const StoreInfoContainer = styled.div`
   margin: 10px;
@@ -178,7 +219,6 @@ const StoreTextbox = styled.div`
 
   border-left: 20px solid var(--primary-color-light);
 
-  
   margin-bottom: 10px;
 
   animation: ${faidIn} 1s ease;
@@ -202,4 +242,3 @@ const StoreTextbox = styled.div`
     padding: 5px;
   }
 `;
-

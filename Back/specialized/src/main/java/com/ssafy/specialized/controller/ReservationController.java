@@ -3,6 +3,8 @@ package com.ssafy.specialized.controller;
 import com.ssafy.specialized.domain.dto.reservation.ReservationDto;
 import com.ssafy.specialized.domain.dto.reservation.ReservationRequestDto;
 import com.ssafy.specialized.domain.entity.Reservation;
+import com.ssafy.specialized.repository.ReservationRepository;
+import com.ssafy.specialized.repository.StoreRepository;
 import com.ssafy.specialized.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = {"https://j8d110.p.ssafy.io", "http://127.0.0.1:5173", "http://localhost:5173", "http://172.30.1.95"}, allowCredentials = "true")
 @RequestMapping("/reservation")
 public class ReservationController {
 
@@ -59,11 +62,21 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
-    @GetMapping("/store/{storeIdx}/date/{date}")
+    @GetMapping("/store/{storeIdx}/date")
     public ResponseEntity<List<ReservationDto>> getReservationsByStoreAndDate(
             @PathVariable int storeIdx,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate reservationDate) {
         List<ReservationDto> reservations = reservationService.getReservationsByStoreAndDate(storeIdx, reservationDate);
         return ResponseEntity.ok(reservations);
+    }
+    @PutMapping("/{reservationId}/confirm")
+    public ResponseEntity<ReservationDto> confirmReservation(@PathVariable("reservationId") int reservationId) {
+        ReservationDto reservationDto = reservationService.confirmReservation(reservationId);
+        return ResponseEntity.ok(reservationDto);
+    }
+    @PutMapping("/{reservationId}/reject")
+    public ResponseEntity<ReservationDto> rejectReservation(@PathVariable("reservationId") int reservationId) {
+        ReservationDto reservationDto = reservationService.rejectReservation(reservationId);
+        return ResponseEntity.ok(reservationDto);
     }
 }

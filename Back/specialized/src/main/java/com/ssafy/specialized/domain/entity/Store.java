@@ -43,5 +43,4 @@ public class Store {
 
     private boolean isClosedOnHolidays;
 
-
 }

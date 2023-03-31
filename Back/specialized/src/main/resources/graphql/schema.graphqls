@@ -61,7 +61,10 @@
 #
 #
 type Query {
-    getNearbyStoreList(nearbyStoreInput: NearbyStoreInput): [StoreOutput]
+    getNearbyStoreList(nearbyStoreInput: NearbyStoreInput): StoreOutputWithTotalCount
+    searchStore(searchInput: String, count: Int, lat: Float, lon: Float): StoreOutputWithTotalCount
+    storeRecommendationByCoordinate(lat: Float,lon: Float): [StoreOutput]
+    storeDetail(store: String): Store
 }
 
 input NearbyStoreInput {
@@ -75,30 +78,31 @@ input NearbyStoreInput {
 
 type Store{
     idx: ID!
+    owner: User
     name: String
     latitude: Float
     longitude: Float
-    hobbyMain: HobbyMain
-    hobbySubcategory: HobbySubcategory
+    mainCategory: HobbyMain
+    subcategory: HobbySubcategory
+    isClosedOnHolidays: Boolean
+    explanation: String
+    address: String
+    contactNumber: String
+    homepage: String
+    imagesUrl: String
 }
 
 type StoreOutput {
-    idx: ID!
-    averageRating: Int
+    store: Store
+    distance: Float
     reviewCount: Int
-    name: String
-    address: String
-    owner: String
-    subcategory: String
-    contactNumber: String
-    homepage: String
-    mainImagesUrl: String # 메인 이미지 ( Store 테이블 )
-    imageUrls: [String] # 서브 이미지 ( StoreImage 테이블 )
-    explanation: String
-    latitude: Float
-    longitude: Float
-    isClosedOnHolidays: Boolean
-    businessHours: [BusinessHour]
+    averageRating: Float
+    isBookmark: Boolean
+}
+
+type StoreOutputWithTotalCount{
+    storeOutput: [StoreOutput]
+    totalCount: Int
 }
 
 type BusinessHour {
@@ -113,14 +117,18 @@ type BusinessHour {
 
 type HobbyMain{
     idx: ID!
-    name: String
+    mainCategory: String
 }
 
 type HobbySubcategory{
     idx: ID!
-    name: String
+    subcategory: String
 }
 
+type User {
+    idx: ID!
+    name: String
+}
 type NearbyStoreOutput{
     mainHobby: [String]
     subcategory: [String]
@@ -128,8 +136,6 @@ type NearbyStoreOutput{
     longitude: Float
     maxDistance: Int
 }
-
-
 
 
 ## 박규영

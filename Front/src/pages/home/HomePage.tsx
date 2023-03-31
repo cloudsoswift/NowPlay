@@ -12,19 +12,30 @@ import Title from "../../components/HomePage/Title";
 
 const HomePage = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [isOpenModalBox, setIsOpenModalBox] = useState<boolean>(false);
+  const [selectAddress, setSelectAddress] = useState<string | null>("");
+  const [selectLocation, setSelectLocation] = useState<
+    { latitude: number; longitude: number } | string
+  >("");
 
   return (
     <HomeBox isOpenModal={isOpenModal}>
       <TitleBox>
-        <Title isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
+        <Title
+          isOpenModal={isOpenModal}
+          setIsOpenModal={setIsOpenModal}
+          selectAddress={selectAddress}
+          setSelectAddress={setSelectAddress}
+          isOpenModalBox={isOpenModalBox}
+          setIsOpenModalBox={setIsOpenModalBox}
+          selectLocation={selectLocation}
+          setSelectLocation={setSelectLocation}
+          textBoolean={true}
+        />
       </TitleBox>
       <hr />
       <MainBox>
         <div>
-          <div>
-            <img src={Sports} />
-            <div>체육</div>
-          </div>
           <div>
             <img src={Culture} />
             <div>문화</div>
@@ -33,6 +44,10 @@ const HomePage = () => {
             <img src={Game} />
             <div>오락</div>
           </div>
+          <div>
+            <img src={Healing} />
+            <div>힐링</div>
+          </div>
         </div>
         <div>
           <div>
@@ -40,12 +55,12 @@ const HomePage = () => {
             <div>레저</div>
           </div>
           <div>
-            <img src={Theme} />
-            <div>테마</div>
+            <img src={Sports} />
+            <div>체육</div>
           </div>
           <div>
-            <img src={Healing} />
-            <div>힐링</div>
+            <img src={Theme} />
+            <div>테마</div>
           </div>
         </div>
       </MainBox>
@@ -61,7 +76,7 @@ export default HomePage;
 
 const HomeBox = styled.div<{ isOpenModal: boolean }>`
   justify-content: center;
-  height: 88vh;
+  height: 100%;
   overflow: ${(props) => (props.isOpenModal ? "hidden" : "auto")};
   > hr {
     background: var(--gray-color);
@@ -97,4 +112,3 @@ const MainBox = styled.div`
 const TitleBox = styled.div`
   width: 100%;
 `;
-

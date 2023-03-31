@@ -9,11 +9,16 @@ import com.ssafy.specialized.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -46,8 +51,25 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@Validated @RequestBody UserLoginDTO login, HttpServletResponse response) throws Exception {
         LoginResponseDto loginResponseDto = userService.login(login);
-
-        response.addHeader("Set-Cookie", loginResponseDto.getRefreshToken().toString());
+        String test = new String();
+        test = loginResponseDto.getRefreshToken().toString();
+        Cookie cookie = new Cookie("refreshToken", test);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(3600);
+        response.addCookie(cookie);
+        loginResponseDto.setRefreshToken(null);
+        return ResponseEntity.ok(loginResponseDto);
+    }
+    // 사업자로그인
+    @PostMapping("/businesslogin")
+    public ResponseEntity<LoginResponseDto> businessLogin(@Validated @RequestBody UserLoginDTO login, HttpServletResponse response) throws Exception {
+        LoginResponseDto loginResponseDto = userService.businessLogin(login);
+        String test = new String();
+        test = loginResponseDto.getRefreshToken().toString();
+        Cookie cookie = new Cookie("refreshToken", test);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(3600);
+        response.addCookie(cookie);
         loginResponseDto.setRefreshToken(null);
         return ResponseEntity.ok(loginResponseDto);
     }
@@ -157,9 +179,8 @@ public class UserController {
 
     //내 리뷰 목록
     @GetMapping("/reviews")
-    public ResponseEntity<?> getMyReviewList(@RequestParam String pageNo, HttpServletRequest request) {
-        List<Review> list = userService.getMyReviewList();
-        return ResponseEntity.ok(list);
+    public ResponseEntity<?> getMyReviewList(@PageableDefault(size = 10, sort = "idx",direction = Sort.Direction.DESC)Pageable  pageable, HttpServletRequest request) {
+        return ResponseEntity.ok(userService.getMyReviewList(pageable));
     }
 
     // 토큰 만료시 재발급

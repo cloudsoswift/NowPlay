@@ -1,83 +1,54 @@
 package com.ssafy.specialized.controller;
 
-
+import com.ssafy.specialized.domain.graphql.input.NearbyStoreInput;
 import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutput;
-import com.ssafy.specialized.domain.graphqlInput.NearbyStoreInput;
+import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutputWithTotalCount;
 import com.ssafy.specialized.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Slf4j
+@RestController
 @RequiredArgsConstructor
-@Controller
-@CrossOrigin
-@RequestMapping("/places")
+@CrossOrigin(origins = {"https://j8d110.p.ssafy.io", "http://127.0.0.1:5173", "http://localhost:5173", "http://172.30.1.95"}, allowCredentials = "true")
+@RequestMapping("/place")
 public class StoreController {
-
     @Autowired
-    private StoreService storeService;
+    private final StoreService storeService;
 
-    //    @QueryMapping
-//    public void getNearbyStoreList(@Argument NearbyStoreInput nearbyStoreInput) {
-//        storeService.getNearbyStoreList(nearbyStoreInput);
-//    }
+    @GetMapping("/{id}/store")
+    public ResponseEntity<?> getStoreDetail(@PathVariable int id) throws Exception {
+        System.out.println("1");
+        return ResponseEntity.ok(storeService.getStoreDetail(id));
+    }
+
+    @PostMapping("/{id}/favorite")
+    public ResponseEntity<?> bookMark(@PathVariable int id) throws Exception {
+        storeService.bookMark(id);
+        return ResponseEntity.ok(null);
+    }
+
     @QueryMapping
-    public List<NearbyStoreOutput> getNearbyStoreList(@Argument NearbyStoreInput nearbyStoreInput) {
+    public NearbyStoreOutputWithTotalCount getNearbyStoreList(@Argument NearbyStoreInput nearbyStoreInput) {
         return storeService.getNearbyStoreList(nearbyStoreInput);
     }
 
-    //    @PostMapping("/nearby")
-//    public List<Store> getNearbyStoreListRestfulApi(@RequestBody NearbyStoreInput nearbyStoreInput){
-//        return storeService.getNearbyStoreList(nearbyStoreInput);
-//    }
-//    @PostMapping("/nearby")
-//    public ResponseEntity<?> getNearbyStoreListRestfulApi(@RequestBody NearbyStoreInput nearbyStoreInput) {
-//        List<Store> storeList = storeService.getNearbyStoreList(nearbyStoreInput);
-//
-////        return new ResponseEntity.ok();
-//    }
+    @QueryMapping
+    public NearbyStoreOutputWithTotalCount searchStore(@Argument String searchInput, @Argument int count, @Argument float lat, @Argument float lon) {
+        return storeService.searchStore(searchInput, count, lat, lon);
+    }
 
-//    @PostMapping("/category")
-//    public List<Store> getStoreListByCategoryRestfulApi(@RequestBody NearbyStoreInput nearbyStoreInput) {
-//        return storeService.getNearbyStoreList(nearbyStoreInput);
-//    }
-//
-//    @PostMapping("/position")
-//    public List<Store> getStoreListByPositionRestfulApi(@RequestBody NearbyStoreInput nearbyStoreInput) {
-//        return storeService.getStoreListByPosition(nearbyStoreInput);
-//    }
-//    @PostMapping("/detail")
-//    public List<Store> getStoreDetailRestfulApi(@RequestBody String name){
-//        return storeService.getStoreDetail(name);
-//    }
-//    @PostMapping("/search")
-//    public List<Store> getStoreListByNameRestfulApi(@RequestBody String name){
-//        return storeService.searchStoreList(name);
-//    }
-
-//    @PostMapping("/nearby")
-//    public void getNearbyStoreList(@RequestBody NearbyStoreInput nearbyStoreInput) {
-//        storeService.getNearbyStoreList(nearbyStoreInput);
-//    }
-
-//
-//    @QueryMapping
-//    public void searchStore() {
-//
-//    }
-//
-//    @PostMapping
-//    public void storeDetail() {
-//
-//    }
+    @QueryMapping
+    public List<NearbyStoreOutput> storeRecommendationByCoordinate(@Argument float lat, @Argument float lon){
+        return storeService.storeRecommendationByCoordinate(lat, lon);
+    }
 
 
 }

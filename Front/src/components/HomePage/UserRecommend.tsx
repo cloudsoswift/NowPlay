@@ -51,7 +51,6 @@ const LoggedIn = styled.div``;
 
 const ButtonArea = styled.div`
   margin-inline: auto;
-  margin-bottom: 15px;
   text-align: center;
   width: 80%;
   height: 40px;

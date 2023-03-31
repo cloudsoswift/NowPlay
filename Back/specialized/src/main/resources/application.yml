@@ -1,6 +1,6 @@
 server:
-  host: localhost
-  port: 8085
+#  host: localhost
+#  port: 8085
   servlet:
     context-path: /spring
 
@@ -10,21 +10,31 @@ spring:
     url: jdbc:mysql://j8d110.p.ssafy.io:4000/specialized
     username: root
     password: root
+  kafka:
+    bootstrap-servers: j8d110.p.ssafy.io:9092
+    producer:
+      acks: all
+      retries: 0
+      batch-size: 16384
+      linger-ms: 1
+      buffer-memory: 33554432
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
   #    url: jdbc:mysql://127.0.0.1:3306/teukhwa
   #    username: root
   #    password: ssafy
+
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-
-
+  #    properties:
+  #      hibernate:
+  #        show_sql: true
+  #        format_sql: true
 
   profiles:
     include: key
@@ -32,8 +42,8 @@ spring:
   redis:
     host: j8d110.p.ssafy.io
     port: 7963
-#    host: localhost
-#    port: 6379
+  #    host: localhost
+  #    port: 6379
 
   mvc:
     pathmatch:

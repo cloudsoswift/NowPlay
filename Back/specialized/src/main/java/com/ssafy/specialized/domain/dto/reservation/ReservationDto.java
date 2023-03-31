@@ -18,11 +18,13 @@ public class ReservationDto {
 
     private int reserverIdx;
 
+    private String reservername;
+
     private int storeIdx;
 
     private LocalDateTime time;
 
-    private boolean isConfirmed;
+    private int isConfirmed;
 
     private LocalDateTime createdAt;
 

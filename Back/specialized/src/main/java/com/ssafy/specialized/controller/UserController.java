@@ -64,8 +64,12 @@ public class UserController {
     @PostMapping("/businesslogin")
     public ResponseEntity<LoginResponseDto> businessLogin(@Validated @RequestBody UserLoginDTO login, HttpServletResponse response) throws Exception {
         LoginResponseDto loginResponseDto = userService.businessLogin(login);
-
-        response.addHeader("Set-Cookie", loginResponseDto.getRefreshToken().toString());
+        String test = new String();
+        test = loginResponseDto.getRefreshToken().toString();
+        Cookie cookie = new Cookie("refreshToken", test);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(3600);
+        response.addCookie(cookie);
         loginResponseDto.setRefreshToken(null);
         return ResponseEntity.ok(loginResponseDto);
     }

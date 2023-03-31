@@ -52,5 +52,4 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
             "order by SQRT((s.latitude - :x) * (s.latitude - :x) + (s.longitude - :y) * (s.longitude - :y)) desc")
     List<NearbyStoreOutputInterface> getStoreListByPosition(@Param("x") float x, @Param("y") float y, @Param("maxDist") double maxDist);
 
-    Optional<Store> findByOwner(User owner);
 }

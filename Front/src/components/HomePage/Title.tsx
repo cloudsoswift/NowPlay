@@ -11,11 +11,33 @@ import MyLocationModal from "../../components/HomePage/MyLocationModal";
 interface TitlelType {
   isOpenModal: boolean;
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpenModalBox: boolean;
+  setIsOpenModalBox: React.Dispatch<React.SetStateAction<boolean>>;
+  selectAddress: string | null;
+  setSelectAddress: React.Dispatch<React.SetStateAction<string | null>>;
+  selectLocation: { latitude: number; longitude: number } | string;
+  setSelectLocation: React.Dispatch<
+    React.SetStateAction<
+      | string
+      | {
+          latitude: number;
+          longitude: number;
+        }
+    >
+  >;
+  textBoolean: boolean;
 }
 
 const Title = ({
   isOpenModal,
   setIsOpenModal,
+  selectAddress,
+  setSelectAddress,
+  isOpenModalBox,
+  setIsOpenModalBox,
+  selectLocation,
+  setSelectLocation,
+  textBoolean,
   children,
 }: PropsWithChildren<TitlelType>) => {
   function recentAddressStore(): string[] {
@@ -68,13 +90,6 @@ const Title = ({
   }
 
   const defaultLocation = { latitude: 36.1078224, longitude: 128.4177517 };
-  const [selectAddress, setSelectAddress] = useState<string>("");
-
-  const [isOpenModalBox, setIsOpenModalBox] = useState<boolean>(false);
-
-  const [selectLocation, setSelectLocation] = useState<
-    { latitude: number; longitude: number } | string
-  >("");
 
   const onClickToggleModal = useCallback(() => {
     if (isOpenModal) {
@@ -143,10 +158,12 @@ const Title = ({
           searchAddressToCoordinate={searchAddressToCoordinate}
         />
       )}
-      <TitleBox onClick={onClickToggleModal}>
-        <img src={Pin2} />
-        <div>{selectAddress ? selectAddress : "주소를 검색해주세요"}</div>
-      </TitleBox>
+      {textBoolean && (
+        <TitleBox onClick={onClickToggleModal}>
+          <img src={Pin2} />
+          <div>{selectAddress ? selectAddress : "주소를 검색해주세요"}</div>
+        </TitleBox>
+      )}
     </>
   );
 };

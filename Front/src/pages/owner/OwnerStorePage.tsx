@@ -1,7 +1,9 @@
-import { useState, Suspense, useDeferredValue } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState, Suspense, useDeferredValue, useEffect } from "react";
 import StoreInfoForm from "../../components/OwnerForm/StoreForm/StoreInfoForm";
 import StoreInfo from "../../components/OwnerPage/StoreInfo";
 import StoreInfoSuspense from "../../components/OwnerPage/StoreInfoSuspense";
+import { ownerapi } from "../../utils/api/api";
 import { TinitialValues } from "../../utils/hooks/useForm";
 
 const dummyData: TinitialValues = {
@@ -69,6 +71,71 @@ const OwnerStorePage = () => {
   const [isUpdate, setIsUpdate] = useState(false);
   const deferredValue = useDeferredValue(dummyData);
 
+  const { isLoading, data, isError, isSuccess } = useQuery(["storeInfo"], async () => {
+    const { data } = await ownerapi({
+      method: "GET",
+      url: "place/1/store",
+    });
+    return data
+  //   return {
+  //     storeName: data.name,
+  //     storeAddress: data.address,
+  // storeContactNumber: data.contactNumber,
+  // storeHompageUrl: data.homepage,
+  // storeBrcImages: [...data.],
+  // storeExplanation: "뉴욕의 전통 스테이크 하우스",
+  // hobbyMainCategory: "힐링",
+  // hobbyMajorCategory: "세차장",
+  // businessHour: {
+  //   monday: {
+  //     open: "10:00",
+  //     close: "18:00",
+  //     reservationInterval: "60",
+  //     storeHoliday: true,
+  //   },
+  //   tuesday: {
+  //     open: "09:00",
+  //     close: "18:00",
+  //     reservationInterval: "60",
+  //     storeHoliday: false,
+  //   },
+  //   wendesday: {
+  //     open: "09:00",
+  //     close: "18:00",
+  //     reservationInterval: "60",
+  //     storeHoliday: false,
+  //   },
+  //   thursday: {
+  //     open: "09:00",
+  //     close: "18:00",
+  //     reservationInterval: "60",
+  //     storeHoliday: false,
+  //   },
+  //   friday: {
+  //     open: "09:00",
+  //     close: "18:00",
+  //     reservationInterval: "60",
+  //     storeHoliday: false,
+  //   },
+  //   saturday: {
+  //     open: "09:00",
+  //     close: "18:00",
+  //     reservationInterval: "60",
+  //     storeHoliday: false,
+  //   },
+  //   sunday: {
+  //     open: "09:00",
+  //     close: "18:00",
+  //     reservationInterval: "60",
+  //     storeHoliday: false,
+  //   },
+  // },
+
+  //   };
+  }, {suspense: true});
+
+  // console.log(isSuccess)
+
   const toUpdate = () => {
     setIsUpdate((prev) => !prev);
   };
@@ -79,7 +146,7 @@ const OwnerStorePage = () => {
         <StoreInfoForm initialValues={deferredValue} updateHandle={toUpdate} />
       ) : (
         <Suspense fallback={<StoreInfoSuspense />}>
-          <StoreInfo values={dummyData} updateHandle={toUpdate} />
+          <StoreInfo values={data} updateHandle={toUpdate} />
         </Suspense>
       )}
     </>

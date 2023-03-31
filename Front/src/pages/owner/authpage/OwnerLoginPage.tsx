@@ -9,7 +9,7 @@ const OwnerloginPage = () => {
   return (
     <OwnerLoginContainer>
       <OwnerLoginAuthForm />
-      <OAuthLoginForm />
+      {/* <OAuthLoginForm /> */}
     </OwnerLoginContainer>
   );
 };

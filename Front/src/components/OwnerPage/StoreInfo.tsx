@@ -4,18 +4,57 @@ import { TinitialValues } from "../../utils/hooks/useForm";
 import useHorizontalScroll from "../../utils/hooks/useHorizontalScroll";
 import { FiSettings } from "react-icons/fi";
 import { weekdays } from "../OwnerForm/OwnerAuthForm/OwnerAuthDescription";
-import {BiMapAlt, BiBookAlt, BiCalendarCheck, BiCategoryAlt, BiCategory, BiPencil} from 'react-icons/bi'
+import {
+  BiMapAlt,
+  BiBookAlt,
+  BiCalendarCheck,
+  BiCategoryAlt,
+  BiCategory,
+  BiPencil,
+} from "react-icons/bi";
 
-const StoreInfo = ({values, updateHandle}: {values: TinitialValues, updateHandle:()=>void}) => {
-  const imgs = values.storeBrcImages
-    ? values.storeBrcImages.map((img, idx) => {
-        return (
-          <StoreImageCard key={idx}>
-            <img src={img} draggable={false} />
-          </StoreImageCard>
-        );
-      })
-    : null;
+type TstoreInfo = {
+  address: string;
+  averageRating: number;
+  businessHourList: string;
+  closedOnHolidays: boolean;
+  contactNumber: string;
+  explanation: string;
+  homepage: string;
+  idx: number;
+  imagesUrl: string[];
+  latitude: number;
+  longitude: number;
+  mainCategory: { idx: number; mainCategory: string; mainImageUrl: string };
+  name: string;
+  owner: {
+    idx: number;
+    name: string;
+    id: string;
+    password: string;
+    nickname: string;
+  };
+  subcategory: { idx: number; subcategory: string };
+};
+
+
+
+const StoreInfo = ({
+  values,
+  updateHandle,
+}: {
+  values: TstoreInfo;
+  updateHandle: () => void;
+}) => {
+  // const imgs = values.imagesUrl
+  //   ? values.imagesUrl.map((img, idx) => {
+  //       return (
+  //         <StoreImageCard key={idx}>
+  //           <img src={img} draggable={false} />
+  //         </StoreImageCard>
+  //       );
+  //     })
+  //   : null;
 
   const scrollRef =
     useRef<HTMLDivElement>() as MutableRefObject<HTMLInputElement>;
@@ -25,16 +64,18 @@ const StoreInfo = ({values, updateHandle}: {values: TinitialValues, updateHandle
   const daysHour = Object.keys(weekdays).map((days, idx) => {
     return (
       <div key={idx}>
-        <p>{weekdays[days]}</p>
-        {values.businessHour?.[days].storeHoliday ? (
+        {/* <p>{weekdays[days]}</p>
+        {values.businessHourList?.[days].storeHoliday ? (
           <span>"휴무일"</span>
         ) : (
           <>
-          <span>OPEN : {values.businessHour?.[days].open}</span>
-          <span>CLOSE : {values.businessHour?.[days].close}</span>
-          <span>예약 간격 {values.businessHour?.[days].reservationInterval} 분</span>
+            <span>OPEN : {values.businessHour?.[days].open}</span>
+            <span>CLOSE : {values.businessHour?.[days].close}</span>
+            <span>
+              예약 간격 {values.businessHour?.[days].reservationInterval} 분
+            </span>
           </>
-        )}
+        )} */}
       </div>
     );
   });
@@ -42,33 +83,33 @@ const StoreInfo = ({values, updateHandle}: {values: TinitialValues, updateHandle
   return (
     <StoreInfoContainer>
       <StoreTitleHeader>
-        {values.storeName}
+        {values.name}
         <button onClick={updateHandle}>
           <BiPencil />
         </button>
       </StoreTitleHeader>
       <StoreImageContainer {...event} ref={scrollRef}>
-        {imgs}
+        {/* {imgs} */}
       </StoreImageContainer>
       <StoreTextbox>
         <BiCategoryAlt />
         <p>주 카테고리</p>
-        <span>{values.hobbyMainCategory}</span>
+        <span>{values.mainCategory.mainCategory}</span>
       </StoreTextbox>
       <StoreTextbox>
         <BiCategory />
         <p>부 카테고리</p>
-        <span>{values.hobbyMajorCategory}</span>
+        <span>{values.subcategory.subcategory}</span>
       </StoreTextbox>
       <StoreTextbox>
         <BiMapAlt />
         <p>주소</p>
-        <span>{values.storeAddress}</span>
+        <span>{values.address}</span>
       </StoreTextbox>
       <StoreTextbox>
         <BiBookAlt />
         <p>가게 설명</p>
-        <span>{values.storeExplanation}</span>
+        <span>{values.explanation}</span>
       </StoreTextbox>
       <StoreTextbox>
         <BiCalendarCheck />
@@ -90,7 +131,7 @@ const faidIn = keyframes`
   100% {
     opacity: 1;
   }
-`
+`;
 
 const StoreInfoContainer = styled.div`
   margin: 10px;
@@ -178,7 +219,6 @@ const StoreTextbox = styled.div`
 
   border-left: 20px solid var(--primary-color-light);
 
-  
   margin-bottom: 10px;
 
   animation: ${faidIn} 1s ease;
@@ -202,4 +242,3 @@ const StoreTextbox = styled.div`
     padding: 5px;
   }
 `;
-

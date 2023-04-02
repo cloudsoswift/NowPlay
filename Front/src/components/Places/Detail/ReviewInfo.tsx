@@ -6,12 +6,13 @@ import styled from "styled-components";
 import api from "../../../utils/api/api";
 import { PopupImage } from "../PopupImage";
 import { TReview } from "../Types";
-import { useRef, useEffect, UIEvent } from "react";
+import { useRef, useEffect, forwardRef } from "react";
 
 type ReviewProps = {
   review: TReview;
 };
-type ReviewInfoProps = {};
+type ReviewInfoProps = {
+};
 
 export const Review = ({ review }: ReviewProps) => {
   const date = new Date(review.createdAt);
@@ -38,7 +39,7 @@ export const Review = ({ review }: ReviewProps) => {
   );
 };
 
-export const ReviewInfo = (props: ReviewInfoProps) => {
+export const ReviewInfo = forwardRef((props: ReviewInfoProps, ref: React.ForwardedRef<HTMLDivElement>) => {
   const { id } = useParams();
   const fetchReviewList = async ({ pageParam = 0 }) => {
     const {data} = await api.get(`places/${id}/reviews?page=${pageParam}`);
@@ -49,18 +50,29 @@ export const ReviewInfo = (props: ReviewInfoProps) => {
     queryFn: fetchReviewList,
     getNextPageParam: (lastPage, pages)=> lastPage.number + 1 < lastPage.totalPages ? lastPage.number + 1 : undefined,
   });
-  console.log(data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status);
+  console.log(data, hasNextPage, isFetching, isFetchingNextPage, status);
   const contentRef = useRef<HTMLDivElement>(null);
-  const touchLog = useRef({
-    touchStartY: 0,
-  });
-  const handleTouchStart = (e: UIEvent<HTMLElement>) => {
-    console.log(e.currentTarget.scrollHeight);
-    console.log(e.currentTarget.scrollTop);
-    console.log(e.currentTarget.clientHeight);
-  }
+  useEffect(()=>{
+    const handleTouchStart = (e: TouchEvent) => {
+      if(ref && typeof ref !== 'function'){
+        // console.log(ref.current?.scrollHeight);
+        // console.log(ref.current?.scrollTop);
+        // console.log(ref.current?.clientHeight);
+        if(ref.current?.scrollHeight === ref.current!.scrollTop + ref.current!.clientHeight){
+          fetchNextPage();
+        }
+      }
+    }
+    if(ref && typeof ref !== 'function' && ref.current){
+      ref.current.addEventListener("touchend", handleTouchStart);
+    } return ()=>{
+      if(ref && typeof ref !== 'function' && ref.current ){
+      ref?.current?.removeEventListener("touchend", handleTouchStart);
+      }
+    }
+  }, [ref])
   return (
-    <div className="h-full overflow-y-scroll" ref={contentRef} onScroll={handleTouchStart}>
+    <div className="h-full overflow-y-scroll" ref={contentRef}>
       <button onClick={()=>{fetchNextPage()}}>dd</button>
       <Link
         to={"review"}
@@ -86,7 +98,7 @@ export const ReviewInfo = (props: ReviewInfoProps) => {
       </div>
     </div>
   );
-};
+});
 
 const ReviewBox = styled.div`
   display: -webkit-box;

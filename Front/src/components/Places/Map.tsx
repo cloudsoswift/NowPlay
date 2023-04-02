@@ -9,6 +9,9 @@ import { AnimatePresence } from "framer-motion";
 import api from "../../utils/api/api";
 import Title from "../HomePage/Title";
 import styled from "styled-components";
+import { QGetNearbyStoreList, TNearbyStoreInput } from "../../utils/api/graphql";
+import axios from "axios";
+import {request, gql} from "graphql-request";
 
 type Props = {};
 
@@ -41,7 +44,6 @@ export const filterState = atom<TFilter>({
 export const Map = (props: Props) => {
   const [isFilterShown, setIsFilterShown] = useState(false);
   const [isModalShown, setIsModalShown] = useState(false);
-  const [isCardlistShown, setIsCardlistShown] = useState(false);
   const [markerList, setMarkerList] = useState<Array<naver.maps.Marker>>([]);
   function recentAddressStore(): string[] {
     const recentAddressJSON = localStorage.getItem("RecentAddressSearch");
@@ -66,9 +68,6 @@ export const Map = (props: Props) => {
       setTimeout(() => setIsFilterShown(set), 500);
     }
   };
-  const handleCardListToggle = () => {
-    setIsCardlistShown((prevState) => !prevState);
-  };
 
   function searchAddressToCoordinate(address: string) {
     naver.maps.Service.geocode(
@@ -92,6 +91,40 @@ export const Map = (props: Props) => {
   }
 
   useEffect(() => {
+    const t = async() => {
+      const query = QGetNearbyStoreList;
+      const variables: {"condition": TNearbyStoreInput} = {
+        condition: {
+          mainHobby: ["체육"],
+          subcategory: [""],
+          latitude: 36.1220611,
+          longitude: 128.3271009,
+          maxDistance: 100000,
+          count: 0,
+        }
+      };
+      // request("https://j8d110.p.ssafy.io/spring/graphql", gql`${query}`, variables).then((response)=>console.log(response));
+      // const a = axios.create();
+      // a.defaults.headers.common['Access-Control-Allow-Origin'] = 'https://j8d110.p.ssafy.io';
+      // a.defaults.headers.common['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE';
+      // a.defaults.headers.common['Access-Control-Allow-Headers'] = '*';
+      console.log(await api.post(
+        "/graphql",
+        {
+          query,
+          variables,
+        },
+        {
+          // baseURL: "http://j8d110.p.ssafy.io:8085/spring",
+          headers: {
+            "content-type": "application/json",
+          },
+          withCredentials: true,
+        }));
+        
+      
+    }
+    t();
     if (recentAddressData.length === 0) {
       setTimeout(() => {
         alert("주소를 설정해 주세요");

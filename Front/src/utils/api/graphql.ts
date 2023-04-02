@@ -1,6 +1,6 @@
 export const QGetNearbyStoreList = 
 `query NearbyStoreList($condition: NearbyStoreInput) {
-  getNearbyStoreList(nearbyConditions: $condition) {
+  getNearbyStoreList(nearbyStoreInput: $condition) {
     storeOutput {
       store {
         idx
@@ -130,39 +130,79 @@ type TNearbyStoreInput = {
 // isClosedOnHolidays: Boolean
 // businessHours: [BusinessHour]
 
-interface TStore implements StoreSummary {
-  idx: number 
-  // owner: User 
-  name: string 
-  mainCategory: THobbyMain 
-  subcategory: THobbySubcategory 
-  address: string 
-  contactNumber: string 
-  homepage: string 
-  imagesUrl: string 
-  explanation: string 
-  latitude: number 
-  longitude: number 
-  isClosedOnHolidays: boolean
+type TUser = {
+  idx: number,
+  name: string,
+  id: string,
+  password: string,
+  nickname: string,
+  phoneNumber: string,
+  email: string,
+  address: number | string,
+  type: string,
+  loginDomain: number | null,
+  brcImageUrl: string,
+  roles: Array<string>,
+  active: boolean,
+  enabled: boolean,
+  username: string,
+  authorities: [
+      {
+          "authority": string
+      }
+  ],
+  credentialsNonExpired: boolean,
+  accountNonExpired: boolean,
+  accountNonLocked: boolean
 }
 
 interface TStoreSummary {
   idx: number
-  name: string  
-  subcategory : THobbySubcategory
+  name: string
+  latitude: number 
+  longitude: number 
+  subcategory: THobbySubCategory
   address: string
 }
-type THobbyMain = {
+
+interface TStore extends TStoreSummary {
+  owner: TUser
+  mainCategory: THobbyMainCategory
+  isClosedOnHolidays: boolean
+  explanation: string
+  contactNumber: string
+  homepage: string
+  imagesUrl: string
+}
+
+interface TStoreDetail extends TStore{
+  businessHourList: Array<TBusinessHour>
+  averageRating: number
+  favorite: boolean
+} 
+
+interface TStoreOutput {
+  storeOutput: {
+    store: TStoreSummary
+    distance: number
+    reviewCount: number
+    averageRating: number
+    isBookmark: boolean
+  }
+  totalCount: number
+}
+
+type THobbyMainCategory = {
   idx: number;
   mainCategory: string;
   mainImageUrl: string;
 } 
 
-type THobbySubcategory = {
-  idx: number;
-  mainCategory: THobbyMain;
+type THobbySubCategory = {
+  idx?: number;
+  mainCategory?: THobbyMainCategory;
   subcategory: string
-  subcategoryImageUrl: string;
+  subcategoryImageUrl?: string;
 }
 
 type TBusinessHour = {
@@ -176,7 +216,7 @@ type TBusinessHour = {
 }
 
 interface TStoreOutput {
-  store: TStore
+  store: TStoreSummary
   distance: number
   reviewCount: number
   averageRating: number
@@ -188,4 +228,4 @@ type TStoreOutputWithTotalCount = {
   totalCount: number
 }
 
-export type { TNearbyStoreInput, TStore, TStoreSummary, THobbyMain, THobbySubcategory, TStoreOutput, TStoreOutputWithTotalCount } 
+export type { TUser, TNearbyStoreInput, TStore, TStoreSummary, TStoreDetail, THobbyMainCategory, THobbySubCategory, TBusinessHour, TStoreOutput, TStoreOutputWithTotalCount } 

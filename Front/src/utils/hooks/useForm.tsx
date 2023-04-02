@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import useBusinessHour from "./useBusinessHour";
 
-interface TbusinessDayHour {
+interface TbusinessDayHour extends Object {
   open: string;
   close: string;
   reservationInterval: string;

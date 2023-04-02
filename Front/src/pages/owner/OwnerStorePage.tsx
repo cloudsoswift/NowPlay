@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState, Suspense, useDeferredValue, useEffect } from "react";
+import React, { useState, Suspense, useDeferredValue, useEffect } from "react";
 import StoreInfoForm from "../../components/OwnerForm/StoreForm/StoreInfoForm";
-import StoreInfo from "../../components/OwnerPage/StoreInfo";
+// import StoreInfo from "../../components/OwnerPage/StoreInfo";
 import StoreInfoSuspense from "../../components/OwnerPage/StoreInfoSuspense";
 import { ownerapi } from "../../utils/api/api";
 import { TinitialValues } from "../../utils/hooks/useForm";
+
+const StoreInfo = React.lazy(() => import("../../components/OwnerPage/StoreInfo"))
 
 const OwnerStorePage = () => {
   const [isUpdate, setIsUpdate] = useState(false);
@@ -25,52 +27,53 @@ const OwnerStorePage = () => {
         storeExplanation: data.explanation,
         hobbyMainCategory: data.mainCategory.mainCategory,
         hobbyMajorCategory: data.subcategory.subcategory,
-        businessHour: data.businessHourList
-          ? data.businessHourList
-          : {
-              monday: {
-                open: "10:00",
-                close: "18:00",
-                reservationInterval: "60",
-                storeHoliday: true,
+        businessHour:
+          data.businessHourList.length !== 0
+            ? data.businessHourList
+            : {
+                monday: {
+                  open: "09:00",
+                  close: "18:00",
+                  reservationInterval: "60",
+                  storeHoliday: true,
+                },
+                tuesday: {
+                  open: "09:00",
+                  close: "18:00",
+                  reservationInterval: "60",
+                  storeHoliday: false,
+                },
+                wendesday: {
+                  open: "09:00",
+                  close: "18:00",
+                  reservationInterval: "60",
+                  storeHoliday: false,
+                },
+                thursday: {
+                  open: "09:00",
+                  close: "18:00",
+                  reservationInterval: "60",
+                  storeHoliday: false,
+                },
+                friday: {
+                  open: "09:00",
+                  close: "18:00",
+                  reservationInterval: "60",
+                  storeHoliday: false,
+                },
+                saturday: {
+                  open: "09:00",
+                  close: "18:00",
+                  reservationInterval: "60",
+                  storeHoliday: false,
+                },
+                sunday: {
+                  open: "09:00",
+                  close: "18:00",
+                  reservationInterval: "60",
+                  storeHoliday: false,
+                },
               },
-              tuesday: {
-                open: "09:00",
-                close: "18:00",
-                reservationInterval: "60",
-                storeHoliday: false,
-              },
-              wendesday: {
-                open: "09:00",
-                close: "18:00",
-                reservationInterval: "60",
-                storeHoliday: false,
-              },
-              thursday: {
-                open: "09:00",
-                close: "18:00",
-                reservationInterval: "60",
-                storeHoliday: false,
-              },
-              friday: {
-                open: "09:00",
-                close: "18:00",
-                reservationInterval: "60",
-                storeHoliday: false,
-              },
-              saturday: {
-                open: "09:00",
-                close: "18:00",
-                reservationInterval: "60",
-                storeHoliday: false,
-              },
-              sunday: {
-                open: "09:00",
-                close: "18:00",
-                reservationInterval: "60",
-                storeHoliday: false,
-              },
-            },
       };
     },
     { suspense: true }
@@ -82,13 +85,13 @@ const OwnerStorePage = () => {
 
   return (
     <>
-      {isUpdate
-        ? data && <StoreInfoForm initialValues={data} updateHandle={toUpdate} />
-        : data && (
-            <Suspense fallback={<StoreInfoSuspense />}>
-              <StoreInfo values={data} updateHandle={toUpdate} />
-            </Suspense>
-          )}
+      <Suspense fallback={<StoreInfoSuspense />}>
+        {isUpdate
+          ? data && (
+              <StoreInfoForm initialValues={data} updateHandle={toUpdate} />
+            )
+          : data && <StoreInfo values={data} updateHandle={toUpdate} />}
+      </Suspense>
     </>
   );
 };

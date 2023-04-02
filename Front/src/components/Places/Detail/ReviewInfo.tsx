@@ -6,6 +6,7 @@ import styled from "styled-components";
 import api from "../../../utils/api/api";
 import { PopupImage } from "../PopupImage";
 import { TReview } from "../Types";
+import { useRef, useEffect, UIEvent } from "react";
 
 type ReviewProps = {
   review: TReview;
@@ -18,7 +19,7 @@ export const Review = ({ review }: ReviewProps) => {
   return (
     <div className="border p-4 w-full h-[30vh] shadow-sm">
       <div>
-        <span className="text-lg">{review.writer.nickname}</span>{" "}
+        <span className="text-lg">{review.writer?.nickname}</span>{" "}
         <span className="text-sm">{dateString}</span>{" "}
         <span>
           <AiFillStar className="inline text-[var(--primary-color)]" />
@@ -49,10 +50,17 @@ export const ReviewInfo = (props: ReviewInfoProps) => {
     getNextPageParam: (lastPage, pages)=> lastPage.number + 1 < lastPage.totalPages ? lastPage.number + 1 : undefined,
   });
   console.log(data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status);
-  console.log(data?.pages.at(0));
-  
+  const contentRef = useRef<HTMLDivElement>(null);
+  const touchLog = useRef({
+    touchStartY: 0,
+  });
+  const handleTouchStart = (e: UIEvent<HTMLElement>) => {
+    console.log(e.currentTarget.scrollHeight);
+    console.log(e.currentTarget.scrollTop);
+    console.log(e.currentTarget.clientHeight);
+  }
   return (
-    <div className="h-full overflow-y-scroll">
+    <div className="h-full overflow-y-scroll" ref={contentRef} onScroll={handleTouchStart}>
       <button onClick={()=>{fetchNextPage()}}>dd</button>
       <Link
         to={"review"}

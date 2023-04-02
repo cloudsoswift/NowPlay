@@ -16,4 +16,5 @@ public interface HobbySubcategoryRepository extends JpaRepository<HobbySubcatego
 
     @Query("select h from HobbySubcategory h where h.subcategory in (:subcategories)")
     List<HobbySubcategory> findAllBySubcategories(@Param("subcategories") List<String> subcategories);
+
 }

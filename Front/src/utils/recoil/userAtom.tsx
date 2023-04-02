@@ -7,6 +7,14 @@ export type TRecoilUserInfo = {
   userDistance: string;
 };
 
+export type TRecoilOwnerInfo = {
+  storeIndex: number;
+  userName: string;
+  userNickname: string;
+  userAddress: string;
+  userDistance: string;
+};
+
 const localStorageEffect: <T>(key: string) => AtomEffect<T> =
   (key: string) =>
     ({ setSelf, onSet }) => {
@@ -29,9 +37,13 @@ export const userInfoAtom = atom<TRecoilUserInfo>({
   ]
 });
 
-export const ownerInfoAtion = atom({
+export const ownerInfoAtion = atom<TRecoilOwnerInfo>({
   key: "ownerInfo",
-  default: { userName: "", userNickname: ""},
+  default: { storeIndex: 0,
+    userName: "",
+    userNickname: "",
+    userAddress: "",
+    userDistance: "",},
   effects: [
     localStorageEffect('ownerinfo')
   ]

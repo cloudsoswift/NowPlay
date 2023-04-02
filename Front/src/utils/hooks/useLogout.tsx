@@ -23,7 +23,7 @@ export const useLogout = () => {
         userName: "",
         userDistance: "",
       });
-      navigation("/mobile/homepage");
+      navigation("/mobile/mypage");
     },
   });
 };

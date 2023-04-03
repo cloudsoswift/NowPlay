@@ -1,3 +1,4 @@
+
 export const QGetNearbyStoreList = 
 `query NearbyStoreList($condition: NearbyStoreInput) {
   getNearbyStoreList(nearbyStoreInput: $condition) {
@@ -20,8 +21,8 @@ export const QGetNearbyStoreList =
 }`
 
 export const QSearchStore = 
-`query searchStore($input: String, $count: Int) {
-  searchStore(searchInput: $input, count: $count) {
+`query searchStore(searchInput: String, count: Int, lat: Float, lon: Float): StoreOutputWithTotalCount {
+  searchStore(searchInput: $searchInput, count: $count, lat: $lat, lon: $lon) {
     stores {
       idx
       name
@@ -102,6 +103,15 @@ fragment storesField on StoreSummary {
 // searchStore(searchInput: String, count: Int): output
 // storeDetail(storeID: ID!): Store
 
+type TFilter = {
+  mainHobby: Array<THobbyMainCategory>
+  subcategory: Array<THobbySubCategory>
+  latitude: number
+  longitude: number
+  maxDistance: number
+  count: number // 페이징 카운트
+}
+
 type TNearbyStoreInput = {
   mainHobby: [String]
   subcategory: [String]
@@ -148,7 +158,7 @@ type TUser = {
   username: string,
   authorities: [
       {
-          "authority": string
+          authority: string
       }
   ],
   credentialsNonExpired: boolean,
@@ -196,6 +206,7 @@ type THobbyMainCategory = {
   idx: number;
   mainCategory: string;
   mainImageUrl: string;
+  subcategories?: Array<THobbySubCategory>
 } 
 
 type THobbySubCategory = {
@@ -228,4 +239,4 @@ type TStoreOutputWithTotalCount = {
   totalCount: number
 }
 
-export type { TUser, TNearbyStoreInput, TStore, TStoreSummary, TStoreDetail, THobbyMainCategory, THobbySubCategory, TBusinessHour, TStoreOutput, TStoreOutputWithTotalCount } 
+export type { TUser, TFilter, TNearbyStoreInput, TStore, TStoreSummary, TStoreDetail, THobbyMainCategory, THobbySubCategory, TBusinessHour, TStoreOutput, TStoreOutputWithTotalCount } 

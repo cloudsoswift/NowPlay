@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { atom, selector, useRecoilValue } from "recoil";
+import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 import { Filter } from "./Filter/Filter";
 import { PlaceCardSheet } from "./PlaceCard";
 import { IoReorderThree } from "react-icons/io5";
@@ -38,6 +38,7 @@ export const Map = (props: Props) => {
     if (recentAddressJSON === null) return [];
     return JSON.parse(recentAddressJSON);
   }
+  const [filterValue, setFilterValue] = useRecoilState(filterState);
   const recentAddressData: string[] = recentAddressStore();
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [isOpenModalBox, setIsOpenModalBox] = useState<boolean>(false);

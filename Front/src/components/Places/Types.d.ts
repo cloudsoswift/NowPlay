@@ -9,6 +9,7 @@ type TMainCategory = {
   idx: number;
   mainCategory: string;
   mainImageUrl: string;
+  subcategories?: Array<TSubCategory>
 }
 type TSubCategory = {
   idx: number;

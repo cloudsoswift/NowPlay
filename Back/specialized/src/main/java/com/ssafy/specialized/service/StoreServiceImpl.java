@@ -237,6 +237,13 @@ public class StoreServiceImpl implements StoreService {
         if (optStore.isPresent()) {
             store = optStore.get();
         }
+        try {
+            s3.deleteObject(bucketName, updateStoreDto.getImagesUrl());
+        } catch (AmazonS3Exception e) {
+            e.printStackTrace();
+        } catch (SdkClientException e) {
+            e.printStackTrace();
+        }
         List<StoreImage> storeImageList = storeImageRepository.findAllByStore(store);
         for (StoreImage storeImage : storeImageList) {
             try {
@@ -311,8 +318,10 @@ public class StoreServiceImpl implements StoreService {
         }
         storeRepository.save(store);
         List<BusinessHour> businessHourList = businessHourRepository.findAllByStore(store);
-        for (BusinessHour businessHour : businessHourList) {
-            businessHourRepository.delete(businessHour);
+        if (businessHourList.size() >= 1) {
+            for (BusinessHour businessHour : businessHourList) {
+                businessHourRepository.delete(businessHour);
+            }
         }
         for (BusinessHourDto businessHourDto : updateStoreDto.getBusinessHourDtoList()) {
             BusinessHour businessHour = BusinessHour.builder()

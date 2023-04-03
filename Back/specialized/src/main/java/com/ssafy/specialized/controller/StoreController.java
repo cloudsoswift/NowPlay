@@ -45,11 +45,12 @@ public class StoreController {
                                          @RequestPart (name = "UpdateStoreDto") UpdateStoreDto updateStoreDto,
                                          @RequestPart (name = "files", required = false) List<MultipartFile> multipartFile) throws Exception {
         List<MultipartFile> list = new ArrayList<>();
-        for (MultipartFile file : multipartFile) {
-            list.add(file);
+        if (multipartFile.size() >= 1) {
+            for (MultipartFile file : multipartFile) {
+                list.add(file);
+            }
+            updateStoreDto.setMultipartFiles(list);
         }
-        updateStoreDto.setMultipartFiles(list);
-
         storeService.updateStore(id, updateStoreDto);
 
         return ResponseEntity.ok(null);

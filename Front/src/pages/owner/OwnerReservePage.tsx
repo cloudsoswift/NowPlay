@@ -50,6 +50,7 @@ const OwnerReservePage = () => {
     rejectMutation.mutate(id)
   }
 
+
   return (
     <>
       <DateHeader>
@@ -59,7 +60,7 @@ const OwnerReservePage = () => {
         <BiRightArrowAlt onClick={() => dayHandler("plus")} />
       </DateHeader>
       <DateBody>
-        {data &&
+        {data && data.length !== 0 ?
           data.map((reserve: any, index: number) => (
             <ReserveCard delay={index} key={index} accept={reserve.isConfirmed}>
               <div className='reserveInfo'>
@@ -85,13 +86,18 @@ const OwnerReservePage = () => {
                 )}
               </div>
             </ReserveCard>
-          ))}
+          )) : <NoContentCard><img src='../src/assets/LeisureLogo.png' /><h1>예약이 존재하지 않습니다</h1></NoContentCard>}
       </DateBody>
     </>
   );
 };
 
 export default OwnerReservePage;
+
+const NoContentCard = styled.div`
+  height: auto;
+  width: 30vw;
+`
 
 const DateHeader = styled.div`
   display: flex;

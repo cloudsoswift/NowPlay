@@ -44,11 +44,11 @@ const OwnerReviewPage = () => {
       return () => observer.unobserve(element);
     }
   }, [fetchNextPage, hasNextPage, handleObserver]);
-
+  console.log(data)
   return (
     <>
       <ReviewContainer>
-        {isSuccess && data ? (
+        {isSuccess && data && data.pages[0].content.length !== 0 ? (
           data.pages.map((page) => {
             return page.content.map((review: any, index: number) => {
               {
@@ -57,7 +57,7 @@ const OwnerReviewPage = () => {
             });
           })
         ) : (
-          <></>
+          <NoContentCard><img src='../src/assets/LeisureLogo.png' /><h1>리뷰가 존재하지 않습니다</h1></NoContentCard>
         )}
         <div className="loader" ref={observerElem}>
           {isFetchingNextPage && hasNextPage ? "Loading..." : ""}
@@ -68,6 +68,11 @@ const OwnerReviewPage = () => {
 };
 
 export default OwnerReviewPage;
+
+const NoContentCard = styled.div`
+  height: auto;
+  width: 30vw;
+`
 
 const ReviewContainer = styled.div`
   display: flex;

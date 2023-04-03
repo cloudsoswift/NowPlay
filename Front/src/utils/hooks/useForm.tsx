@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import useBusinessHour from "./useBusinessHour";
 
-interface TbusinessDayHour {
+interface TbusinessDayHour extends Object {
   open: string;
   close: string;
   reservationInterval: string;
   storeHoliday: boolean;
 }
 
-interface TbusinessDay {
+export interface TbusinessDay {
   [key: string]: TbusinessDayHour;
   monday: TbusinessDayHour;
   tuesday: TbusinessDayHour;

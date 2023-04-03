@@ -258,8 +258,6 @@ public class StoreServiceImpl implements StoreService {
         store.setHomepage(updateStoreDto.getHomepage());
         store.setImagesUrl(updateStoreDto.getImagesUrl());
         store.setExplanation(updateStoreDto.getExplanation());
-        store.setLatitude(updateStoreDto.getLatitude());
-        store.setLongitude(updateStoreDto.getLongitude());
         store.setClosedOnHolidays(updateStoreDto.isClosedOnHolidays());
 
         if (updateStoreDto.getMultipartFiles().size() > 0) {

@@ -10,6 +10,9 @@ export const QGetNearbyStoreList =
           subcategory
         }
         address
+        latitude
+        longitude
+        imagesUrl
       }
       distance
       reviewCount
@@ -113,8 +116,8 @@ type TFilter = {
 }
 
 type TNearbyStoreInput = {
-  mainHobby: [String]
-  subcategory: [String]
+  mainHobby: Array<string>
+  subcategory: Array<string>
   latitude: number
   longitude: number
   maxDistance: number
@@ -173,6 +176,7 @@ interface TStoreSummary {
   longitude: number 
   subcategory: THobbySubCategory
   address: string
+  imagesUrl: string
 }
 
 interface TStore extends TStoreSummary {
@@ -182,7 +186,6 @@ interface TStore extends TStoreSummary {
   explanation: string
   contactNumber: string
   homepage: string
-  imagesUrl: string
 }
 
 interface TStoreDetail extends TStore{

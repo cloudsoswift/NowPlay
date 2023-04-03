@@ -52,13 +52,14 @@ export const SelectableCategory = ({
     >
       { isMainCategory(category) ? (
         <>
+
           <img src={category.mainImageUrl} className="h-[20vw] w-[20vw] mt-1"/>
-          {(category as TMainCategory).mainCategory}
+          {(category as THobbyMainCategory).mainCategory}
         </>
       ) : (
         <>
-          <img src={(category as TSubCategory).subcategoryImageUrl} className="h-[10vw] w-[10vw] justify-self-center mt-2"/>
-          {(category as TSubCategory).subcategory}
+          <img src={(category as THobbySubCategory).subcategoryImageUrl} className="h-[10vw] w-[10vw] justify-self-center mt-2"/>
+          {(category as THobbySubCategory).subcategory}
         </>
         )}
     </div>

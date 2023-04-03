@@ -73,7 +73,6 @@ export const ReviewInfo = forwardRef((props: ReviewInfoProps, ref: React.Forward
   }, [ref])
   return (
     <div className="h-full overflow-y-scroll" ref={contentRef}>
-      <button onClick={()=>{fetchNextPage()}}>dd</button>
       <Link
         to={"review"}
         className="grid h-14 w-full border rounded-xl shadow-sm my-2 justify-items-center items-center"

@@ -55,9 +55,6 @@ export const ReviewInfo = forwardRef((props: ReviewInfoProps, ref: React.Forward
   useEffect(()=>{
     const handleTouchEnd = (e: TouchEvent) => {
       if(ref && typeof ref !== 'function'){
-        // console.log(ref.current?.scrollHeight);
-        // console.log(ref.current?.scrollTop);
-        // console.log(ref.current?.clientHeight);
         if(ref.current?.scrollHeight === ref.current!.scrollTop + ref.current!.clientHeight){
           fetchNextPage();
         }

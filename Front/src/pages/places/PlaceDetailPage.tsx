@@ -27,7 +27,7 @@ export const PlaceDetailPage = (props: Props) => {
     !isLoading && data &&
     <div className="px-4 h-[calc(100vh-128px)] overflow-y-scroll" ref={pageRef}>
       <div>
-        <div className='flex justify-center'><PopupImage imageURL={`${data.imagesUrl ? data.imagesUrl : data.subcategory.subcategoryImageUrl}`} imageClass="w-[80vw] h-[80vw] object-cover"/></div>
+        <div className='flex justify-center'><PopupImage imageURL={`${data.imagesUrl ? data.imagesUrl : data.subcategory.subcategoryImageUrl}`} imageClass="w-[80vw] h-[80vw] object-contain"/></div>
         <div className='text-3xl text-center'>{data.name}</div>
         <StarRating rating={data.averageRating} className={"justify-center"}/>
         <div className="flex justify-center">

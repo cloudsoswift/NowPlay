@@ -45,7 +45,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getDetailReviewDto(id));
     }
 
-    @PutMapping(value = "{id}/reviews", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping(value = "{id}/reviews", consumes = "multipart/form-data")
     public ResponseEntity<?> updateReview(@PathVariable int id,
                                           @RequestPart (name = "review") ReviewDto reviewDto,
                                           @RequestPart (name = "files", required = false) List<MultipartFile> files) throws Exception {

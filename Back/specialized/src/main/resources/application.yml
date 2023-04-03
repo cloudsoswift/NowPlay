@@ -3,8 +3,8 @@ graphql:
     allow-origin: "https://j8d110.p.ssafy.io,http://127.0.0.1:5173,http://localhost:5173,http://172.30.1.95"
 
 server:
-#  host: localhost
-#  port: 8085
+  #  host: localhost
+  #  port: 8085
   servlet:
     context-path: /spring
 
@@ -25,10 +25,17 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
-  #    url: jdbc:mysql://127.0.0.1:3306/teukhwa
-  #    username: root
-  #    password: ssafy
-
+  graphql:
+    path: /graphql
+    schema:
+      locations: classpath:graphql/**/
+      fileExtensions: .graphqls, .gqls
+    cors:
+      allowed-origins: https://j8d110.p.ssafy.io, http://127.0.0.1:5173, http://localhost:5173, http://172.30.1.95 # Comma-separated list of origin patterns like 'https://*.example.com' to allow.
+      allowed-methods: '*'
+      allow-credentials: true # Whether credentials are supported. When not set, credentials are not supported.
+  #      spring.graphql.cors.allowed-headers= # Comma-separated list of headers to allow in a request. '*' allows all headers.
+  #      spring.graphql.cors.exposed-headers= # Comma-separated list of headers to include in a response.
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -46,8 +53,6 @@ spring:
   redis:
     host: j8d110.p.ssafy.io
     port: 7963
-  #    host: localhost
-  #    port: 6379
 
   mvc:
     pathmatch:

@@ -1,5 +1,6 @@
 package com.ssafy.specialized.controller;
 
+import com.ssafy.specialized.domain.dto.review.ReviewDto;
 import com.ssafy.specialized.domain.dto.store.UpdateStoreDto;
 import com.ssafy.specialized.domain.graphql.input.NearbyStoreInput;
 import com.ssafy.specialized.domain.graphql.output.NearbyStoreOutput;
@@ -14,7 +15,9 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -37,10 +40,18 @@ public class StoreController {
         return ResponseEntity.ok(null);
     }
 
-    @PostMapping(value = "/owners/{id}", consumes = "multipart/form-data")
-    public ResponseEntity<?> updateStore(@PathVariable int id, @RequestBody UpdateStoreDto updateStoreDto) throws Exception {
+    @PostMapping(value = "/owners/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> updateStore(@PathVariable int id,
+                                         @RequestPart (name = "UpdateStoreDto") UpdateStoreDto updateStoreDto,
+                                         @RequestPart (name = "files", required = false) List<MultipartFile> multipartFile) throws Exception {
+        List<MultipartFile> list = new ArrayList<>();
+        for (MultipartFile file : multipartFile) {
+            list.add(file);
+        }
+        updateStoreDto.setMultipartFiles(list);
+
         storeService.updateStore(id, updateStoreDto);
-        
+
         return ResponseEntity.ok(null);
     }
 

@@ -269,7 +269,7 @@ public class StoreServiceImpl implements StoreService {
             String newfilePath = "/" + newName1;
             try {
                 s3.putObject(bucketName, newName1, new File(newfilePath));
-                s3.setObjectAcl(bucketName, newName1, CannedAccessControlList.PublicRead);
+                s3.setObjectAcl(bucketName, newName1, CannedAccessControlList.PublicReadWrite);
                 System.out.format("Object %s has been created.\n", newName1);
                 store.setImagesUrl("https://kr.object.ncloudstorage.com/d110/store/" + newName1);
             } catch (AmazonS3Exception e) {
@@ -302,7 +302,10 @@ public class StoreServiceImpl implements StoreService {
             }
         }
         storeRepository.save(store);
-
+        List<BusinessHour> businessHourList = businessHourRepository.findAllByStore(store);
+        for (BusinessHour businessHour : businessHourList) {
+            businessHourRepository.delete(businessHour);
+        }
         for (BusinessHourDto businessHourDto : updateStoreDto.getBusinessHourDtoList()) {
             BusinessHour businessHour = BusinessHour.builder()
                     .store(store)

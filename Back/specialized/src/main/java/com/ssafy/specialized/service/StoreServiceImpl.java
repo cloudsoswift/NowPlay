@@ -237,8 +237,11 @@ public class StoreServiceImpl implements StoreService {
         if (optStore.isPresent()) {
             store = optStore.get();
         }
+
         try {
-            s3.deleteObject(bucketName, updateStoreDto.getImagesUrl());
+            String[] urlarr = updateStoreDto.getImagesUrl().split("/");
+            String url = urlarr[urlarr.length-1];
+            s3.deleteObject(bucketName, url);
         } catch (AmazonS3Exception e) {
             e.printStackTrace();
         } catch (SdkClientException e) {

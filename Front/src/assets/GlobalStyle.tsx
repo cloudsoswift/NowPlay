@@ -64,6 +64,9 @@ const GlobalStyle = createGlobalStyle`
           --caption: 12px;
           --navigation-text: 12px;
 
+          /* ===== Height Size ====== */
+          --mobile-height: ${window.innerHeight - 122}px;
+
           height: 100%;
       }
   

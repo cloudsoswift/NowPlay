@@ -37,16 +37,16 @@ const HomePage = () => {
       <MainBox>
         <div>
           <div>
-            <img src={Sports} />
-            <div>체육</div>
-          </div>
-          <div>
             <img src={Culture} />
             <div>문화</div>
           </div>
           <div>
             <img src={Game} />
             <div>오락</div>
+          </div>
+          <div>
+            <img src={Healing} />
+            <div>힐링</div>
           </div>
         </div>
         <div>
@@ -55,12 +55,12 @@ const HomePage = () => {
             <div>레저</div>
           </div>
           <div>
-            <img src={Theme} />
-            <div>테마</div>
+            <img src={Sports} />
+            <div>체육</div>
           </div>
           <div>
-            <img src={Healing} />
-            <div>힐링</div>
+            <img src={Theme} />
+            <div>테마</div>
           </div>
         </div>
       </MainBox>
@@ -76,7 +76,7 @@ export default HomePage;
 
 const HomeBox = styled.div<{ isOpenModal: boolean }>`
   justify-content: center;
-  height: 88vh;
+  height: 100%;
   overflow: ${(props) => (props.isOpenModal ? "hidden" : "auto")};
   > hr {
     background: var(--gray-color);

@@ -21,7 +21,7 @@ public class BusinessHour {
     @ManyToOne
     private Store store;
 
-    private DayOfWeek dayOfWeek;
+    private String dayOfWeek;
 
     private String openAt;
 

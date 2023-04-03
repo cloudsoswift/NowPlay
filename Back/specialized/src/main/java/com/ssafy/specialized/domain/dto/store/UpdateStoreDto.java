@@ -24,10 +24,6 @@ public class UpdateStoreDto {
 
     private String explanation;
 
-    private float latitude;
-
-    private float longitude;
-
     private boolean isClosedOnHolidays;
 
     private List<BusinessHourDto> businessHourDtoList;

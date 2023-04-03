@@ -72,7 +72,6 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public StoreDto getStoreDetail(int Storeid) {
-        System.out.println("2");
         String username = SecurityUtil.getLoginUsername();
         User user = userRepository.findByName(username);
         Optional<Store> optstore = storeRepository.findById(Storeid);
@@ -101,7 +100,6 @@ public class StoreServiceImpl implements StoreService {
         } catch (Exception e) {
         }
         storeDto.setFaverite(bookmarkRepository.existsAllByStoreAndUser(store, user));
-        System.out.println("3");
         return storeDto;
     }
 

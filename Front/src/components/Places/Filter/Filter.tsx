@@ -73,7 +73,9 @@ export const Filter = ({
           exit={{ opacity: 0, y: -100 }}
         > */}
         <Categories />
-        <SelectableCategories />
+        <React.Suspense fallback={<div>... Loading</div>}>
+          <SelectableCategories />
+        </React.Suspense>
         <DistanceSlider />
         {/* <BusinessTimeSelector /> */}
         <ButtonArea onClick={handleApplyFilter}>적용</ButtonArea>

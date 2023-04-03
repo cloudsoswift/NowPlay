@@ -3,19 +3,16 @@ import { atom, selector, useRecoilValue } from "recoil";
 import { Filter } from "./Filter/Filter";
 import { PlaceCardSheet } from "./PlaceCard";
 import { IoReorderThree } from "react-icons/io5";
-import type { TFilter } from "./Types";
-import * as json from "./Filter/categories.json";
 import { AnimatePresence } from "framer-motion";
 import api from "../../utils/api/api";
 import Title from "../HomePage/Title";
 import styled from "styled-components";
-import { QGetNearbyStoreList, TNearbyStoreInput } from "../../utils/api/graphql";
-import axios from "axios";
-import {request, gql} from "graphql-request";
+import { QGetNearbyStoreList, TNearbyStoreInput, TFilter } from "../../utils/api/graphql";
+import { TMainCategory } from "./Types";
 
 type Props = {};
 
-const categoriesSelector = selector({
+export const categoriesSelector = selector<Array<TMainCategory>>({
   key: "categoriesSelector",
   get: async ({get})=>{
     return await (await api.get("place/categories")).data;
@@ -24,21 +21,12 @@ const categoriesSelector = selector({
 export const filterState = atom<TFilter>({
   key: "filterState",
   default: {
-    categories: json.categories.map((C) => {
-      return {
-        ...C,
-        type: "Main",
-        subCategory: C.subCategory.map((subC) => {
-          return {
-            ...subC,
-            type: "Sub",
-          };
-        }),
-      };
-    }),
-    selectedCategories: [],
-    businessTime: "",
-    distance: 0,
+    mainHobby: [],
+    subcategory: [],
+    latitude: 36.1078224,
+    longitude: 128.4177517,
+    maxDistance: 0,
+    count: 1,
   },
 });
 export const Map = (props: Props) => {
@@ -93,16 +81,10 @@ export const Map = (props: Props) => {
   useEffect(() => {
     const t = async() => {
       const query = QGetNearbyStoreList;
-      const variables: {"condition": TNearbyStoreInput} = {
-        condition: {
-          mainHobby: ["체육"],
-          subcategory: [""],
-          latitude: 36.1220611,
-          longitude: 128.3271009,
-          maxDistance: 100000,
-          count: 0,
-        }
-      };
+      const condition = useRecoilValue(filterState)
+      // const variables: {"condition": TNearbyStoreInput} = {
+      //   ...condition
+      // };
       // request("https://j8d110.p.ssafy.io/spring/graphql", gql`${query}`, variables).then((response)=>console.log(response));
       // const a = axios.create();
       // a.defaults.headers.common['Access-Control-Allow-Origin'] = 'https://j8d110.p.ssafy.io';
@@ -112,7 +94,7 @@ export const Map = (props: Props) => {
         "/graphql",
         {
           query,
-          variables,
+          // variables,
         },
         {
           // baseURL: "http://j8d110.p.ssafy.io:8085/spring",
@@ -121,8 +103,6 @@ export const Map = (props: Props) => {
           },
           withCredentials: true,
         }));
-        
-      
     }
     t();
     if (recentAddressData.length === 0) {

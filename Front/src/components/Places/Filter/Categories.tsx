@@ -2,11 +2,11 @@
 import * as React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { filterState } from "../Map";
-import { TSubCategory } from "../Types";
 import { RxCross2 } from "react-icons/rx";
+import { THobbySubCategory } from "../../../utils/api/graphql";
 type CategoriesProps = {};
 type CategoryProps = {
-  subCategory: TSubCategory;
+  subCategory: THobbySubCategory;
 };
 
 export const Category = ({ subCategory }: CategoryProps) => {
@@ -15,8 +15,8 @@ export const Category = ({ subCategory }: CategoryProps) => {
     setFilter((prevFilter) => {
       return {
         ...prevFilter,
-        selectedCategories: prevFilter.selectedCategories.filter(
-          (prevCategories) => prevCategories.category !== subCategory.category
+        subcategory: prevFilter.subcategory.filter(
+          (prevCategories) => prevCategories.subcategory !== subCategory.subcategory
         ),
       };
     });
@@ -24,7 +24,7 @@ export const Category = ({ subCategory }: CategoryProps) => {
   return (
     <div className="mx-2 border-2 rounded-full p-2 inline border-[var(--primary-color)]"  onClick={handleCategoryClick} >
       <span className="text-[var(--primary-color)]" >
-        {subCategory.category}
+        {subCategory.subcategory}
       </span>
       <button type="button" className="align-middle text-[var(--primary-color)]"><RxCross2 /></button>
     </div>
@@ -32,16 +32,16 @@ export const Category = ({ subCategory }: CategoryProps) => {
 };
 
 export const Categories = (props: CategoriesProps) => {
-  const { selectedCategories } = useRecoilValue(filterState);
+  const { subcategory } = useRecoilValue(filterState);
 
-  const CategoryBox = selectedCategories.length === 0 ? (
+  const CategoryBox = subcategory.length === 0 ? (
     <div className="mx-4 text-[var(--gray-color)] text-[20px]">
       카테고리를 선택하여 주세요.
     </div>
   ) : (
     <>
-      {selectedCategories.map((data) => (
-        <Category key={data.category} subCategory={data} />
+      {subcategory.map((data) => (
+        <Category key={data.subcategory} subCategory={data} />
       ))}
     </>
   )

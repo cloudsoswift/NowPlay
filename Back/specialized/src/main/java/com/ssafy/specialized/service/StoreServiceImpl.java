@@ -310,10 +310,10 @@ public class StoreServiceImpl implements StoreService {
             BusinessHour businessHour = BusinessHour.builder()
                     .store(store)
                     .dayOfWeek(businessHourDto.getDayOfWeek())
-                    .openAt(businessHourDto.getOpen())
-                    .closeAt(businessHourDto.getClose())
+                    .open(businessHourDto.getOpen())
+                    .close(businessHourDto.getClose())
                     .reservationInterval(businessHourDto.getReservationInterval())
-                    .isDayOff(businessHourDto.isStoreHoliday())
+                    .storeHoliday(businessHourDto.isStoreHoliday())
                     .build();
             businessHourRepository.save(businessHour);
         }

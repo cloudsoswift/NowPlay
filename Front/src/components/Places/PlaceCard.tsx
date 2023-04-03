@@ -8,36 +8,38 @@ import { motion } from "framer-motion";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { StarRating } from "./StarRating";
 import { BsBookmarkHeart, BsBookmarkHeartFill } from 'react-icons/bs'
+import { UseInfiniteQueryResult } from "@tanstack/react-query";
+import { TStoreOutput, TStoreOutputWithTotalCount } from "../../utils/api/graphql";
 
 type PlaceCardProps = {
-  place: TPlaceCard;
+  place: TStoreOutput;
 };
 
 export const PlaceCard2 = ({ place }: PlaceCardProps) => {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(`${place.id}`);
+    navigate(`${place.store.idx}`);
   };
   const percentRating = place.averageRating * 20;
 
   return (
     <CardBox onClick={handleClick}>
-      <img src={`/pics/${place.imageURL}`} />
+      <img src={`${place.store.imagesUrl}`} />
       <div>
         <Top>
-          <Name>{place.name}</Name>
-          <Category>{place.subCategory}</Category>
+          <Name>{place.store.name}</Name>
+          <Category>{place.store.subcategory.subcategory}</Category>
           <BookmarkDiv>
             {place.isBookmark ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
           </BookmarkDiv>
         </Top>
         <Middle>
-          <Address>{place.address}</Address>
+          <Address>{place.store.address}</Address>
         </Middle>
         <Bottom>
           <Distance>
             {place.distance < 1
-              ? `${place.distance * 1000}m`
+              ? `${(place.distance * 1000).toFixed(0)}m`
               : `${place.distance.toFixed(2)}km`}
           </Distance>
           <div>/</div>
@@ -67,6 +69,144 @@ export const PlaceCard2 = ({ place }: PlaceCardProps) => {
     </CardBox>
   );
 };
+
+// export const PlaceCard1 = ({ place }: PlaceCardProps) => {
+//   const navigate = useNavigate();
+//   const handleClick = () => {
+//     navigate(`${place.id}`);
+//   };
+//   return (
+//     <div
+//       className="w-full h-[40vh] grid justify-self-center border rounded-xl p-2 shadow-md"
+//       onClick={handleClick}
+//     >
+//       <img src={`/pics/${place.imageURL}`} alt="" className="h-[25vh] w-full" />
+//       <div className="flex space-x-2">
+//         <span className="text-xl">{place.name}</span>
+//         <span className="text-[var(--gray-color)]">{place.subCategory}</span>
+//       </div>
+//       <div>{place.address}</div>
+//       <div className="flex space-x-2 items-center">
+//         <div className="text-[var(--primary-color)]">
+//           {place.distance < 1
+//             ? `${place.distance * 1000}m`
+//             : `${place.distance.toFixed(2)}km`}
+//         </div>
+//         <div>{`리뷰 ${place.reviewCount}개`}</div>
+//         <StarRating rating={place.averageRating} />
+//       </div>
+//       <div>{place.isBookmark}</div>
+//     </div>
+//   );
+// };
+
+// const TEST_DATA: Array<TPlaceCard> = [
+//   {
+//     id: 1,
+//     imageURL: "place_test_image.png",
+//     name: "스파크 노래타운",
+//     subCategory: "노래방",
+//     address: "경북 구미시 인동중앙로1길 5",
+//     distance: 0.513,
+//     averageRating: 3.5,
+//     reviewCount: 4,
+//     isBookmark: true,
+//   },
+//   {
+//     id: 2,
+//     imageURL: "place_test_image.png",
+//     name: "스파크 노래타운",
+//     subCategory: "노래방",
+//     address: "경북 구미시 인동중앙로1길 5",
+//     distance: 0.513,
+//     averageRating: 4.0,
+//     reviewCount: 4,
+//     isBookmark: false,
+//   },
+//   {
+//     id: 3,
+//     imageURL: "place_test_image.png",
+//     name: "스파크 노래타운",
+//     subCategory: "노래방",
+//     address: "경북 구미시 인동중앙로1길 5",
+//     distance: 0.513,
+//     averageRating: 4.0,
+//     reviewCount: 4,
+//     isBookmark: true,
+//   },
+//   {
+//     id: 4,
+//     imageURL: "place_test_image.png",
+//     name: "스파크 노래타운",
+//     subCategory: "노래방",
+//     address: "경북 구미시 인동중앙로1길 5",
+//     distance: 0.513,
+//     averageRating: 4.0,
+//     reviewCount: 4,
+//     isBookmark: false,
+//   },
+// ];
+
+type PlaceCardsProps = {
+  result: UseInfiniteQueryResult<TStoreOutputWithTotalCount>
+};
+
+export const MIN_Y = 120; // 바텀시트가 최대로 높이 올라갔을 때의 y 값
+export const MAX_Y = window.innerHeight - 60; // 바텀시트가 최소로 내려갔을 때의 y 값
+export const BOTTOM_SHEET_HEIGHT = window.innerHeight; // 바텀시트의 세로 길이
+
+export const PlaceCardSheet = ({ result }: PlaceCardsProps) => {
+  const { sheet, content } = useBottomSheet();
+  const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status } = result;
+  useEffect(()=>{
+    const handleTouchEnd = (e: TouchEvent) => {
+      if(content.current?.scrollHeight === content.current!.scrollTop + content.current!.clientHeight){
+        fetchNextPage();
+      }
+    }
+    content.current?.addEventListener("touchend", handleTouchEnd);
+    return ()=>{
+      content.current?.removeEventListener("touchend", handleTouchEnd);
+    }
+  }, [])
+  return (
+    <Wrapper ref={sheet}>
+      <div className="h-20 rounded-t-lg pt-4 pb-1 bg-[var(--gray-color-light)]" id="bottomSheetHeader">
+        <div className="w-8 h-1 rounded-sm m-auto bg-[var(--primary-color)]"></div>
+      </div>
+      <div
+        id="bottomSheetContent"
+        className="overflow-auto"
+        ref={content}
+      >
+        {/* {TEST_DATA.map((data) => (
+          <PlaceCard2 key={data.id} place={data.} />
+        ))} */}
+        {data?.pages.map((page)=>(
+          page.storeOutput.map((store)=>(
+            <PlaceCard2 key={store.store.idx} place={store} />
+          ))
+        ))}
+      </div>
+    </Wrapper>
+  );
+};
+
+const Wrapper = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  z-index: 0;
+  top: calc(100% - ${MIN_Y}px);
+  left: 0;
+  right: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+  height: ${BOTTOM_SHEET_HEIGHT - MIN_Y}px;
+`;
+
 
 const CardBox = styled.div`
   width: 100%;
@@ -180,122 +320,3 @@ const BookmarkDiv = styled.div`
     fill: var(--primary-color)
   }
 `
-
-export const PlaceCard1 = ({ place }: PlaceCardProps) => {
-  const navigate = useNavigate();
-  const handleClick = () => {
-    navigate(`${place.id}`);
-  };
-  return (
-    <div
-      className="w-full h-[40vh] grid justify-self-center border rounded-xl p-2 shadow-md"
-      onClick={handleClick}
-    >
-      <img src={`/pics/${place.imageURL}`} alt="" className="h-[25vh] w-full" />
-      <div className="flex space-x-2">
-        <span className="text-xl">{place.name}</span>
-        <span className="text-[var(--gray-color)]">{place.subCategory}</span>
-      </div>
-      <div>{place.address}</div>
-      <div className="flex space-x-2 items-center">
-        <div className="text-[var(--primary-color)]">
-          {place.distance < 1
-            ? `${place.distance * 1000}m`
-            : `${place.distance.toFixed(2)}km`}
-        </div>
-        <div>{`리뷰 ${place.reviewCount}개`}</div>
-        <StarRating rating={place.averageRating} />
-      </div>
-      <div>{place.isBookmark}</div>
-    </div>
-  );
-};
-
-const TEST_DATA: Array<TPlaceCard> = [
-  {
-    id: 1,
-    imageURL: "place_test_image.png",
-    name: "스파크 노래타운",
-    subCategory: "노래방",
-    address: "경북 구미시 인동중앙로1길 5",
-    distance: 0.513,
-    averageRating: 3.5,
-    reviewCount: 4,
-    isBookmark: true,
-  },
-  {
-    id: 2,
-    imageURL: "place_test_image.png",
-    name: "스파크 노래타운",
-    subCategory: "노래방",
-    address: "경북 구미시 인동중앙로1길 5",
-    distance: 0.513,
-    averageRating: 4.0,
-    reviewCount: 4,
-    isBookmark: false,
-  },
-  {
-    id: 3,
-    imageURL: "place_test_image.png",
-    name: "스파크 노래타운",
-    subCategory: "노래방",
-    address: "경북 구미시 인동중앙로1길 5",
-    distance: 0.513,
-    averageRating: 4.0,
-    reviewCount: 4,
-    isBookmark: true,
-  },
-  {
-    id: 4,
-    imageURL: "place_test_image.png",
-    name: "스파크 노래타운",
-    subCategory: "노래방",
-    address: "경북 구미시 인동중앙로1길 5",
-    distance: 0.513,
-    averageRating: 4.0,
-    reviewCount: 4,
-    isBookmark: false,
-  },
-];
-
-type PlaceCardsProps = {};
-
-export const MIN_Y = 120; // 바텀시트가 최대로 높이 올라갔을 때의 y 값
-export const MAX_Y = window.innerHeight - 60; // 바텀시트가 최소로 내려갔을 때의 y 값
-export const BOTTOM_SHEET_HEIGHT = window.innerHeight; // 바텀시트의 세로 길이
-
-export const PlaceCardSheet = (props: PlaceCardsProps) => {
-  const { sheet, content } = useBottomSheet();
-
-  return (
-    <Wrapper ref={sheet}>
-      <div className="h-20 rounded-t-lg pt-4 pb-1 bg-[var(--gray-color-light)]" id="bottomSheetHeader">
-        <div className="w-8 h-1 rounded-sm m-auto bg-[var(--primary-color)]"></div>
-      </div>
-      <div
-        id="bottomSheetContent"
-        className="overflow-auto"
-        ref={content}
-      >
-        {TEST_DATA.map((data) => (
-          <PlaceCard2 key={data.id} place={data} />
-        ))}
-      </div>
-    </Wrapper>
-  );
-};
-
-const Wrapper = styled(motion.div)`
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  z-index: 0;
-  top: calc(100% - ${MIN_Y}px);
-  left: 0;
-  right: 0;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
-  height: ${BOTTOM_SHEET_HEIGHT - MIN_Y}px;
-`;

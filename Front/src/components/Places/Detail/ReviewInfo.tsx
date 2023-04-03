@@ -53,7 +53,7 @@ export const ReviewInfo = forwardRef((props: ReviewInfoProps, ref: React.Forward
   console.log(data, hasNextPage, isFetching, isFetchingNextPage, status);
   const contentRef = useRef<HTMLDivElement>(null);
   useEffect(()=>{
-    const handleTouchStart = (e: TouchEvent) => {
+    const handleTouchEnd = (e: TouchEvent) => {
       if(ref && typeof ref !== 'function'){
         // console.log(ref.current?.scrollHeight);
         // console.log(ref.current?.scrollTop);
@@ -64,10 +64,10 @@ export const ReviewInfo = forwardRef((props: ReviewInfoProps, ref: React.Forward
       }
     }
     if(ref && typeof ref !== 'function' && ref.current){
-      ref.current.addEventListener("touchend", handleTouchStart);
+      ref.current.addEventListener("touchend", handleTouchEnd);
     } return ()=>{
       if(ref && typeof ref !== 'function' && ref.current ){
-      ref?.current?.removeEventListener("touchend", handleTouchStart);
+      ref?.current?.removeEventListener("touchend", handleTouchEnd);
       }
     }
   }, [ref])

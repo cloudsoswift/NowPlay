@@ -274,7 +274,7 @@ export const PlaceCardSheet = (props: PlaceCardsProps) => {
       </div>
       <div
         id="bottomSheetContent"
-        className="overflow-auto"
+        className="overflow-y-auto"
         ref={content}
       >
         {TEST_DATA.map((data) => (

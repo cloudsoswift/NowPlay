@@ -100,7 +100,7 @@ const SlideUp = keyframes`
 
 const FilterModalBox = styled.div`
   width: 100%;
-  height: 80%;
+  height: 70%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,6 +111,7 @@ const FilterModalBox = styled.div`
 
 const FilterModalContent = styled.dialog<{ isModalShown: boolean }>`
   width: 100%;
+  overflow-x: hidden;
   top: 42px;
   display: flex;
   flex-direction: column;

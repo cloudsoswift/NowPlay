@@ -17,12 +17,13 @@ const StoreInfoForm = ({
   const storeInfoMutation = useStoreUpdate()
 
   const StoreUpdateHandler = (values: TinitialValues) => {
-    console.log(values);
+    console.log(123);
+    storeInfoMutation.mutate(values)
     updateHandle()
-    // storeInfoMutation.mutate(values)
   };
 
   const newInitialValues = {...initialValues, newStoreBrcImages: undefined}
+
 
   return (
     <>

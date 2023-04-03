@@ -1,15 +1,18 @@
 import styled from "styled-components";
 import Vector from "../../svg/vector.svg";
-import { BiArrowBack } from 'react-icons/bi'
+import { BiArrowBack } from "react-icons/bi";
+import React from "react";
 
 const Topbar = () => {
   return (
     <>
       <TopbarBox>
-        <div>
-          <a href="javascript:history.back();">
-            <BiArrowBack />
-          </a>
+        <div
+          onClick={(e: React.MouseEvent) => {
+            history.back();
+          }}
+        >
+          <BiArrowBack />
         </div>
       </TopbarBox>
     </>
@@ -32,13 +35,11 @@ const TopbarBox = styled.div`
     height: 100%;
     width: 50px;
     text-align: center;
-    > a {
-      > svg {
-        /* background-color: var(--primary-color); */
-        width: 30px;
-        height: 30px;
-        fill: var(--primary-color);
+    > svg {
+      /* background-color: var(--primary-color); */
+      width: 30px;
+      height: 30px;
+      fill: var(--primary-color);
     }
   }
-}
 `;

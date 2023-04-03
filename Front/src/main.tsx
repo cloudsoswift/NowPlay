@@ -11,7 +11,7 @@ import {BrowserRouter as Router,} from 'react-router-dom';
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  // <React.StrictMode>
+  <React.StrictMode>
     <CookiesProvider>
       <RecoilRoot>
         <QueryClientProvider client={queryClient}>
@@ -21,7 +21,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         </QueryClientProvider>
       </RecoilRoot>
     </CookiesProvider>
-  // </React.StrictMode>
+  </React.StrictMode>
 );
 
 export {queryClient}

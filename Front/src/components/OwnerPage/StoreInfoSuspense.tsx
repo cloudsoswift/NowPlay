@@ -1,7 +1,6 @@
 import styled, { keyframes } from "styled-components";
 
 const StoreInfoSuspense = () => {
-  console.log("뜨기는합니까?")
   return (
     <StoreInfoContainer>
       <StoreTitleHeader>

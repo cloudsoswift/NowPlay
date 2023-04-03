@@ -13,7 +13,7 @@ import { PlacesPage } from "./pages/places/PlacesPage";
 import { PlaceDetailPage } from "./pages/places/PlaceDetailPage";
 import { PlaceReviewWritePage } from "./pages/places/PlaceReviewWritePage";
 import { PlaceReservationPage } from "./pages/places/PlaceReservationPage";
-import HobbyPage from './pages/user/SelectHobby';
+import HobbyPage from "./pages/user/SelectHobby";
 
 function Mobile() {
   return (
@@ -31,7 +31,9 @@ function Mobile() {
           >
             <Route path="/mypage/signup" element={<SignupPage />} />
           </Route>
-          <Route path="/mypage/hobby" element={<HobbyPage />} />
+          <Route element={<PrivateRoute authentication={true} type="mobile" />}>
+            <Route path="/mypage/hobby" element={<HobbyPage />} />
+          </Route>
           <Route element={<PrivateRoute authentication={true} type="mobile" />}>
             <Route path="/mypage/*" element={<MyPage />} />
           </Route>
@@ -39,7 +41,10 @@ function Mobile() {
           <Route path="/search/*" element={<SearchPage />} />
           <Route path="/places" element={<PlacesPage />} />
           <Route path="/places/:id" element={<PlaceDetailPage />} />
-          <Route path="/places/:id/reservation" element={<PlaceReservationPage />} />
+          <Route
+            path="/places/:id/reservation"
+            element={<PlaceReservationPage />}
+          />
           {/* <Route element={<PrivateRoute authentication={true} type="mobile" />}> */}
           <Route path="/places/:id/review" element={<PlaceReviewWritePage />} />
           {/* </Route> */}
@@ -53,8 +58,8 @@ function Mobile() {
 export default Mobile;
 
 const MobileContainer = styled.div`
-  height: var(--mobile-height);
+  min-height: var(--mobile-height);
   margin-top: 42px;
-  margin-bottom: 80px;
+  padding-bottom: 80px;
   overflow: hidden;
 `;

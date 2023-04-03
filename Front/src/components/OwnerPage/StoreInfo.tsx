@@ -13,32 +13,6 @@ import {
   BiPencil,
 } from "react-icons/bi";
 
-type TstoreInfo = {
-  address: string;
-  averageRating: number;
-  businessHourList: string;
-  closedOnHolidays: boolean;
-  contactNumber: string;
-  explanation: string;
-  homepage: string;
-  idx: number;
-  imagesUrl: string[];
-  latitude: number;
-  longitude: number;
-  mainCategory: { idx: number; mainCategory: string; mainImageUrl: string };
-  name: string;
-  owner: {
-    idx: number;
-    name: string;
-    id: string;
-    password: string;
-    nickname: string;
-  };
-  subcategory: { idx: number; subcategory: string };
-};
-
-
-
 const StoreInfo = ({
   values,
   updateHandle,

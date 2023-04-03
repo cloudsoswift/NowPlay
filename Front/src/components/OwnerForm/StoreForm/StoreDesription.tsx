@@ -11,6 +11,7 @@ const StoreDescription = {
     const errors = {
       storeName: "",
       storeAddress: "",
+      
     };
 
     if (!values.storeName) {
@@ -19,7 +20,7 @@ const StoreDescription = {
     if (!values.storeAddress) {
       errors.storeAddress = "가게 주소는 필수입력 항목입니다."
     }
-
+    
     return errors;
   },
 };

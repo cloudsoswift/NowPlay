@@ -3,11 +3,14 @@ import { atom } from "recoil";
 import { Filter } from "./Filter/Filter";
 import { PlaceCardSheet } from "./PlaceCard";
 import { IoReorderThree } from "react-icons/io5";
-import type { TFilter } from "./Types";
+import type { TFilter, TSubCategory } from "./Types";
 import * as json from "./Filter/categories.json";
 import { AnimatePresence } from "framer-motion";
 import Title from "../HomePage/Title";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { SelectableCategory } from "./Filter/SelectableCategories";
 
 type Props = {};
 
@@ -49,6 +52,26 @@ export const Map = (props: Props) => {
   const [selectLocation, setSelectLocation] = useState<
     { latitude: number; longitude: number } | string
   >("");
+
+  const setFilter = useSetRecoilState(filterState);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state) {
+      location.state.map((subCategory: TSubCategory) => {
+        setFilter((prevFilter) => {
+          return {
+            ...prevFilter,
+            selectedCategories: prevFilter.selectedCategories.some(
+              (subC) => subC.category === subCategory.category
+            )
+              ? [...prevFilter.selectedCategories]
+              : [...prevFilter.selectedCategories, subCategory],
+          };
+        });
+      });
+    }
+  }, []);
 
   const handleFilterToggle = (set: boolean) => {
     if (set) {
@@ -115,7 +138,7 @@ export const Map = (props: Props) => {
           zoom: 10,
         });
       }
-    } 
+    }
   }, [isOpenModal, selectLocation]);
 
   return (

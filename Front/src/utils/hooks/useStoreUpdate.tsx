@@ -4,8 +4,6 @@ import { storeUpdateAPI } from '../api/ownerApiFunctions'
 import { TinitialValues } from './useForm'
 
 const useStoreUpdate = () => {
-  console.log(1)
-  
   return useMutation((values: TinitialValues) => storeUpdateAPI(values), {onSuccess: () => queryClient.invalidateQueries(["storeInfo"])})
 }
 

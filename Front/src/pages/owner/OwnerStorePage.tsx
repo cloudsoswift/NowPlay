@@ -1,14 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useState, Suspense, useDeferredValue, useEffect } from "react";
-import StoreInfoForm from "../../components/OwnerForm/StoreForm/StoreInfoForm";
+// import StoreInfoForm from "../../components/OwnerForm/StoreForm/StoreInfoForm";
 // import StoreInfo from "../../components/OwnerPage/StoreInfo";
 import StoreInfoSuspense from "../../components/OwnerPage/StoreInfoSuspense";
 import { ownerapi } from "../../utils/api/api";
-import { TinitialValues } from "../../utils/hooks/useForm";
+import { TinitialValues, TbusinessDay } from "../../utils/hooks/useForm";
 
-const StoreInfo = React.lazy(() => import("../../components/OwnerPage/StoreInfo"))
+const StoreInfo = React.lazy(
+  () => import("../../components/OwnerPage/StoreInfo")
+);
+const StoreInfoForm = React.lazy(
+  () => import("../../components/OwnerForm/StoreForm/StoreInfoForm")
+);
 
-const OwnerStorePage = () => {
+
+const OwnerStorePageComp = () => {
   const [isUpdate, setIsUpdate] = useState(false);
 
   const { isLoading, data, isError, isSuccess } = useQuery<TinitialValues>(
@@ -18,18 +24,67 @@ const OwnerStorePage = () => {
         method: "GET",
         url: "place/1/store",
       });
+      let newbusinessHour: TbusinessDay = {
+        monday: {
+          open: "09:00",
+          close: "18:00",
+          reservationInterval: "60",
+          storeHoliday: true,
+        },
+        tuesday: {
+          open: "09:00",
+          close: "18:00",
+          reservationInterval: "60",
+          storeHoliday: false,
+        },
+        wendesday: {
+          open: "09:00",
+          close: "18:00",
+          reservationInterval: "60",
+          storeHoliday: false,
+        },
+        thursday: {
+          open: "09:00",
+          close: "18:00",
+          reservationInterval: "60",
+          storeHoliday: false,
+        },
+        friday: {
+          open: "09:00",
+          close: "18:00",
+          reservationInterval: "60",
+          storeHoliday: false,
+        },
+        saturday: {
+          open: "09:00",
+          close: "18:00",
+          reservationInterval: "60",
+          storeHoliday: false,
+        },
+        sunday: {
+          open: "09:00",
+          close: "18:00",
+          reservationInterval: "60",
+          storeHoliday: false,
+        },
+      };
+      if (data.businessHourList.length !== 0) {
+        data.businessHourList.forEach((day: any) => {
+          newbusinessHour[day.dayOfWeek] = {...day}
+        })
+      }
       return {
         storeName: data.name,
         storeAddress: data.address,
         storeContactNumber: data.contactNumber,
         storeHompageUrl: data.homepage,
-        storeBrcImages: [data.imagesUrl],
+        storeBrcImages: [data.imagesUrl, ...data.storeImageList],
         storeExplanation: data.explanation,
         hobbyMainCategory: data.mainCategory.mainCategory,
         hobbyMajorCategory: data.subcategory.subcategory,
         businessHour:
           data.businessHourList.length !== 0
-            ? data.businessHourList
+            ? newbusinessHour
             : {
                 monday: {
                   open: "09:00",
@@ -79,20 +134,28 @@ const OwnerStorePage = () => {
     { suspense: true }
   );
 
+  
+
   const toUpdate = () => {
     setIsUpdate((prev) => !prev);
   };
 
+  console.log(data)
+
   return (
     <>
-      <Suspense fallback={<StoreInfoSuspense />}>
-        {isUpdate
-          ? data && (
-              <StoreInfoForm initialValues={data} updateHandle={toUpdate} />
-            )
-          : data && <StoreInfo values={data} updateHandle={toUpdate} />}
-      </Suspense>
+      {isUpdate
+        ? data && <StoreInfoForm initialValues={data} updateHandle={toUpdate} />
+        : data && <StoreInfo values={data} updateHandle={toUpdate} />}
     </>
+  );
+};
+
+const OwnerStorePage = () => {
+  return (
+    <Suspense fallback={<StoreInfoSuspense />}>
+      <OwnerStorePageComp />
+    </Suspense>
   );
 };
 

@@ -8,7 +8,7 @@ interface TbusinessDayHour extends Object {
   storeHoliday: boolean;
 }
 
-interface TbusinessDay {
+export interface TbusinessDay {
   [key: string]: TbusinessDayHour;
   monday: TbusinessDayHour;
   tuesday: TbusinessDayHour;

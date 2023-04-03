@@ -62,7 +62,7 @@ export default api;
 
 const ownerapi = axios.create({
   baseURL: "https://j8d110.p.ssafy.io/spring/",
-  // baseURL: "http://192.168.99.231:8085/spring/",
+  // baseURL: "http://192.168.100.92:8085/spring/",
   withCredentials: true,
 });
 

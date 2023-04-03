@@ -34,8 +34,6 @@ const OwnerReservePage = () => {
     return data;
   });
 
-  console.log(data)
-
   const confirmMutation = useMutation((id: number) =>  ownerapi({method: "PUT", url: `reservation/${id}/confirm`}), {onSuccess: () => {
     queryClient.invalidateQueries([`storeReservation${dateInfo}`])
   }})

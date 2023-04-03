@@ -1,9 +1,11 @@
 // @flow
-import * as React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { filterState } from "../Map";
 import { TSubCategory } from "../Types";
 import { RxCross2 } from "react-icons/rx";
+import { useEffect, useState } from "react";
+
+
 type CategoriesProps = {};
 type CategoryProps = {
   subCategory: TSubCategory;
@@ -47,7 +49,7 @@ export const Categories = (props: CategoriesProps) => {
   )
 
   return (
-    <div className="w-full overflow-x-scroll space-x-2 whitespace-nowrap p-2 h-[48px]">
+    <div className="w-full h-[50px] overflow-x-auto space-x-2 whitespace-nowrap p-2">
       {CategoryBox}
     </div>
   );

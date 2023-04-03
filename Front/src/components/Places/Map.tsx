@@ -102,18 +102,22 @@ export const Map = (props: Props) => {
         })
       }
     };
-    const {getNearbyStoreList} = (await api.post("/graphql", {
+    console.log(variables);
+    const data = (await api.post("/graphql", {
       query,
       variables,
-    })).data.data;
-    return getNearbyStoreList;
+    })).data?.data;
+    return data.getNearbyStoreList ? data.getNearbyStoreList : [] ;
   }
   const result = useInfiniteQuery({
     queryKey: ["getReviewList"],
     queryFn: fetchCardList,
     getNextPageParam: (lastPage, pages)=> {console.log(lastPage, pages);
      return pages.length + 1 < lastPage.totalCount/20 ? pages.length + 1 : undefined},
+    staleTime: 20000
   });
+  console.log(result.isFetching);
+  
 
   useEffect(() => {
     if (!isOpenModal) {
@@ -178,6 +182,7 @@ export const Map = (props: Props) => {
           onClose={handleFilterToggle}
           isFilterShown={isFilterShown}
           isModalShown={isModalShown}
+          onSubmit={result.refetch}
         />
       )}
       {/* </AnimatePresence> */}

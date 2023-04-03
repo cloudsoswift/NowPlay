@@ -1,10 +1,5 @@
 import styled from "styled-components";
-import Sports from "../../svg/main-sports.svg";
-import Theme from "../../svg/main-theme.svg";
-import Healing from "../../svg/main-healing.svg";
-import Game from "../../svg/main-game.svg";
-import Culture from "../../svg/main-culture.svg";
-import Leisure from "../../svg/main-leisure.svg";
+import MainBox from "../../components/HomePage/MainBox";
 import Recommend from "../../components/HomePage/Recommend";
 import UserRecommend from "../../components/HomePage/UserRecommend";
 import { useState } from "react";
@@ -34,36 +29,7 @@ const HomePage = () => {
         />
       </TitleBox>
       <hr />
-      <MainBox>
-        <div>
-          <div>
-            <img src={Culture} />
-            <div>문화</div>
-          </div>
-          <div>
-            <img src={Game} />
-            <div>오락</div>
-          </div>
-          <div>
-            <img src={Healing} />
-            <div>힐링</div>
-          </div>
-        </div>
-        <div>
-          <div>
-            <img src={Leisure} />
-            <div>레저</div>
-          </div>
-          <div>
-            <img src={Sports} />
-            <div>체육</div>
-          </div>
-          <div>
-            <img src={Theme} />
-            <div>테마</div>
-          </div>
-        </div>
-      </MainBox>
+      <MainBox />
       <hr />
       <Recommend />
       <hr />
@@ -83,29 +49,6 @@ const HomeBox = styled.div<{ isOpenModal: boolean }>`
     height: 1px;
     border: 0;
     margin-inline: 16px;
-  }
-`;
-
-const MainBox = styled.div`
-  padding: 16px;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center; */
-  > div {
-    display: flex;
-    justify-content: space-around;
-    > div {
-      padding: 3px;
-      max-width: 100px;
-      text-align: center;
-      > img {
-        height: 75px;
-      }
-      > div {
-        font-size: var(--title-2);
-        margin-top: 5px;
-      }
-    }
   }
 `;
 

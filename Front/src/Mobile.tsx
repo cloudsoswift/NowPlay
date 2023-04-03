@@ -53,7 +53,7 @@ function Mobile() {
 export default Mobile;
 
 const MobileContainer = styled.div`
-  height: var(--mobile-height);
+  min-height: var(--mobile-height);
   margin-top: 42px;
   margin-bottom: 80px;
   overflow: hidden;

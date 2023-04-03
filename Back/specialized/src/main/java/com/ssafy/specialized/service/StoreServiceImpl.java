@@ -100,6 +100,14 @@ public class StoreServiceImpl implements StoreService {
         } catch (Exception e) {
         }
         storeDto.setFaverite(bookmarkRepository.existsAllByStoreAndUser(store, user));
+        List<String> list = new ArrayList<>();
+        List<StoreImage> storeImageList = storeImageRepository.findAllByStore(store);
+        if (storeImageList.size() >=1 ){
+            for (StoreImage e : storeImageList) {
+                list.add(e.getStoreImageUrl());
+            }
+        }
+        storeDto.setStoreImageList(list);
         return storeDto;
     }
 

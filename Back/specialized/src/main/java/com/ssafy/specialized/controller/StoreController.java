@@ -37,9 +37,10 @@ public class StoreController {
         return ResponseEntity.ok(null);
     }
 
-    @PostMapping(value = "/owners/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/owners/{id}", consumes = "multipart/form-data")
     public ResponseEntity<?> updateStore(@PathVariable int id, @RequestBody UpdateStoreDto updateStoreDto) throws Exception {
         storeService.updateStore(id, updateStoreDto);
+        
         return ResponseEntity.ok(null);
     }
 

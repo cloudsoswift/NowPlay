@@ -1,9 +1,6 @@
 package com.ssafy.specialized.domain.dto.store;
 
-import com.ssafy.specialized.domain.entity.BusinessHour;
-import com.ssafy.specialized.domain.entity.HobbyMain;
-import com.ssafy.specialized.domain.entity.HobbySubcategory;
-import com.ssafy.specialized.domain.entity.User;
+import com.ssafy.specialized.domain.entity.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,6 +39,8 @@ public class StoreDto {
     private boolean isClosedOnHolidays;
 
     private List<BusinessHour> businessHourList;
+
+    private List<String> storeImageList;
 
     private float averageRating;
 

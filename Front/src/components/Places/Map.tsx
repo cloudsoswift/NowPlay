@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+import { atom, selector, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Filter } from "./Filter/Filter";
 import { PlaceCardSheet } from "./PlaceCard";
 import { IoReorderThree } from "react-icons/io5";
@@ -8,8 +8,11 @@ import api from "../../utils/api/api";
 import Title from "../HomePage/Title";
 import styled from "styled-components";
 import { QGetNearbyStoreList, TNearbyStoreInput, TFilter } from "../../utils/api/graphql";
-import { TMainCategory } from "./Types";
+import { TMainCategory, TSubCategory } from "./Types";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import Pin2 from "../../svg/pin2.svg";
+import { useLocation } from "react-router-dom";
+import { SelectableCategory } from "./Filter/SelectableCategories";
 
 type Props = {};
 
@@ -50,8 +53,31 @@ export const Map = (props: Props) => {
     if (recentAddressJSON === null) return [];
     return JSON.parse(recentAddressJSON);
   }
+  const [isModalState, setIsModalState] = useState<boolean>(false);
+
+  const setFilter = useSetRecoilState(filterState);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state) {
+      location.state.map((subCategory: TSubCategory) => {
+        setFilter((prevFilter) => {
+          return {
+            ...prevFilter,
+            selectedCategories: prevFilter.subcategory.some(
+              (subC) => subC.subcategory === subCategory.category
+            )
+              ? [...prevFilter.subcategory]
+              : [...prevFilter.subcategory, subCategory],
+          };
+        });
+      });
+    }
+  }, []);
+
   const handleFilterToggle = (set: boolean) => {
     if (set) {
+      setIsModalState(set);
       setIsModalShown(set);
       setIsFilterShown(set);
     } else {
@@ -176,10 +202,14 @@ export const Map = (props: Props) => {
           isFilterShown={isFilterShown}
           isModalShown={isModalShown}
           onSubmit={result.refetch}
+          setIsOpenModal={setIsOpenModal}
+          setIsOpenModalBox={setIsOpenModalBox}
+          recentAddress={recentAddressData}
         />
       )}
       {/* </AnimatePresence> */}
-      <div id="map" className="w-screen h-[calc(100vh-122px)] -z-0"></div>
+
+      <div id="map" className="w-screen h-[calc(100vh-122px)] -z-0" />
       <button
         className="absolute top-12 left-1/2 -translate-x-1/2 border-2 border-black bg-white rounded-full"
         onClick={(e: React.MouseEvent) => {
@@ -201,6 +231,7 @@ export const Map = (props: Props) => {
 };
 
 const TitleBox = styled.div`
+  top: 42px;
   position: fixed;
   width: 100%;
   z-index: 9995;

@@ -161,7 +161,7 @@ const Title = ({
       {textBoolean && (
         <TitleBox onClick={onClickToggleModal}>
           <img src={Pin2} />
-          <div>{selectAddress ? selectAddress : "주소를 검색해주세요"}</div>
+          <div>{selectAddress ? selectAddress : "주소를 설정해주세요."}</div>
         </TitleBox>
       )}
     </>

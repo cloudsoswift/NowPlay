@@ -10,6 +10,7 @@ import styled, { keyframes } from "styled-components";
 import { useSetRecoilState } from "recoil";
 import { filterState } from "../Map";
 import { TFilter } from "../../../utils/api/graphql";
+import Pin2 from "../../../svg/pin2.svg";
 
 type Props = {
   className: string;
@@ -17,13 +18,19 @@ type Props = {
   isFilterShown: boolean;
   isModalShown: boolean;
   onSubmit: Function;
+  setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpenModalBox: React.Dispatch<React.SetStateAction<boolean>>;
+  recentAddress: string[];
 };
 export const Filter = ({
   className,
   onClose,
   isFilterShown,
+  setIsOpenModal,
+  setIsOpenModalBox,
   isModalShown,
-  onSubmit
+  onSubmit,
+  recentAddress,
 }: Props) => {
   const setFilterValue = useSetRecoilState(filterState);
   const handleApplyFilter = () => {
@@ -40,6 +47,23 @@ export const Filter = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -100 }}
         > */}
+        <IsAddress
+          onClick={(e: React.MouseEvent) => {
+            e.preventDefault();
+            setIsOpenModal(true);
+            setIsOpenModalBox(true);
+            onClose(false)
+          }}
+        >
+          <img src={Pin2} />
+          <div>
+            {recentAddress.length !== 0 ? (
+              recentAddress[0]
+            ) : (
+              "주소를 설정해주세요."
+            )}
+          </div>
+        </IsAddress>
         <Categories />
         <React.Suspense fallback={<div>... Loading</div>}>
           <SelectableCategories />
@@ -117,4 +141,25 @@ const ButtonArea = styled.div`
   line-height: 43px;
   border-radius: 20px;
   box-shadow: 2px 2px 2px gray;
+`;
+
+const IsAddress = styled.div`
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  padding: 16px;
+  width: 80%;
+  margin-inline: auto;
+  > img {
+    width: 24px;
+    height: 24px;
+    margin-right: 7px;
+  }
+  > div {
+    font-size: var(--body-text);
+    margin: auto 7px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;

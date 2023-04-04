@@ -44,6 +44,6 @@ export const PlaceDetailPage = (props: Props) => {
         {tabIndex === 1 && <PlaceMapInfo address={data.address} latitude={data.latitude} longitude={data.longitude}/>}
         {tabIndex === 2 && <ReviewInfo ref={pageRef}/>} 
       </div>
-    </div>
+    </div> || <div></div>
   );
 };

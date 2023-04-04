@@ -2,15 +2,18 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 
 import { BiRightArrowAlt, BiLeftArrowAlt } from "react-icons/bi";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled, { keyframes } from "styled-components";
 import { queryClient } from '../../main';
 import { ownerapi } from "../../utils/api/api";
+import { ownerInfoAtion } from "../../utils/recoil/userAtom";
 
 const OwnerReservePage = () => {
-  // useDateInfo??
   const [dateInfo, setDateInfo] = useState<string>(
     new Date().toISOString().slice(0, 10)
   );
+
+  const ownerInfo = useRecoilValue(ownerInfoAtion)
 
   const dateChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDateInfo(e.currentTarget.value);
@@ -29,7 +32,7 @@ const OwnerReservePage = () => {
   const { data } = useQuery([`storeReservation${dateInfo}`], async () => {
     const { data } = await ownerapi({
       method: "GET",
-      url: `reservation/store/1/date?reservationDate=${dateInfo}`,
+      url: `reservation/store/${ownerInfo.storeIdx}/date?reservationDate=${dateInfo}`,
     });
     return data;
   });
@@ -49,7 +52,6 @@ const OwnerReservePage = () => {
   const rejectHandler = (id: number) => {
     rejectMutation.mutate(id)
   }
-
 
   return (
     <>

@@ -8,7 +8,7 @@ export type TRecoilUserInfo = {
 };
 
 export type TRecoilOwnerInfo = {
-  storeIndex: number;
+  storeIdx: number;
   userName: string;
   userNickname: string;
   userAddress: string;
@@ -43,7 +43,7 @@ export const userInfoAtom = atom<TRecoilUserInfo>({
 export const ownerInfoAtion = atom<TRecoilOwnerInfo>({
   key: "ownerInfo",
   default: {
-    storeIndex: 0,
+    storeIdx: 0,
     userName: "",
     userNickname: "",
     userAddress: "",

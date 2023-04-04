@@ -1,37 +1,5 @@
-import { useState } from "react";
 import { TinitialValues } from "../hooks/useForm";
 import { ownerapi } from "./api";
-
-import AWS from "aws-sdk";
-import axios from "axios";
-
-const s3 = new AWS.S3({
-  endpoint: "https://kr.object.ncloudstorage.com",
-  credentials: {
-    accessKeyId: "ESCb1U9YUC1iPdriv1Qc",
-    secretAccessKey: "1M49n1x3q4COn0KtlZ2rKt63AQ4ermzvsCg9yk3l",
-  },
-  region: "kr-standard",
-});
-
-const getImageAsBlob = async ({
-  bucketName,
-  key,
-}: {
-  bucketName: string;
-  key: string;
-}) => {
-  try {
-    const response = await axios.get(s3.getSignedUrl('getObject', { Bucket: bucketName, Key: key }), {
-      responseType: 'arraybuffer',
-    });
-    // const blob = new Blob([response.Body], { type: response.ContentType });
-    // return blob;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
 
 export const storeUpdateAPI = async (values: TinitialValues) => {
   const formData = new FormData();
@@ -50,31 +18,33 @@ export const storeUpdateAPI = async (values: TinitialValues) => {
     longitude: 0,
   };
 
-  if (values.storeBrcImages) {
-    Array.from(values.storeBrcImages).forEach((img) => {
-      ownerapi({
-        method: "GET",
-        baseURL: img,
-        responseType: "blob",
-      }).then((res) => {
-        const myFile = new File([res.data], "imageName");
-        formData.append("files", new Blob([myFile]) );
-        formData.append("files", myFile );
-      });
-      const url_data = new Blob([img], {type: 'image'})
-      console.log(url_data)
-      formData.append("files", new File([url_data], img))
-      // console.log(img.split("/")[img.split("/").length - 2] +
-      // "/" +
-      // img.split("/")[img.split("/").length - 1]);
-      // getImageAsBlob({
-      //   bucketName: "/d110/store",
-      //   key:
+  // if (values.storeBrcImages) {
+  //   Array.from(values.storeBrcImages).forEach((img) => {
+  //     console.log(img.split('/').slice(0, 2))
+  //     ownerapi({
+  //       method: "GET",
+  //       baseURL: "https://kr.object.ncloudstorage.com",
+  //       url: `/d110/${img.split('/')[(img.split('/').length - 2)] + '/' + img.split('/')[(img.split('/').length - 1)]}`,
+  //       responseType: "blob",
+  //     }).then((res) => {
+  //       const myFile = new File([res.data], "imageName");
+  //       formData.append("files", new Blob([myFile]) );
+  //       formData.append("files", myFile );
+  //     });
+  //     const url_data = new Blob([img], {type: 'image'})
+  //     console.log(url_data)
+  //     formData.append("files", new File([url_data], img))
+  //     console.log(img.split("/")[img.split("/").length - 2] +
+  //     "/" +
+  //     img.split("/")[img.split("/").length - 1]);
+  //     getImageAsBlob({
+  //       bucketName: "/d110/store",
+  //       key:
           
-      //     img.split("/")[img.split("/").length - 1],
-      // });
-    });
-  }
+  //         img.split("/")[img.split("/").length - 1],
+  //     });
+  //   });
+  // }
 
   if (values.newStoreBrcImages) {
     Array.from(values.newStoreBrcImages).forEach((img) => {

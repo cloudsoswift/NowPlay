@@ -36,7 +36,7 @@ const StoreInfoForm = ({
       >
         <SubmitButton type='submit'>회원정보 수정 완료</SubmitButton>
         <Field type='text' name='storeName' />
-        <OldImageField />
+        {/* <OldImageField /> */}
         <FileField type='file' name='newStoreBrcImages' />
         <Field type='text' name='storeAddress' />
         <Field type='text' name='storeContactNumber' />

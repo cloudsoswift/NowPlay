@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useState, Suspense, useDeferredValue, useEffect } from "react";
+import { useRecoilValue } from "recoil";
 // import StoreInfoForm from "../../components/OwnerForm/StoreForm/StoreInfoForm";
 // import StoreInfo from "../../components/OwnerPage/StoreInfo";
 import StoreInfoSuspense from "../../components/OwnerPage/StoreInfoSuspense";
 import { ownerapi } from "../../utils/api/api";
 import { TinitialValues, TbusinessDay } from "../../utils/hooks/useForm";
+import { ownerInfoAtion } from "../../utils/recoil/userAtom";
 
 const StoreInfo = React.lazy(
   () => import("../../components/OwnerPage/StoreInfo")
@@ -17,12 +19,14 @@ const StoreInfoForm = React.lazy(
 const OwnerStorePageComp = () => {
   const [isUpdate, setIsUpdate] = useState(false);
 
+  const ownerInfo = useRecoilValue(ownerInfoAtion)
+
   const { isLoading, data, isError, isSuccess } = useQuery<TinitialValues>(
     ["storeInfo"],
     async () => {
       const { data } = await ownerapi({
         method: "GET",
-        url: "place/1/store",
+        url: `place/${17799}/store`,
       });
       let newbusinessHour: TbusinessDay = {
         monday: {
@@ -139,8 +143,6 @@ const OwnerStorePageComp = () => {
   const toUpdate = () => {
     setIsUpdate((prev) => !prev);
   };
-
-  console.log(data)
 
   return (
     <>

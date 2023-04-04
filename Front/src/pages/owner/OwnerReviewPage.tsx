@@ -3,15 +3,20 @@ import styled from "styled-components";
 import ReviewCard from "../../components/OwnerReview/OwnerReviewCard";
 import api, { ownerapi } from "../../utils/api/api";
 import { useState, useRef, useCallback, useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { ownerInfoAtion } from "../../utils/recoil/userAtom";
 
 const OwnerReviewPage = () => {
+  const ownerInfo = useRecoilValue(ownerInfoAtion)
+
+
   const { data, isSuccess, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery(
       ["storeReviews"],
       async ({ pageParam = 0 }) => {
         const { data } = await ownerapi({
           method: "GET",
-          url: `/places/1/reviews?page=${pageParam}`,
+          url: `/places/${ownerInfo.storeIdx}/reviews?page=${pageParam}`,
         });
         return data;
       },
@@ -44,12 +49,13 @@ const OwnerReviewPage = () => {
       return () => observer.unobserve(element);
     }
   }, [fetchNextPage, hasNextPage, handleObserver]);
-  console.log(data)
+
   return (
     <>
       <ReviewContainer>
         {isSuccess && data && data.pages[0].content.length !== 0 ? (
           data.pages.map((page) => {
+            console.log(page)
             return page.content.map((review: any, index: number) => {
               {
                 return <ReviewCard review={review} key={index}></ReviewCard>;

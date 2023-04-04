@@ -15,8 +15,8 @@ export const UserInfoCard = () => {
           <span className="user-name">{userInfo.userName}</span>
           <span className="user-id">{userInfo.userNickname}</span>
         </div>
-        <Link to="/mobile/mypage/signup">
-          <GrUserSettings />
+        <Link to="/mobile/hobby">
+          취미 수정<GrUserSettings />
         </Link>
       </NameCard>
       <div className="image-box">
@@ -32,9 +32,6 @@ export const UserInfoCard = () => {
 export const MyPageCategory = () => {
   return (
     <MyPageCategoryBox>
-      <NavLink to="recent">
-        <li>최근 내역</li>
-      </NavLink>
       <NavLink to="my-review">
         <li>내 리뷰</li>
       </NavLink>
@@ -105,7 +102,7 @@ const MyPageCategoryBox = styled.ul`
   border-bottom: 2px solid var(--primary-color);
 
   > a {
-    width: 25%;
+    width: 33.4%;
     padding: 10px;
     font-size: var(--body-text);
     text-align: center;

@@ -7,18 +7,25 @@ import { SelectableCategories } from "./SelectableCategories";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import styled, { keyframes } from "styled-components";
+import Pin2 from "../../../svg/pin2.svg";
 
 type Props = {
   className: string;
   onClose: (set: boolean) => void;
   isFilterShown: boolean;
   isModalShown: boolean;
+  setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpenModalBox: React.Dispatch<React.SetStateAction<boolean>>;
+  recentAddress: string[];
 };
 export const Filter = ({
   className,
   onClose,
   isFilterShown,
+  setIsOpenModal,
+  setIsOpenModalBox,
   isModalShown,
+  recentAddress,
 }: Props) => {
   const handleApplyFilter = () => {
     const query = `
@@ -72,6 +79,23 @@ export const Filter = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -100 }}
         > */}
+        <IsAddress
+          onClick={(e: React.MouseEvent) => {
+            e.preventDefault();
+            setIsOpenModal(true);
+            setIsOpenModalBox(true);
+            onClose(false)
+          }}
+        >
+          <img src={Pin2} />
+          <div>
+            {recentAddress.length !== 0 ? (
+              recentAddress[0]
+            ) : (
+              "주소를 설정해주세요."
+            )}
+          </div>
+        </IsAddress>
         <Categories />
         <SelectableCategories />
         <DistanceSlider />
@@ -100,7 +124,7 @@ const SlideUp = keyframes`
 
 const FilterModalBox = styled.div`
   width: 100%;
-  height: 80%;
+  height: 70%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,6 +135,7 @@ const FilterModalBox = styled.div`
 
 const FilterModalContent = styled.dialog<{ isModalShown: boolean }>`
   width: 100%;
+  overflow-x: hidden;
   top: 42px;
   display: flex;
   flex-direction: column;
@@ -146,4 +171,25 @@ const ButtonArea = styled.div`
   line-height: 43px;
   border-radius: 20px;
   box-shadow: 2px 2px 2px gray;
+`;
+
+const IsAddress = styled.div`
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  padding: 16px;
+  width: 80%;
+  margin-inline: auto;
+  > img {
+    width: 24px;
+    height: 24px;
+    margin-right: 7px;
+  }
+  > div {
+    font-size: var(--body-text);
+    margin: auto 7px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;

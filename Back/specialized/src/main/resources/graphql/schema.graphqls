@@ -1,70 +1,9 @@
-#type Query {
-#    getNearbyStoreList(nearbyStoreInput: NearbyStoreInput): output
-#    searchStore(searchInput: String, count: Int): output
-#    storeDetail(store: String): Store
-#}
-#
-##type Mutation {
-##
-##}
-#type output{
-#    stores:[Store]
-#    totalCount: Int
-#}
-#
-#input NearbyStoreInput {
-#    mainHobby: [String]
-#    subcategory: [String]
-#    latitude: Float
-#    longitude: Float
-#    maxDistance: Int
-#    count: Int # 페이징 카운트
-#}
-#
-#type Store implements StoreSummary {
-#    idx: ID!
-#    averageRating: Int
-#    reviewCount: Int
-#    name: String
-#    address: String
-#    owner: String
-#    subcategory: String
-#    contactNumber: String
-#    homepage: String
-#    mainImagesUrl: String # 메인 이미지 ( Store 테이블 )
-#    imageUrls: [String] # 서브 이미지 ( StoreImage 테이블 )
-#    explanation: String
-#    latitude: Float
-#    longitude: Float
-#    isClosedOnHolidays: Boolean
-#    businessHours: [BusinessHour]
-#}
-#
-#type BusinessHour {
-#    idx: ID!
-#    store: String
-#    dayOfWeek: String
-#    openAt: String
-#    closeAt: String
-#    reservationInterval: String
-#    isDayOff: Boolean
-#}
-#
-#interface StoreSummary {
-#    idx: ID!
-#    averageRating: Int
-#    reviewCount: Int
-#    name: String
-#    address: String
-#}
-##
-#
-#
 type Query {
     getNearbyStoreList(nearbyStoreInput: NearbyStoreInput): StoreOutputWithTotalCount
     searchStore(searchInput: String, count: Int, lat: Float, lon: Float): StoreOutputWithTotalCount
     storeRecommendationByCoordinate(lat: Float,lon: Float): [StoreOutput]
     storeDetail(store: String): Store
+    getStoreListByUserHobby(lat: Float,lon: Float): [StoreOutput]
 }
 
 input NearbyStoreInput {

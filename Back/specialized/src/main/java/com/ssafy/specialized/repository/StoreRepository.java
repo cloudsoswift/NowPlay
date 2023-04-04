@@ -18,6 +18,7 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
 
 
     Optional<Store> findById(int id);
+
     List<Store> findAllByName(String name);
 
 

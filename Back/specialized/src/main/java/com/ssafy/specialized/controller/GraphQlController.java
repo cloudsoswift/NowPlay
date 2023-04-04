@@ -40,4 +40,9 @@ public class GraphQlController {
         return storeService.storeRecommendationByCoordinate(lat, lon);
     }
 
+    @QueryMapping
+    public List<NearbyStoreOutput> getStoreListByUserHobby(@Argument float lat, @Argument float lon){
+        return storeService.getStoreListByUserHobby(lat, lon);
+    }
+
 }

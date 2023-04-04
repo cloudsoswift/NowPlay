@@ -3,6 +3,7 @@ type Query {
     searchStore(searchInput: String, count: Int, lat: Float, lon: Float): StoreOutputWithTotalCount
     storeRecommendationByCoordinate(lat: Float,lon: Float): [StoreOutput]
     storeDetail(store: String): Store
+    getStoreListByUserHobby(lat: Float,lon: Float): [StoreOutput]
 }
 
 input NearbyStoreInput {

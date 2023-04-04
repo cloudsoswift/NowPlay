@@ -61,4 +61,20 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
             "order by SQRT((s.latitude - :x) * (s.latitude - :x) + (s.longitude - :y) * (s.longitude - :y)) desc")
     List<NearbyStoreOutputInterface> getStoreListByPosition(@Param("x") float x, @Param("y") float y, @Param("maxDist") double maxDist);
 
+    @Query(value = "SELECT *" +
+            ", (select (ST_Distance_Sphere(POINT(:y, :x), POINT(longitude, latitude)))/1000) as DISTANCE" +
+            ", (select exists(select * from bookmark where bookmark.store_idx = store.idx and user_idx = :userIdx)) as bookmark " +
+            "from store LEFT JOIN (SELECT review.store_idx AS id, COUNT(*) as reviewCount, AVG(rating) as averageRating FROM review GROUP BY review.store_idx) as reviewData ON reviewData.id = store.idx " +
+            "HAVING subcategory_idx in(:subcategoryArr) " +
+            "order by distance", nativeQuery = true)
+    List<NearbyStoreOutputInterface> getStoreListByUserHobby(@Param("subcategoryArr") List<Integer> subcategoryArr, @Param("x") float x, @Param("y") float y, @Param("userIdx") int userIndex);
+
+
+    @Query(value = "SELECT *" +
+            ", (select (ST_Distance_Sphere(POINT(:y, :x), POINT(longitude, latitude)))/1000) as DISTANCE" +
+            ", (select exists(select * from bookmark where bookmark.store_idx = store.idx and user_idx = :userIdx)) as bookmark " +
+            "from store LEFT JOIN (SELECT review.store_idx AS id, COUNT(*) as reviewCount, AVG(rating) as averageRating FROM review GROUP BY review.store_idx) as reviewData ON reviewData.id = store.idx " +
+            "order by distance", nativeQuery = true)
+    List<NearbyStoreOutputInterface> getStoreListByUserHobby(@Param("x") float x, @Param("y") float y, @Param("userIdx") int userIndex);
+
 }

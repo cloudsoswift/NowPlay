@@ -102,7 +102,7 @@ public class StoreServiceImpl implements StoreService {
         storeDto.setFaverite(bookmarkRepository.existsAllByStoreAndUser(store, user));
         List<String> list = new ArrayList<>();
         List<StoreImage> storeImageList = storeImageRepository.findAllByStore(store);
-        if (storeImageList.size() >=1 ){
+        if (storeImageList.size() >= 1) {
             for (StoreImage e : storeImageList) {
                 list.add(e.getStoreImageUrl());
             }
@@ -242,7 +242,7 @@ public class StoreServiceImpl implements StoreService {
         if (updateStoreDto.getMultipartFiles().size() > 0) {
             try {
                 String[] urlarr = store.getImagesUrl().split("/");
-                String url = urlarr[urlarr.length-1];
+                String url = urlarr[urlarr.length - 1];
                 s3.deleteObject(bucketName, url);
             } catch (AmazonS3Exception e) {
                 e.printStackTrace();
@@ -346,8 +346,10 @@ public class StoreServiceImpl implements StoreService {
     public NearbyStoreOutputWithTotalCount searchStore(String searchInput, int count, float lat, float lon) {
         String name = SecurityUtil.getLoginUsername();
         User user = userRepository.findByName(name);
+        int userIdx = 1;
+//        int userIdx = user.getIdx();
 
-        List<NearbyStoreOutputInterface> storeList = storeRepository.findAllByNameQuery(searchInput, lat, lon, 1);
+        List<NearbyStoreOutputInterface> storeList = storeRepository.findAllByNameQuery(searchInput, lat, lon, userIdx);
         ;
         int i = (count - 1) * 20;
         int j = i + 19;
@@ -397,6 +399,59 @@ public class StoreServiceImpl implements StoreService {
         int i = 0;
         int j = 9;
         List<NearbyStoreOutput> retrieveList = new ArrayList<>();
+        while (storeList.size() > i && i <= j) {
+            Store store = storeRepository.findById(storeList.get(i).getIdx()).get();
+            List<Review> reviewList = reviewRepository.findAllByStore(store);
+            float ratings = 0;
+            int reviewCount = reviewList.size();
+            for (Review review : reviewList) {
+                ratings += review.getRating();
+            }
+            NearbyStoreOutput nearbyStoreOutput = new NearbyStoreOutput();
+            nearbyStoreOutput.setStore(store);
+            if (reviewCount == 0) {
+                nearbyStoreOutput.setAverageRating(0);
+            } else {
+                nearbyStoreOutput.setAverageRating(ratings / reviewCount);
+            }
+            nearbyStoreOutput.setDistance((float) storeList.get(i).getDistance());
+            if (user == null) {
+                nearbyStoreOutput.setIsBookmark(false);
+            } else {
+                Optional<Bookmark> optionalBookmark = bookmarkRepository.findByUser(user);
+                if (optionalBookmark.isPresent()) {
+                    nearbyStoreOutput.setIsBookmark(true);
+                }
+            }
+            nearbyStoreOutput.setReviewCount(reviewCount);
+            retrieveList.add(nearbyStoreOutput);
+            i++;
+        }
+        return retrieveList;
+    }
+
+    @Override
+    public List<NearbyStoreOutput> getStoreListByUserHobby(float lat, float lon) {
+        String name = SecurityUtil.getLoginUsername();
+        User user = userRepository.findById(1).get();
+//        User user = userRepository.findByName(name);
+        int userIdx = user.getIdx();
+        List<UserHobby> userHobbyList = userHobbyRepository.findAllByUser(user);
+
+        List<NearbyStoreOutputInterface> storeList = storeRepository.findAllByCoordinateQuery(lat, lon, userIdx);
+        int i = 0;
+        int j = 9;
+        List<NearbyStoreOutput> retrieveList = new ArrayList<>();
+        List<Integer> subIndex = new ArrayList<>();
+        for (UserHobby userHobby : userHobbyList) {
+            subIndex.add(userHobby.getSubcategory().getIdx());
+        }
+
+        if (userHobbyList.isEmpty()) {
+            storeList = storeRepository.getStoreListByUserHobby(lat, lon, userIdx);
+        } else {
+            storeList = storeRepository.getStoreListByUserHobby(subIndex, lat, lon, userIdx);
+        }
         while (storeList.size() > i && i <= j) {
             Store store = storeRepository.findById(storeList.get(i).getIdx()).get();
             List<Review> reviewList = reviewRepository.findAllByStore(store);

@@ -26,14 +26,28 @@ type TBusinessHour = {
     holiday: boolean,
   }
   
-  type TReview = {
-    id: number,
-    writer: object,
-    content: string,
-    rating: number,
-    createdAt: string,
-    reviewImageUrl: string
-  }
+type TReview = {
+  idx: number,
+  writer?: object,
+  store?: object,
+  content: string,
+  rating: number,
+  createdAt: string,
+  hidden: boolean,
+  reviewImageUrl: string, 
+}
+type TReviewImage = {
+  idx: number;
+  review: TReview;
+  reviewImageFileName: string;
+  reviewImageUrl: string;
+}
+type TOwnerComment = {
+  idx: number;
+  review: TReview;
+  createdAt: string;
+  content: string;
+}
 
 type TPlaceCard = {
   idx: number,
@@ -81,4 +95,4 @@ type TPosition = {
   latitude: number,
 }
 
-export type { TFilter, TMainCategory, TSubCategory, TBusinessHour, TReview, TPlaceCard, TStoreDetail, TPosition };
+export type { TFilter, TMainCategory, TSubCategory, TBusinessHour, TReview, TReviewImage, TOwnerComment, TPlaceCard, TStoreDetail, TPosition };

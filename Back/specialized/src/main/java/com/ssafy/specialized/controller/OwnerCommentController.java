@@ -32,7 +32,7 @@ public class OwnerCommentController {
         return ResponseEntity.ok(ownerCommentService.getOwnerComment(id));
     }
 
-    @PostMapping("/{id}/comments")
+    @PostMapping("/{id}/comments/update")
     public ResponseEntity<?> updateOwnerComment(@PathVariable int id,
                                                 @RequestBody OwnerCommentPostDto ownerCommentPostDto) throws Exception {
         ownerCommentService.updateOwnerComment(id, ownerCommentPostDto);

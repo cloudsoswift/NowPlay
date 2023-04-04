@@ -7,8 +7,7 @@ import { useRecoilValue } from "recoil";
 import { ownerInfoAtion } from "../../utils/recoil/userAtom";
 
 const OwnerReviewPage = () => {
-  const ownerInfo = useRecoilValue(ownerInfoAtion)
-
+  const ownerInfo = useRecoilValue(ownerInfoAtion);
 
   const { data, isSuccess, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery(
@@ -55,7 +54,7 @@ const OwnerReviewPage = () => {
       <ReviewContainer>
         {isSuccess && data && data.pages[0].content.length !== 0 ? (
           data.pages.map((page) => {
-            console.log(page)
+            console.log(page);
             return page.content.map((review: any, index: number) => {
               {
                 return <ReviewCard review={review} key={index}></ReviewCard>;
@@ -63,9 +62,18 @@ const OwnerReviewPage = () => {
             });
           })
         ) : (
-          <NoContentCard><img src='../src/assets/LeisureLogo.png' /><h1>리뷰가 존재하지 않습니다</h1></NoContentCard>
+          <NoContentCard>
+            <div className='photo-box'>
+              <img src='../src/assets/LeisureLogo.png' />
+            </div>
+            <div className='text-box'>
+              <h1>리뷰가</h1>
+              <h1>존재하지</h1>
+              <h1>않습니다</h1>
+            </div>
+          </NoContentCard>
         )}
-        <div className="loader" ref={observerElem}>
+        <div className='loader' ref={observerElem}>
           {isFetchingNextPage && hasNextPage ? "Loading..." : ""}
         </div>
       </ReviewContainer>
@@ -76,9 +84,34 @@ const OwnerReviewPage = () => {
 export default OwnerReviewPage;
 
 const NoContentCard = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
   height: auto;
   width: 30vw;
-`
+
+  background-color: var(--body-color);
+
+  box-shadow: 10px 10px 5px var(--primary-color-light);
+
+  .photo-box {
+    width: 25vw;
+    padding: 20px;
+  }
+
+  .text-box {
+    width: 100%;
+    text-align: start;
+    padding: 40px;
+  }
+
+  h1 {
+    font-size: var(--large-text);
+    font-weight: bold;
+  }
+`;
 
 const ReviewContainer = styled.div`
   display: flex;
@@ -87,6 +120,7 @@ const ReviewContainer = styled.div`
   border-left: 20px solid var(--primary-color-light);
 
   justify-content: center;
+  align-items: center;
   min-height: calc(100vh - 100px);
 
   background-color: var(--body-color);

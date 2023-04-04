@@ -12,19 +12,13 @@ export const UserInfoCard = () => {
     <UserInfoCardBox>
       <NameCard>
         <div>
-          <span className="user-name">{userInfo.userName}</span>
-          <span className="user-id">{userInfo.userNickname}</span>
+          <span className='user-name'>{userInfo.userName}</span>
+          <span className='user-id'>{userInfo.userNickname}</span>
         </div>
-        <Link to="/mobile/hobby">
-          취미 수정<GrUserSettings />
-        </Link>
       </NameCard>
-      <div className="image-box">
-        <img
-          src="https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2022-08/220805-border-collie-play-mn-1100-82d2f1.jpg"
-          alt=""
-        />
-      </div>
+      <Link to='/mobile/hobby'>
+        <button>취미수정</button>
+      </Link>
     </UserInfoCardBox>
   );
 };
@@ -32,13 +26,13 @@ export const UserInfoCard = () => {
 export const MyPageCategory = () => {
   return (
     <MyPageCategoryBox>
-      <NavLink to="my-review">
+      <NavLink to='my-review'>
         <li>내 리뷰</li>
       </NavLink>
-      <NavLink to="my-reservation">
+      <NavLink to='my-reservation'>
         <li>예약 내역</li>
       </NavLink>
-      <NavLink to="customer-service">
+      <NavLink to='customer-service'>
         <li>고객 센터</li>
       </NavLink>
     </MyPageCategoryBox>
@@ -49,6 +43,7 @@ const UserInfoCardBox = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   margin: 10px 10px 0px 10px;
   padding: 10px;
 
@@ -64,6 +59,15 @@ const UserInfoCardBox = styled.div`
     object-fit: fill;
     border-radius: 100%;
     border: 2px solid var(--primary-color);
+  }
+
+  button {
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    height: 60px;
+    width: 100px;
+    color: white;
+    font-size: var(--title-1);
   }
 `;
 

@@ -36,15 +36,49 @@ const MyReservation = () => {
               <button className='decline' onClick={() => rejectHandler(reserve.idx)}>예약 취소</button>
         </div>
       </ReserveCard>
-    )) : <NoContentCard><img src='../../src/assets/LeisureLogo.png' /><h1>예약이 존재하지 않습니다</h1></NoContentCard>}</>);
+    )) : <NoContentCard>
+    <div className='photo-box'>
+      <img src='../../src/assets/LeisureLogo.png' />
+    </div>
+    <div className='text-box'>
+      <h1>예약이 </h1>
+      <h1>존재하지</h1>
+      <h1>않습니다</h1>
+    </div>
+  </NoContentCard>}</>);
 };
 
 export default MyReservation;
 
 const NoContentCard = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
   height: auto;
-  width: 30vw;
-`
+  width: 100%;
+
+  background-color: var(--body-color);
+
+  box-shadow: 10px 10px 10px var(--primary-color-light);
+
+  .photo-box {
+    width: 80%;
+    padding: 20px;
+  }
+
+  .text-box {
+    width: 100%;
+    text-align: start;
+    padding: 40px;
+  }
+
+  h1 {
+    font-size: var(--large-text);
+    font-weight: bold;
+  }
+`;
 
 const openCard = keyframes`
     0% {
@@ -108,11 +142,11 @@ const ReserveCard = styled.div<{ delay: number; accept: number }>`
 
   button {
     height: 50px;
-    width: fit-content;
+    width: 90px;
     padding: 10px;
     border-radius: 10px;
 
-    font-size: var(--title-2);
+    font-size: var(--body-text);
 
     color: white;
 

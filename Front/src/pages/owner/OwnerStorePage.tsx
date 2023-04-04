@@ -15,18 +15,17 @@ const StoreInfoForm = React.lazy(
   () => import("../../components/OwnerForm/StoreForm/StoreInfoForm")
 );
 
-
 const OwnerStorePageComp = () => {
   const [isUpdate, setIsUpdate] = useState(false);
 
-  const ownerInfo = useRecoilValue(ownerInfoAtion)
+  const ownerInfo = useRecoilValue(ownerInfoAtion);
 
   const { isLoading, data, isError, isSuccess } = useQuery<TinitialValues>(
     ["storeInfo"],
     async () => {
       const { data } = await ownerapi({
         method: "GET",
-        url: `place/${17799}/store`,
+        url: `place/${ownerInfo.storeIdx}/store`,
       });
       let newbusinessHour: TbusinessDay = {
         monday: {
@@ -74,8 +73,8 @@ const OwnerStorePageComp = () => {
       };
       if (data.businessHourList.length !== 0) {
         data.businessHourList.forEach((day: any) => {
-          newbusinessHour[day.dayOfWeek] = {...day}
-        })
+          newbusinessHour[day.dayOfWeek] = { ...day };
+        });
       }
       return {
         storeName: data.name,
@@ -137,8 +136,6 @@ const OwnerStorePageComp = () => {
     },
     { suspense: true }
   );
-
-  
 
   const toUpdate = () => {
     setIsUpdate((prev) => !prev);

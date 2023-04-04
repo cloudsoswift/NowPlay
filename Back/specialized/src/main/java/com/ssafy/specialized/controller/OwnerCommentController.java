@@ -1,5 +1,6 @@
 package com.ssafy.specialized.controller;
 
+import com.ssafy.specialized.domain.dto.ownerComment.OwnerCommentPostDto;
 import com.ssafy.specialized.service.OwnerCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +22,8 @@ public class OwnerCommentController {
 
     @PostMapping("/{id}/comments")
     public ResponseEntity<?> writeOwnerComments(@PathVariable int id,
-                                                @RequestBody String comment) throws Exception {
-        ownerCommentService.writeOwnerComment(id, comment);
+                                                @RequestBody OwnerCommentPostDto OwnerCommentPostDto) throws Exception {
+        ownerCommentService.writeOwnerComment(id, OwnerCommentPostDto);
         return ResponseEntity.ok(null);
     }
 
@@ -31,10 +32,10 @@ public class OwnerCommentController {
         return ResponseEntity.ok(ownerCommentService.getOwnerComment(id));
     }
 
-    @PutMapping("/{id}/comments")
+    @PostMapping("/{id}/comments/update")
     public ResponseEntity<?> updateOwnerComment(@PathVariable int id,
-                                                @RequestBody String comment) throws Exception {
-        ownerCommentService.updateOwnerComment(id, comment);
+                                                @RequestBody OwnerCommentPostDto ownerCommentPostDto) throws Exception {
+        ownerCommentService.updateOwnerComment(id, ownerCommentPostDto);
         return ResponseEntity.ok(null);
     }
 

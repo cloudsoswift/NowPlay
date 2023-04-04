@@ -6,7 +6,9 @@ type Props = {
 export const PlacesPage = (props: Props) => {
   return (
     <div>
-      <Map />
+      <React.Suspense fallback={<div>...Loading</div>}>
+        <Map />
+      </React.Suspense>
     </div>
   );
 };

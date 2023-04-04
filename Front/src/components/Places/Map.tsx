@@ -1,60 +1,59 @@
 import { useEffect, useState } from "react";
-import { atom } from "recoil";
+import { atom, selector, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Filter } from "./Filter/Filter";
 import { PlaceCardSheet } from "./PlaceCard";
 import { IoReorderThree } from "react-icons/io5";
-import type { TFilter, TSubCategory } from "./Types";
-import * as json from "./Filter/categories.json";
 import { AnimatePresence } from "framer-motion";
+import api from "../../utils/api/api";
 import Title from "../HomePage/Title";
 import styled from "styled-components";
+import { QGetNearbyStoreList, TNearbyStoreInput, TFilter } from "../../utils/api/graphql";
+import { TMainCategory, TSubCategory } from "./Types";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import Pin2 from "../../svg/pin2.svg";
 import { useLocation } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
 import { SelectableCategory } from "./Filter/SelectableCategories";
 
 type Props = {};
 
+export const categoriesSelector = selector<Array<TMainCategory>>({
+  key: "categoriesSelector",
+  get: async ({get})=>{
+    return await (await api.get("place/categories")).data;
+  }
+})
 export const filterState = atom<TFilter>({
   key: "filterState",
   default: {
-    categories: json.categories.map((C) => {
-      return {
-        ...C,
-        type: "Main",
-        subCategory: C.subCategory.map((subC) => {
-          return {
-            ...subC,
-            type: "Sub",
-          };
-        }),
-      };
-    }),
-    selectedCategories: [],
-    businessTime: "",
-    distance: 0,
+    mainHobby: [],
+    subcategory: [],
+    latitude: 36.1078224,
+    longitude: 128.4177517,
+    maxDistance: 10,
+    count: 1,
   },
 });
 export const Map = (props: Props) => {
   const [isFilterShown, setIsFilterShown] = useState(false);
   const [isModalShown, setIsModalShown] = useState(false);
-  const [isCardlistShown, setIsCardlistShown] = useState(false);
   const [markerList, setMarkerList] = useState<Array<naver.maps.Marker>>([]);
+  const [mapInstance, setMapInstance] = useState<naver.maps.Map>();
+  const [filterValue, setFilterValue] = useRecoilState(filterState);
+  const categoryList = useRecoilValue(categoriesSelector);
+  const recentAddressData: string[] = recentAddressStore();
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [isOpenModalBox, setIsOpenModalBox] = useState<boolean>(false);
+  const [selectAddress, setSelectAddress] = useState<string | null>(null);
+  const [selectLocation, setSelectLocation] = useState<
+  { latitude: number; longitude: number } | string
+  >("");
+
   function recentAddressStore(): string[] {
     const recentAddressJSON = localStorage.getItem("RecentAddressSearch");
     if (recentAddressJSON === null) return [];
     return JSON.parse(recentAddressJSON);
   }
-  const recentAddressData: string[] = recentAddressStore();
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [isOpenModalBox, setIsOpenModalBox] = useState<boolean>(false);
   const [isModalState, setIsModalState] = useState<boolean>(false);
-  const [isAddress, setIsAddress] = useState<boolean>(false);
-  const [selectAddress, setSelectAddress] = useState<string | null>(null);
-  const defaultLocation = { latitude: 36.1078224, longitude: 128.4177517 };
-  const [selectLocation, setSelectLocation] = useState<
-    { latitude: number; longitude: number } | string
-  >("");
 
   const setFilter = useSetRecoilState(filterState);
   const location = useLocation();
@@ -65,11 +64,11 @@ export const Map = (props: Props) => {
         setFilter((prevFilter) => {
           return {
             ...prevFilter,
-            selectedCategories: prevFilter.selectedCategories.some(
-              (subC) => subC.category === subCategory.category
+            selectedCategories: prevFilter.subcategory.some(
+              (subC) => subC.subcategory === subCategory.category
             )
-              ? [...prevFilter.selectedCategories]
-              : [...prevFilter.selectedCategories, subCategory],
+              ? [...prevFilter.subcategory]
+              : [...prevFilter.subcategory, subCategory],
           };
         });
       });
@@ -86,9 +85,6 @@ export const Map = (props: Props) => {
       setTimeout(() => setIsFilterShown(set), 500);
     }
   };
-  const handleCardListToggle = () => {
-    setIsCardlistShown((prevState) => !prevState);
-  };
 
   function searchAddressToCoordinate(address: string) {
     naver.maps.Service.geocode(
@@ -103,15 +99,61 @@ export const Map = (props: Props) => {
           return alert("올바른 주소를 입력해주세요.");
         }
         const item = response.v2.addresses[0];
-        setSelectLocation({
-          latitude: Number(item.y),
-          longitude: Number(item.x),
-        });
+        setFilterValue((prevFilter)=>{
+          return {
+            ...prevFilter,
+            latitude: Number(item.y),
+            longitude: Number(item.x),
+          }
+        })
       }
     );
   }
+  const fetchCardList = async({pageParam = 1}) => {
+    const query = QGetNearbyStoreList;
+    const variables: {"condition": TNearbyStoreInput} = {
+      condition: {
+        ...filterValue,
+        count: pageParam,
+        mainHobby: [],
+        subcategory: [],
+        ...(filterValue.mainHobby.length + filterValue.subcategory.length > 0 && {
+          mainHobby: filterValue.mainHobby.map((mainH)=>mainH.mainCategory),
+          subcategory: filterValue.subcategory.map((subC)=>subC.subcategory),
+        }),
+        // 필터가 선택되지 않은 상태면 모든 카테고리 검색.
+        ...(filterValue.mainHobby.length + filterValue.subcategory.length === 0 && {
+          mainHobby: categoryList.map((mainH)=>mainH.mainCategory),
+        })
+      }
+    };
+    console.log(variables);
+    const data = (await api.post("/graphql", {
+      query,
+      variables,
+    })).data?.data;
+    return data.getNearbyStoreList ? data.getNearbyStoreList : [] ;
+  }
+  const result = useInfiniteQuery({
+    queryKey: ["getReviewList"],
+    queryFn: fetchCardList,
+    getNextPageParam: (lastPage, pages)=> {console.log(lastPage, pages);
+     return pages.length + 1 < lastPage.totalCount/20 ? pages.length + 1 : undefined},
+    staleTime: 20000
+  });
+  console.log(result.isFetching);
+  
 
   useEffect(() => {
+    if (!isOpenModal) {
+      mapInstance?.setCenter(new naver.maps.LatLng(
+        filterValue.latitude, 
+        filterValue.longitude))
+    } 
+  }, [isOpenModal, filterValue.latitude, filterValue.longitude]);
+
+  useEffect(()=>{
+    // 최근 주소 기록 없으면, 주소 입력하도록 설정.
     if (recentAddressData.length === 0) {
       setTimeout(() => {
         alert("주소를 설정해 주세요");
@@ -121,33 +163,18 @@ export const Map = (props: Props) => {
     } else {
       searchAddressToCoordinate(recentAddressData[0]);
     }
-  }, []);
-
-  useEffect(() => {
-    if (!isOpenModal) {
-      if (isModalState) {
-        handleFilterToggle(true);
-      }
-      if (typeof selectLocation !== "string") {
-        const map = new window.naver.maps.Map("map", {
-          center: new window.naver.maps.LatLng(
-            selectLocation.latitude,
-            selectLocation.longitude
-          ),
-          zoom: 10,
-        });
-      } else {
-        // setIsAddress(true)
-        // const map = new window.naver.maps.Map("map", {
-        //   center: new window.naver.maps.LatLng(
-        //     defaultLocation.latitude,
-        //     defaultLocation.longitude
-        //   ),
-        //   zoom: 10,
-        // });
-      }
-    }
-  }, [isOpenModal, selectLocation]);
+    
+    if(mapInstance) return;
+    setMapInstance(
+      new window.naver.maps.Map("map", {
+        center: new window.naver.maps.LatLng(
+          filterValue.latitude,
+          filterValue.longitude,
+        ),
+        zoom: 18,
+      })
+    )
+  }, [])
 
   return (
     <>
@@ -174,6 +201,7 @@ export const Map = (props: Props) => {
           onClose={handleFilterToggle}
           isFilterShown={isFilterShown}
           isModalShown={isModalShown}
+          onSubmit={result.refetch}
           setIsOpenModal={setIsOpenModal}
           setIsOpenModalBox={setIsOpenModalBox}
           recentAddress={recentAddressData}
@@ -197,7 +225,7 @@ export const Map = (props: Props) => {
         >
         카드리스트 호출 버튼
       </button> */}
-      <PlaceCardSheet />
+      <PlaceCardSheet result={result}/>
     </>
   );
 };

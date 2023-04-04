@@ -8,6 +8,7 @@ import * as json from "./Filter/categories.json";
 import { AnimatePresence } from "framer-motion";
 import Title from "../HomePage/Title";
 import styled from "styled-components";
+import Pin2 from "../../svg/pin2.svg";
 import { useLocation } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { SelectableCategory } from "./Filter/SelectableCategories";
@@ -47,6 +48,8 @@ export const Map = (props: Props) => {
   const recentAddressData: string[] = recentAddressStore();
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [isOpenModalBox, setIsOpenModalBox] = useState<boolean>(false);
+  const [isModalState, setIsModalState] = useState<boolean>(false);
+  const [isAddress, setIsAddress] = useState<boolean>(false);
   const [selectAddress, setSelectAddress] = useState<string | null>(null);
   const defaultLocation = { latitude: 36.1078224, longitude: 128.4177517 };
   const [selectLocation, setSelectLocation] = useState<
@@ -75,6 +78,7 @@ export const Map = (props: Props) => {
 
   const handleFilterToggle = (set: boolean) => {
     if (set) {
+      setIsModalState(set);
       setIsModalShown(set);
       setIsFilterShown(set);
     } else {
@@ -121,6 +125,9 @@ export const Map = (props: Props) => {
 
   useEffect(() => {
     if (!isOpenModal) {
+      if (isModalState) {
+        handleFilterToggle(true);
+      }
       if (typeof selectLocation !== "string") {
         const map = new window.naver.maps.Map("map", {
           center: new window.naver.maps.LatLng(
@@ -130,13 +137,14 @@ export const Map = (props: Props) => {
           zoom: 10,
         });
       } else {
-        const map = new window.naver.maps.Map("map", {
-          center: new window.naver.maps.LatLng(
-            defaultLocation.latitude,
-            defaultLocation.longitude
-          ),
-          zoom: 10,
-        });
+        // setIsAddress(true)
+        // const map = new window.naver.maps.Map("map", {
+        //   center: new window.naver.maps.LatLng(
+        //     defaultLocation.latitude,
+        //     defaultLocation.longitude
+        //   ),
+        //   zoom: 10,
+        // });
       }
     }
   }, [isOpenModal, selectLocation]);
@@ -166,10 +174,14 @@ export const Map = (props: Props) => {
           onClose={handleFilterToggle}
           isFilterShown={isFilterShown}
           isModalShown={isModalShown}
+          setIsOpenModal={setIsOpenModal}
+          setIsOpenModalBox={setIsOpenModalBox}
+          recentAddress={recentAddressData}
         />
       )}
       {/* </AnimatePresence> */}
-      <div id="map" className="w-screen h-[calc(100vh-122px)] -z-0"></div>
+
+      <div id="map" className="w-screen h-[calc(100vh-122px)] -z-0" />
       <button
         className="absolute top-12 left-1/2 -translate-x-1/2 border-2 border-black bg-white rounded-full"
         onClick={(e: React.MouseEvent) => {
@@ -191,6 +203,7 @@ export const Map = (props: Props) => {
 };
 
 const TitleBox = styled.div`
+  top: 42px;
   position: fixed;
   width: 100%;
   z-index: 9995;

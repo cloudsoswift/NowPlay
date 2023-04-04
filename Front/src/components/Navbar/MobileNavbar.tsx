@@ -71,7 +71,7 @@ const NavBox = styled.nav`
   background-color: var(--gray-color-light);
   width: 100vw;
   height: 80px;
-  z-index: 100;
+  z-index: 10001;
   justify-content: space-evenly;
 `;
 
@@ -82,7 +82,7 @@ const NavStyle = styled(NavLink)`
   align-items: center;
   color: black;
   width: 20vw;
-  z-index: 100;
+  z-index: 10001;
 
   svg {
     transition: 0.1s;
@@ -112,7 +112,7 @@ const Indicatior = styled.div<{ movement: number }>`
   left: 0px;
   height: 80px;
   width: 20vw;
-  z-index: 99;
+  z-index: 10000;
   background-color: var(--primary-color);
   border-radius: 10px;
   /* border: var(--gray-color-light) 17px solid; */

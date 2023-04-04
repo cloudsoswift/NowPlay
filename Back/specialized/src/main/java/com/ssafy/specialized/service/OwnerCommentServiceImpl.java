@@ -56,7 +56,7 @@ public class OwnerCommentServiceImpl implements OwnerCommentService{
         if (optOwnerComment.isPresent()){
             ownerComment = optOwnerComment.get();
         }
-        if (ownerComment.getContent() != null) {
+        if (ownerCommentPostDto.getComment() != null) {
             ownerComment.setContent(ownerCommentPostDto.getComment());
             ownerComment.setCreatedAt(LocalDateTime.now());
             ownerCommentRepository.save(ownerComment);

@@ -238,16 +238,17 @@ public class StoreServiceImpl implements StoreService {
             store = optStore.get();
         }
 
-        try {
-            String[] urlarr = updateStoreDto.getImagesUrl().split("/");
-            String url = urlarr[urlarr.length-1];
-            s3.deleteObject(bucketName, url);
-        } catch (AmazonS3Exception e) {
-            e.printStackTrace();
-        } catch (SdkClientException e) {
-            e.printStackTrace();
-        }
+
         if (updateStoreDto.getMultipartFiles().size() > 0) {
+            try {
+                String[] urlarr = store.getImagesUrl().split("/");
+                String url = urlarr[urlarr.length-1];
+                s3.deleteObject(bucketName, url);
+            } catch (AmazonS3Exception e) {
+                e.printStackTrace();
+            } catch (SdkClientException e) {
+                e.printStackTrace();
+            }
             List<StoreImage> storeImageList = storeImageRepository.findAllByStore(store);
             for (StoreImage storeImage : storeImageList) {
                 try {

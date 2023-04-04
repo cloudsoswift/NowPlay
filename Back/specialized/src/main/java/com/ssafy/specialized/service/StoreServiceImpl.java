@@ -247,16 +247,18 @@ public class StoreServiceImpl implements StoreService {
         } catch (SdkClientException e) {
             e.printStackTrace();
         }
-        List<StoreImage> storeImageList = storeImageRepository.findAllByStore(store);
-        for (StoreImage storeImage : storeImageList) {
-            try {
-                s3.deleteObject(bucketName, storeImage.getStoreImageFileName());
-            } catch (AmazonS3Exception e) {
-                e.printStackTrace();
-            } catch (SdkClientException e) {
-                e.printStackTrace();
+        if (updateStoreDto.getMultipartFiles().size() > 0) {
+            List<StoreImage> storeImageList = storeImageRepository.findAllByStore(store);
+            for (StoreImage storeImage : storeImageList) {
+                try {
+                    s3.deleteObject(bucketName, storeImage.getStoreImageFileName());
+                } catch (AmazonS3Exception e) {
+                    e.printStackTrace();
+                } catch (SdkClientException e) {
+                    e.printStackTrace();
+                }
+                storeImageRepository.delete(storeImage);
             }
-            storeImageRepository.delete(storeImage);
         }
         Optional<HobbyMain> optionalHobbyMain = hobbyMainRepository.findByMainCategory(updateStoreDto.getMainCategory());
         HobbyMain hobbyMain = null;

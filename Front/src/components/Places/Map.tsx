@@ -7,7 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import api from "../../utils/api/api";
 import Title from "../HomePage/Title";
 import styled from "styled-components";
-import { QGetNearbyStoreList, TNearbyStoreInput, TFilter } from "../../utils/api/graphql";
+import { QGetNearbyStoreList, TNearbyStoreInput, TFilter, THobbyMainCategory, THobbySubCategory } from "../../utils/api/graphql";
 import { TMainCategory, TSubCategory } from "./Types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Pin2 from "../../svg/pin2.svg";
@@ -16,7 +16,7 @@ import { SelectableCategory } from "./Filter/SelectableCategories";
 
 type Props = {};
 
-export const categoriesSelector = selector<Array<TMainCategory>>({
+export const categoriesSelector = selector<Array<THobbyMainCategory>>({
   key: "categoriesSelector",
   get: async ({get})=>{
     return await (await api.get("place/categories")).data;
@@ -60,12 +60,13 @@ export const Map = (props: Props) => {
 
   useEffect(() => {
     if (location.state) {
-      location.state.map((subCategory: TSubCategory) => {
+      console.log(location.state);
+      location.state.map((subCategory: THobbySubCategory) => {
         setFilter((prevFilter) => {
           return {
             ...prevFilter,
-            selectedCategories: prevFilter.subcategory.some(
-              (subC) => subC.subcategory === subCategory.category
+            subcategory: prevFilter.subcategory.some(
+              (subC) => subC.subcategory === subCategory.subcategory
             )
               ? [...prevFilter.subcategory]
               : [...prevFilter.subcategory, subCategory],
@@ -135,7 +136,7 @@ export const Map = (props: Props) => {
     return data.getNearbyStoreList ? data.getNearbyStoreList : [] ;
   }
   const result = useInfiniteQuery({
-    queryKey: ["getReviewList"],
+    queryKey: ["getCardList"],
     queryFn: fetchCardList,
     getNextPageParam: (lastPage, pages)=> {console.log(lastPage, pages);
      return pages.length + 1 < lastPage.totalCount/20 ? pages.length + 1 : undefined},

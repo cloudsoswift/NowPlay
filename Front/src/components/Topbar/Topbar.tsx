@@ -22,7 +22,7 @@ const Topbar = () => {
 export default Topbar;
 
 const TopbarBox = styled.div`
-  z-index: 2;
+  z-index: 10000;
   position: fixed;
   width: 100vw;
   top: 0px;

@@ -1,6 +1,7 @@
 package com.ssafy.specialized.service;
 
 import com.ssafy.specialized.domain.dto.ownerComment.OwnerCommentDto;
+import com.ssafy.specialized.domain.dto.ownerComment.OwnerCommentPostDto;
 import com.ssafy.specialized.domain.entity.OwnerComment;
 import com.ssafy.specialized.domain.entity.Review;
 import com.ssafy.specialized.repository.OwnerCommentRepository;
@@ -24,7 +25,7 @@ public class OwnerCommentServiceImpl implements OwnerCommentService{
     private final OwnerCommentRepository ownerCommentRepository;
 
     @Override
-    public void writeOwnerComment(int reviewPk, String comment) {
+    public void writeOwnerComment(int reviewPk, OwnerCommentPostDto ownerCommentPostDto) {
         Optional<Review> optReview = reviewRepository.findById(reviewPk);
         Review review = null;
         if (optReview.isPresent()){
@@ -33,7 +34,7 @@ public class OwnerCommentServiceImpl implements OwnerCommentService{
         OwnerComment ownerComment = OwnerComment.builder()
                 .review(review)
                 .createdAt(LocalDateTime.now())
-                .content(comment)
+                .content(ownerCommentPostDto.getComment())
                 .build();
         ownerCommentRepository.save(ownerComment);
     }
@@ -49,13 +50,13 @@ public class OwnerCommentServiceImpl implements OwnerCommentService{
     }
 
     @Override
-    public void updateOwnerComment(int ownerCommentPk, String comment) {
+    public void updateOwnerComment(int ownerCommentPk, OwnerCommentPostDto ownerCommentPostDto) {
         Optional<OwnerComment> optOwnerComment = ownerCommentRepository.findById(ownerCommentPk);
         OwnerComment ownerComment = null;
         if (optOwnerComment.isPresent()){
             ownerComment = optOwnerComment.get();
         }
-        ownerComment.setContent(comment);
+        ownerComment.setContent(ownerCommentPostDto.getComment());
         ownerComment.setCreatedAt(LocalDateTime.now());
         ownerCommentRepository.save(ownerComment);
     }

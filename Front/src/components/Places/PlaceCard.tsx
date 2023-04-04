@@ -8,11 +8,14 @@ import { motion } from "framer-motion";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { StarRating } from "./StarRating";
 import { BsBookmarkHeart, BsBookmarkHeartFill } from 'react-icons/bs'
-import { UseInfiniteQueryResult } from "@tanstack/react-query";
+import { InfiniteData, QueryObserverResult, RefetchOptions, RefetchQueryFilters, UseInfiniteQueryResult, useMutation, useQuery } from "@tanstack/react-query";
 import { TStoreOutput, TStoreOutputWithTotalCount } from "../../utils/api/graphql";
+import api from "../../utils/api/api";
+import { queryClient } from "../../main";
 
 type PlaceCardProps = {
   place: TStoreOutput;
+  onBookmark: <TPageData>(options?: RefetchOptions & RefetchQueryFilters<TPageData>) => Promise<QueryObserverResult>;
 };
 
 export const PlaceCard2 = ({ place }: PlaceCardProps) => {
@@ -21,7 +24,38 @@ export const PlaceCard2 = ({ place }: PlaceCardProps) => {
     navigate(`${place.store.idx}`);
   };
   const percentRating = place.averageRating * 20;
-
+  const toggleBookmark = async () => {
+    return (await api.post(`place/${place.store.idx}/favorite`)).status === 200 ? true : false;
+  }
+  const toggleBookmarkMutation = useMutation({
+    mutationFn: toggleBookmark,
+    onMutate: async () => {
+      await queryClient.cancelQueries({queryKey: ["getCardList"]});
+      const previousList = useQuery(["getCardList"]);
+      console.log("prev",previousList);
+      if(previousList){
+        queryClient.setQueryData<InfiniteData<Array<TStoreOutputWithTotalCount>>>(["getCardList"], (oldData)=>{
+          const newData = oldData?.pages.map(page =>
+            page.map(item => {
+              return {
+                ...item,
+                storeOutput: item.storeOutput.map((st)=>({
+                  ...st,
+                  isBookmark: !st.isBookmark,
+                }))
+              }
+            })
+          );
+          return {
+            ...oldData,
+            pages: newData,
+          };
+        })
+      }
+      return () => queryClient.setQueryData(["getCardList"], previousList);
+    },
+    onSettled: () => queryClient.invalidateQueries(["getCardList"])
+  })
   return (
     <CardBox onClick={handleClick}>
       <img src={`${place.store.imagesUrl}`} />
@@ -29,7 +63,7 @@ export const PlaceCard2 = ({ place }: PlaceCardProps) => {
         <Top>
           <Name>{place.store.name}</Name>
           <Category>{place.store.subcategory.subcategory}</Category>
-          <BookmarkDiv>
+          <BookmarkDiv onClick={(e)=>{e.preventDefault; e.stopPropagation; toggleBookmarkMutation.mutate()}} className="z-30">
             {place.isBookmark ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
           </BookmarkDiv>
         </Top>
@@ -157,7 +191,7 @@ export const BOTTOM_SHEET_HEIGHT = window.innerHeight; // 바텀시트의 세로
 
 export const PlaceCardSheet = ({ result }: PlaceCardsProps) => {
   const { sheet, content } = useBottomSheet();
-  const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status } = result;
+  const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, refetch } = result;
   useEffect(()=>{
     const handleTouchEnd = (e: TouchEvent) => {
       if(content.current?.scrollHeight === content.current!.scrollTop + content.current!.clientHeight){
@@ -183,8 +217,8 @@ export const PlaceCardSheet = ({ result }: PlaceCardsProps) => {
           <PlaceCard2 key={data.id} place={data.} />
         ))} */}
         {data?.pages.map((page)=>(
-          page.storeOutput.map((store)=>(
-            <PlaceCard2 key={store.store.idx} place={store} />
+          page.storeOutput?.map((store)=>(
+            <PlaceCard2 key={store.store.idx} place={store} onBookmark={refetch}/>
           ))
         ))}
       </div>

@@ -15,8 +15,8 @@ export const PopupImage = ({ imageURL, imageClass }: Props) => {
         className="fixed inset-0 bg-black bg-opacity-25 z-10"
       >
         <div className="flex min-h-full items-center justify-center p-4 text-center">
-          <Dialog.Panel className="w-full max-w-md transform overflow-hidden bg-white text-left align-middle shadow-xl">
-            <img src={`${imageURL}`} className="w-full h-full" />
+          <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl">
+            <img src={`${imageURL}`} className="w-full h-full p-8" />
           </Dialog.Panel>
         </div>
       </Dialog>

@@ -1,9 +1,9 @@
 import { GrDocumentText, GrMapLocation } from "react-icons/gr";
 import { ImPhone } from "react-icons/im";
-import { TStoreDetail } from "../Types";
+import { TPlaceDetail } from "../Types";
 import { HiOutlineGlobeAlt } from "react-icons/hi";
 type Props = {
-  placeDetail: TStoreDetail;
+  placeDetail: TPlaceDetail;
 };
 export const PlaceDetailInfo = ({ placeDetail }: Props) => {
   return (
@@ -13,7 +13,7 @@ export const PlaceDetailInfo = ({ placeDetail }: Props) => {
       </div>
       <div>
         영업시간{" "}
-        {placeDetail.businessHourList.map((a) => (
+        {placeDetail.businessTimes.map((a) => (
           <div>a</div>
         ))}
       </div>
@@ -27,15 +27,15 @@ export const PlaceDetailInfo = ({ placeDetail }: Props) => {
       </div>
       <div className="flex p-2 text-lg items-center">
         <GrDocumentText className="mr-2 text-lg" />
-        {placeDetail.explanation}
+        {placeDetail.description}
       </div>
       <div>
-        {/* <div className="text-center">사업장 사진들</div>
+        <div className="text-center">사업장 사진들</div>
         <div className="grid grid-cols-2">
-          {placeDetail..map((a) => (
+          {placeDetail.imageURLs.map((a) => (
             <div>a</div>
           ))}
-        </div> */}
+        </div>
       </div>
     </div>
   );

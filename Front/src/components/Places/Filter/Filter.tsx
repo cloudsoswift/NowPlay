@@ -7,9 +7,6 @@ import { SelectableCategories } from "./SelectableCategories";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import styled, { keyframes } from "styled-components";
-import { useSetRecoilState } from "recoil";
-import { filterState } from "../Map";
-import { TFilter } from "../../../utils/api/graphql";
 import Pin2 from "../../../svg/pin2.svg";
 
 type Props = {
@@ -17,7 +14,6 @@ type Props = {
   onClose: (set: boolean) => void;
   isFilterShown: boolean;
   isModalShown: boolean;
-  onSubmit: Function;
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   setIsOpenModalBox: React.Dispatch<React.SetStateAction<boolean>>;
   recentAddress: string[];
@@ -29,14 +25,50 @@ export const Filter = ({
   setIsOpenModal,
   setIsOpenModalBox,
   isModalShown,
-  onSubmit,
   recentAddress,
 }: Props) => {
-  const setFilterValue = useSetRecoilState(filterState);
   const handleApplyFilter = () => {
-    onSubmit();
-    onClose(false);
-  }
+    const query = `
+    query film($filmID: ID!){
+      f1: film(filmID: $filmID) {
+        ...F
+        created
+        director
+        edited
+        episodeID
+        openingCrawl
+        producers
+        releaseDate
+      }
+      f2: film(filmID: $filmID) {
+        ...F
+      }
+    }
+    fragment F on Film {
+      id
+      title
+    }
+    `;
+    const variables = {
+      filmID: 1,
+    };
+    axios
+      .post(
+        "https://swapi-graphql.netlify.app/.netlify/functions/index",
+        {
+          query,
+          variables,
+        },
+        {
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+      });
+  };
   return (
     <FilterModalBox>
       <FilterModalContent isModalShown={isModalShown}>
@@ -65,9 +97,7 @@ export const Filter = ({
           </div>
         </IsAddress>
         <Categories />
-        <React.Suspense fallback={<div>... Loading</div>}>
-          <SelectableCategories />
-        </React.Suspense>
+        <SelectableCategories />
         <DistanceSlider />
         {/* <BusinessTimeSelector /> */}
         <ButtonArea onClick={handleApplyFilter}>적용</ButtonArea>

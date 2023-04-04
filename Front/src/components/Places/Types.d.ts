@@ -1,24 +1,26 @@
 type TFilter = {
-  categories: RecoilValueReadOnly<TMainCategory[]>,
+  categories: Array<TMainCategory>,
   selectedCategories: Array<TSubCategory>,
   businessTime: string,
   distance: Number,
 }
 type TCategoryType = TMainCategory | TSubCategory;
 type TMainCategory = {
-  idx: number;
-  mainCategory: string;
-  mainImageUrl: string;
-  subcategories?: Array<TSubCategory>
+  type: "Main"
+  // id: number,
+  category: string,
+  imageURL: string,
+  subCategory: Array<TSubCategory>
 }
 type TSubCategory = {
-  idx: number;
-  mainCategory: TMainCategory;
-  subcategory: string;
-  subcategoryImageUrl: string;
+  type: "Sub"
+  // id: number,
+  // TMainCategory: string,
+  category: string,
+  imageURL: string
 }
 
-type TBusinessHour = {
+type TBusinessTime = {
     day: number,
     openTime: string,
     closeTime: string,
@@ -28,15 +30,15 @@ type TBusinessHour = {
   
   type TReview = {
     id: number,
-    writer: object,
+    nickname: string,
     content: string,
-    rating: number,
-    createdAt: string,
-    reviewImageUrl: string
+    rate: number,
+    created_at: Date,
+    imageURL: string
   }
 
 type TPlaceCard = {
-  idx: number,
+  id: number,
   imageURL: string,
   name: string,
   subCategory: string,
@@ -47,38 +49,15 @@ type TPlaceCard = {
   isBookmark: boolean,
 }
 
-// type TPlaceDetail = TPlaceCard & {
-//   businessTimes: Array<TBusinessHour>,
-//   contactNumber: string,
-//   homepage: string,
-//   imageURLs: Array<string>,
-//   latitude: number,
-//   longitude: number,
-//   description: string,
-//   isClosedOnHolidays: boolean,
-// }
-
-type TStoreDetail = {
-  idx: number;
-  owner: object;
-  mainCategory: TMainCategory;
-  subcategory: TSubCategory;
-  name: string;
-  address: string;
-  contactNumber: string;
-  homepage: string;
-  imagesUrl: string;
-  explanation: string;
-  latitude: number;
-  longitude: number;
-  businessHourList: Array<TBusinessHour>;
-  averageRating: number;
-  closedOnHolidays: boolean;
-  faverite: boolean;
-}
-type TPosition = {
-  longitude: number,
+type TPlaceDetail = TPlaceCard & {
+  businessTimes: Array<TBusinessTime>,
+  contactNumber: string,
+  homepage: string,
+  imageURLs: Array<string>,
   latitude: number,
+  longitude: number,
+  description: string,
+  isClosedOnHolidays: boolean,
 }
 
-export type { TFilter, TMainCategory, TSubCategory, TBusinessHour, TReview, TPlaceCard, TStoreDetail, TPosition };
+export type { TFilter, TMainCategory, TSubCategory, TBusinessTime, TReview, TPlaceCard, TPlaceDetail };

@@ -41,7 +41,6 @@ export const Map = (props: Props) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [isOpenModalBox, setIsOpenModalBox] = useState<boolean>(false);
   const [selectAddress, setSelectAddress] = useState<string | null>(null);
-  const defaultLocation = { latitude: 36.1078224, longitude: 128.4177517 };
   const [selectLocation, setSelectLocation] = useState<
   { latitude: number; longitude: number } | string
   >("");
@@ -121,17 +120,11 @@ export const Map = (props: Props) => {
 
   useEffect(() => {
     if (!isOpenModal) {
-      if (typeof selectLocation !== "string") {
-        mapInstance?.setCenter(new naver.maps.LatLng(
-          selectLocation.latitude, 
-          selectLocation.longitude))
-      } else {
-        mapInstance?.setCenter(new naver.maps.LatLng(
-          defaultLocation.latitude, 
-          defaultLocation.longitude))
-      }
+      mapInstance?.setCenter(new naver.maps.LatLng(
+        filterValue.latitude, 
+        filterValue.longitude))
     } 
-  }, [isOpenModal, selectLocation]);
+  }, [isOpenModal, filterValue.latitude, filterValue.longitude]);
 
   useEffect(()=>{
     // 최근 주소 기록 없으면, 주소 입력하도록 설정.
@@ -149,8 +142,8 @@ export const Map = (props: Props) => {
     setMapInstance(
       new window.naver.maps.Map("map", {
         center: new window.naver.maps.LatLng(
-          defaultLocation.latitude,
-          defaultLocation.longitude
+          filterValue.latitude,
+          filterValue.longitude,
         ),
         zoom: 18,
       })

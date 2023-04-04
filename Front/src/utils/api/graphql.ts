@@ -74,27 +74,35 @@ query storeDetail($storeID: ID!) {
 `
 
 export const QGetRecommendStores = 
-`query getRecommendStores($latitude: Float, $longitude: Float) {
-  getRecommendByPosition(latitude: $latitude, longitude: $longitude) {
-    stores {
-      ...storesField
-    }
+`query searchStores($lat: Float, $lon: Float) {
+  storeRecommendationByCoordinate(lat: $lat,lon: $lon) {
+      store {
+          idx
+          name
+          subcategory {
+              subcategory
+          }
+          address
+      }
+      distance
+      reviewCount
+      averageRating
+      isBookmark
   }
-  getRecommendByCategory() {
-    stores {
-      ...storesField
-    }
+  getStoreListByUserHobby(lat: $lat, lon: $lon) {
+      store {
+          idx
+          name
+          subcategory {
+              subcategory
+          }
+          address
+      }
+      distance
+      reviewCount
+      averageRating
+      isBookmark
   }
-}
-fragment storesField on StoreSummary {
-  idx
-  name
-  subcategory
-  address
-  distance
-  reviewCount
-  averageRating
-  isBookmark
 }
 `
 
@@ -238,7 +246,7 @@ interface TStoreOutput {
 }
 
 type TStoreOutputWithTotalCount = {
-  storeOutput: [TStoreOutput]
+  storeOutput: Array<TStoreOutput>
   totalCount: number
 }
 

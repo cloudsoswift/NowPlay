@@ -80,8 +80,9 @@ export const ReviewInfo = forwardRef((props: ReviewInfoProps, ref: React.Forward
         </div>
       </Link>
       <div className="space-y-4">
+        {data?.pages?.at(0)?.content == false && <div>리뷰가 없습니다...</div>}
         {data?.pages.map((page) => (
-          page.content.map((reviewList: Array<any>)=>{
+          page?.content?.map((reviewList: Array<any>)=>{
             const ReviewData = reviewList.at(0);
             const {reviewImageUrl} = reviewList.at(1) !== null ? reviewList.at(1) : {reviewImageUrl: ""};
             const review = {

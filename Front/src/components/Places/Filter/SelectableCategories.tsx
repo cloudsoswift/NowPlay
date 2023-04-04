@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-<<<<<<< HEAD
 import { categoriesSelector, filterState } from "../Map";
 import { TFilter, THobbyMainCategory, THobbySubCategory } from "../../../utils/api/graphql";
-=======
-import { filterState } from "../Map";
-import { TFilter, TMainCategory, TSubCategory } from "../Types";
-import { useLocation } from "react-router-dom";
->>>>>>> 5d4ef9794eec7b2d6f05e006430b3c2ad306bb9f
 
 type sCategoryProps = {
   category: THobbyMainCategory | THobbySubCategory;

@@ -28,6 +28,7 @@ export const Filter = ({
   const setFilterValue = useSetRecoilState(filterState);
   const handleApplyFilter = () => {
     onSubmit();
+    onClose(false);
   }
   return (
     <FilterModalBox>

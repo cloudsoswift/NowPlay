@@ -55,7 +55,7 @@ const ButtonArea = styled.div`
   width: 80%;
   height: 40px;
   background-color: var(--primary-color);
-  font-size: var(--title-2);
+  font-size: var(--caption);
   color: var(--body-color);
   line-height: 43px;
   border-radius: 20px;

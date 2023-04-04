@@ -17,8 +17,7 @@ const OwnerReviewPage = () => {
       },
       {
         getNextPageParam: (lastPage, pages) => {
-          const NextPage = lastPage.number + 1;
-          return NextPage;
+          return lastPage.number + 1;
         },
       }
     );
@@ -46,16 +45,14 @@ const OwnerReviewPage = () => {
     }
   }, [fetchNextPage, hasNextPage, handleObserver]);
 
-  console.log(data)
-
   return (
     <>
       <ReviewContainer>
         {isSuccess && data ? (
           data.pages.map((page) => {
-            return page.content.map((review: any) => {
+            return page.content.map((review: any, index: number) => {
               {
-                return <ReviewCard review={review}></ReviewCard>;
+                return <ReviewCard review={review} key={index}></ReviewCard>;
               }
             });
           })

@@ -72,7 +72,6 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public StoreDto getStoreDetail(int Storeid) {
-        System.out.println("2");
         String username = SecurityUtil.getLoginUsername();
         User user = userRepository.findByName(username);
         Optional<Store> optstore = storeRepository.findById(Storeid);
@@ -101,7 +100,14 @@ public class StoreServiceImpl implements StoreService {
         } catch (Exception e) {
         }
         storeDto.setFaverite(bookmarkRepository.existsAllByStoreAndUser(store, user));
-        System.out.println("3");
+        List<String> list = new ArrayList<>();
+        List<StoreImage> storeImageList = storeImageRepository.findAllByStore(store);
+        if (storeImageList.size() >=1 ){
+            for (StoreImage e : storeImageList) {
+                list.add(e.getStoreImageUrl());
+            }
+        }
+        storeDto.setStoreImageList(list);
         return storeDto;
     }
 
@@ -231,6 +237,16 @@ public class StoreServiceImpl implements StoreService {
         if (optStore.isPresent()) {
             store = optStore.get();
         }
+
+        try {
+            String[] urlarr = updateStoreDto.getImagesUrl().split("/");
+            String url = urlarr[urlarr.length-1];
+            s3.deleteObject(bucketName, url);
+        } catch (AmazonS3Exception e) {
+            e.printStackTrace();
+        } catch (SdkClientException e) {
+            e.printStackTrace();
+        }
         List<StoreImage> storeImageList = storeImageRepository.findAllByStore(store);
         for (StoreImage storeImage : storeImageList) {
             try {
@@ -260,8 +276,6 @@ public class StoreServiceImpl implements StoreService {
         store.setHomepage(updateStoreDto.getHomepage());
         store.setImagesUrl(updateStoreDto.getImagesUrl());
         store.setExplanation(updateStoreDto.getExplanation());
-        store.setLatitude(updateStoreDto.getLatitude());
-        store.setLongitude(updateStoreDto.getLongitude());
         store.setClosedOnHolidays(updateStoreDto.isClosedOnHolidays());
 
         if (updateStoreDto.getMultipartFiles().size() > 0) {
@@ -273,7 +287,7 @@ public class StoreServiceImpl implements StoreService {
             String newfilePath = "/" + newName1;
             try {
                 s3.putObject(bucketName, newName1, new File(newfilePath));
-                s3.setObjectAcl(bucketName, newName1, CannedAccessControlList.PublicRead);
+                s3.setObjectAcl(bucketName, newName1, CannedAccessControlList.PublicReadWrite);
                 System.out.format("Object %s has been created.\n", newName1);
                 store.setImagesUrl("https://kr.object.ncloudstorage.com/d110/store/" + newName1);
             } catch (AmazonS3Exception e) {
@@ -306,15 +320,20 @@ public class StoreServiceImpl implements StoreService {
             }
         }
         storeRepository.save(store);
-
+        List<BusinessHour> businessHourList = businessHourRepository.findAllByStore(store);
+        if (businessHourList.size() >= 1) {
+            for (BusinessHour businessHour : businessHourList) {
+                businessHourRepository.delete(businessHour);
+            }
+        }
         for (BusinessHourDto businessHourDto : updateStoreDto.getBusinessHourDtoList()) {
             BusinessHour businessHour = BusinessHour.builder()
                     .store(store)
                     .dayOfWeek(businessHourDto.getDayOfWeek())
-                    .openAt(businessHourDto.getOpen())
-                    .closeAt(businessHourDto.getClose())
+                    .open(businessHourDto.getOpen())
+                    .close(businessHourDto.getClose())
                     .reservationInterval(businessHourDto.getReservationInterval())
-                    .isDayOff(businessHourDto.isStoreHoliday())
+                    .storeHoliday(businessHourDto.isStoreHoliday())
                     .build();
             businessHourRepository.save(businessHour);
         }

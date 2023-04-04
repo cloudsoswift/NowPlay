@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+<<<<<<< HEAD
 import { categoriesSelector, filterState } from "../Map";
 import { TFilter, THobbyMainCategory, THobbySubCategory } from "../../../utils/api/graphql";
+=======
+import { filterState } from "../Map";
+import { TFilter, TMainCategory, TSubCategory } from "../Types";
+import { useLocation } from "react-router-dom";
+>>>>>>> 5d4ef9794eec7b2d6f05e006430b3c2ad306bb9f
 
 type sCategoryProps = {
   category: THobbyMainCategory | THobbySubCategory;
@@ -20,7 +26,7 @@ export const SelectableCategory = ({
   category,
   id,
   onClick,
-  className
+  className,
 }: sCategoryProps) => {
   const handleSelectCategory = () => {
     if (isMainCategory(category)) {
@@ -48,7 +54,7 @@ export const SelectableCategory = ({
   return (
     <div
       onClick={handleSelectCategory}
-      className={ `grid text-center justify-center p-1 ${className} transition-all duration-300`}
+      className={`grid text-center justify-center p-1 ${className} transition-all duration-300`}
     >
       { isMainCategory(category) ? (
         <>
@@ -67,12 +73,20 @@ export const SelectableCategory = ({
 };
 
 type sCategoriesProps = {};
-const unSelectedCategoryClass = "bg-[var(--body-color)] m-1 border-b-4 border-b-[var(--body-color)]";
-const selectedCategoryClass = "bg-[var(--body-color)] m-1 border-b-4 border-b-[var(--primary-color)]";
+const unSelectedCategoryClass =
+  "bg-[var(--body-color)] m-1 border-b-4 border-b-[var(--body-color)]";
+const selectedCategoryClass =
+  "bg-[var(--body-color)] m-1 border-b-4 border-b-[var(--primary-color)]";
+
 export const SelectableCategories = (props: sCategoriesProps) => {
   const [ {subcategory}, setFilter] = useRecoilState(filterState);
   const [subCategories, setSubcategories] = useState<subCategoryList>();
   const categoryList = useRecoilValue(categoriesSelector);
+
+  // useEffect(() => {
+  //   console.log("메인스테이트", location.state);
+  //   console.log("selectedCategories", selectedCategories)
+  // }, selectedCategories);
 
   return (
     <div className="w-full p-1 grid grid-cols-3">
@@ -83,7 +97,11 @@ export const SelectableCategories = (props: sCategoriesProps) => {
             id={index}
             category={category}
             onClick={setSubcategories}
-            className={index === subCategories?.id ? selectedCategoryClass : unSelectedCategoryClass}
+            className={
+              index === subCategories?.id
+                ? selectedCategoryClass
+                : unSelectedCategoryClass
+            }
           />
         ) : (
           <>
@@ -92,7 +110,11 @@ export const SelectableCategories = (props: sCategoriesProps) => {
               id={index}
               category={category}
               onClick={setSubcategories}
-              className={index === subCategories?.id ? selectedCategoryClass : unSelectedCategoryClass}
+              className={
+                index === subCategories?.id
+                  ? selectedCategoryClass
+                  : unSelectedCategoryClass
+              }
             />
             {subCategories?.id !== undefined &&
               Math.floor(subCategories.id / 3) === Math.floor(index / 3) && (
@@ -106,7 +128,11 @@ export const SelectableCategories = (props: sCategoriesProps) => {
                         id={i}
                         category={sbC}
                         onClick={setFilter}
-                        className={ isSelected ? "m-1 bg-[var(--primary-color)] text-white [&>img]:invert transition-color" : "m-1"}
+                        className={
+                          isSelected
+                            ? "m-1 bg-[var(--primary-color)] text-white [&>img]:invert transition-color"
+                            : "m-1"
+                        }
                       />
                     );
                   })}

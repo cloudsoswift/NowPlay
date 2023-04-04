@@ -166,7 +166,7 @@ public class StoreServiceImpl implements StoreService {
         }
         List<NearbyStoreOutputInterface> storeList = null;
         if (isEmpty) {
-            storeList = storeRepository.getStoreListByPosition(nearbyStoreInput.getLatitude(), nearbyStoreInput.getLongitude(), nearbyStoreInput.getMaxDistance());
+            storeList = storeRepository.getNearbyStoreList(nearbyStoreInput.getLatitude(), nearbyStoreInput.getLongitude(), nearbyStoreInput.getMaxDistance(), 1);
         } else {
             storeList = storeRepository.getNearbyStoreList(mainIndex, subIndex, nearbyStoreInput.getLatitude(), nearbyStoreInput.getLongitude(), nearbyStoreInput.getMaxDistance(), 1);
         }

@@ -74,7 +74,7 @@ const OwnerReviewPage = () => {
           </NoContentCard>
         )}
         <div className='loader' ref={observerElem}>
-          {isFetchingNextPage && hasNextPage ? "Loading..." : ""}
+          {isFetchingNextPage && hasNextPage ? "" : ""}
         </div>
       </ReviewContainer>
     </>

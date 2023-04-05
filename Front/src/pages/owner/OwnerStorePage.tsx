@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery } from "@tanstack/react-query";
 import React, { useState, Suspense, useDeferredValue, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 // import StoreInfoForm from "../../components/OwnerForm/StoreForm/StoreInfoForm";
 // import StoreInfo from "../../components/OwnerPage/StoreInfo";
 import StoreInfoSuspense from "../../components/OwnerPage/StoreInfoSuspense";
+import { queryClient } from "../../main";
 import { ownerapi } from "../../utils/api/api";
 import { TinitialValues, TbusinessDay } from "../../utils/hooks/useForm";
 import { ownerInfoAtion } from "../../utils/recoil/userAtom";
@@ -19,6 +20,8 @@ const OwnerStorePageComp = () => {
   const [isUpdate, setIsUpdate] = useState(false);
 
   const ownerInfo = useRecoilValue(ownerInfoAtion);
+
+  console.log(queryClient)
 
   const { isLoading, data, isError, isSuccess } = useQuery<TinitialValues>(
     ["storeInfo"],
@@ -84,7 +87,7 @@ const OwnerStorePageComp = () => {
         storeBrcImages: [data.imagesUrl, ...data.storeImageList],
         storeExplanation: data.explanation,
         hobbyMainCategory: data.mainCategory.mainCategory,
-        hobbyMajorCategory: data.subcategory.subcategory,
+        hobbyMajorCategory: data.subcategory ? data.subcategory.subcategory : "카테고리를 설정해주세요",
         businessHour:
           data.businessHourList.length !== 0
             ? newbusinessHour
@@ -136,6 +139,8 @@ const OwnerStorePageComp = () => {
     },
     { suspense: true }
   );
+
+  
 
   const toUpdate = () => {
     setIsUpdate((prev) => !prev);

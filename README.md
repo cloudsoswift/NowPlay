@@ -25,10 +25,6 @@
   - 일반 사용자와 사업자 회원가입 분리
   - 소셜 로그인  - 네이버 로그인 지원
 
-
-
-
-
 - 홈페이지
   
   - 위치 선택 
@@ -55,10 +51,6 @@
     
     - 비로그인시 로그인 페이지로 이동 버튼 표시
 
-
-
-
-
 - 검색페이지
   
   - 여가시설 이름 검색 기능
@@ -69,10 +61,6 @@
   
   - 무한 스크롤을 적용
 
-
-
-
-
 - 즐겨찾기
   
   - 사용자가 즐겨찾기한 여가시설 표시
@@ -80,10 +68,6 @@
     - 검색페이지와 같은 카드 디자인으로 통일성
   
   - 최신순으로 정렬
-
-
-
-
 
 - 주변페이지
   
@@ -103,10 +87,6 @@
   
   - GrapeQL을 사용?
 
-
-
-
-
 - 마이페이지
   
   - 최근 예약했던 가게 목록 표시
@@ -117,25 +97,19 @@
     
     - 예약이 완료되면 알림표시
 
-
-
-
-
 # :computer: Design
-
-
 
 ### 기술스택
 
-
+![](C:\Users\multicampus\AppData\Roaming\marktext\images\2023-04-05-12-42-12-image.png)
 
 ### 시스템 구조
 
-
+![mishana.png](C:\Users\multicampus\Desktop\특화PJT\readmeimg\Web%20App%20Reference%20Architecture.png)
 
 ### ERD 다이어그램
 
-
+![](C:\Users\multicampus\Desktop\특화PJT\readmeimg\여가어때.png)
 
 ### 기능명세서
 
@@ -143,11 +117,7 @@
 
 ### 와이어프레임
 
-
-
 ### 피그마
-
-
 
 ### 사용 라이브러리
 
@@ -165,54 +135,20 @@
 |     |       |
 |     |       |
 
-
-
 ### Directory 구조
 
 ##### BackEnd
 
-
-
 ##### FrontEnd
-
-
 
 ### JWT 인증 플로우
 
-
-
 # :trollface: 구 사 일 생 팀
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ---
 
 ## Rule
+
 ### Commit Type
 
 - feat : 새로운 기능 추가, 기존의 기능을 요구 사항에 맞추어 수정
@@ -228,7 +164,7 @@
 
 ## REST API
 
-### URI 
+### URI
 
 #### 1. 마지막에 `/` 를포함하지 않는다.
 
@@ -374,10 +310,15 @@ HTTP/1.1 404 Not Found
 - 400 Bad Request
 
 - 401 Unauthorized
+
 - 403 Forbidden
+
 - 404 Not Found
+
 - 405 Method Not Allowd
+
 - 409 Conflict
+
 - 429 Too many Requests
 
 #### 5XX Server errors

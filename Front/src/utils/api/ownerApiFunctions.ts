@@ -1,7 +1,7 @@
 import { TinitialValues } from "../hooks/useForm";
 import { ownerapi } from "./api";
 
-export const storeUpdateAPI = async (values: TinitialValues) => {
+export const storeUpdateAPI = async ({values, idx}: {values: TinitialValues, idx: number}) => {
   const formData = new FormData();
 
   const updateStoreDTO = {
@@ -111,7 +111,7 @@ export const storeUpdateAPI = async (values: TinitialValues) => {
     headers: {
       "Content-Type": undefined,
     },
-    url: "place/owners/1",
+    url: `place/owners/${idx}`,
     method: "POST",
     data: formData,
   });

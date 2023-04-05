@@ -8,6 +8,7 @@ import com.ssafy.specialized.common.jwt.JwtTokenProvider;
 import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.user.*;
 import com.ssafy.specialized.domain.entity.*;
+import com.ssafy.specialized.domain.mapping.GetMyReviewsInterface;
 import com.ssafy.specialized.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -117,11 +118,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<?> getMyReviewList(Pageable pageable) {
+    public List<GetMyReviewsInterface> getMyReviewList(Pageable pageable) {
 //    public List<Object[]> getMyReviewList(Pageable pageable) {
         User user = userRepository.findByName(SecurityUtil.getLoginUsername());
-//        List<Object[]> list = reviewRepository.findAllByWriter(user);
-        Page<Object[]> list = reviewRepository.findAllByWriter(user.getIdx(), pageable);
+        List<GetMyReviewsInterface> list = reviewRepository.findAllByWriter(user.getIdx());
+//        Page<Object[]> list = reviewRepository.findAllByWriter(user.getIdx(), pageable);
         return list;
     }
 

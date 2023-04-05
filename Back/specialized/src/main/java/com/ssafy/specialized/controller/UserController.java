@@ -177,7 +177,7 @@ public class UserController {
     }
 
     //내 리뷰 목록
-    @GetMapping("/reviews")
+    @PostMapping("/reviews")
     public ResponseEntity<?> getMyReviewList(@PageableDefault(size = 10, sort = "idx", direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest request) {
         return ResponseEntity.ok(userService.getMyReviewList(pageable));
     }

@@ -21,9 +21,9 @@
 ### 기능
 
 - 로그인, 회원가입
+  
   - JWT 방식 로그인 및 회원가입
   - 일반 사용자와 사업자 회원가입 분리
-  - 소셜 로그인  - 네이버 로그인 지원
 
 - 홈페이지
   
@@ -96,28 +96,40 @@
   - 예약내역 확인 가능
     
     - 예약이 완료되면 알림표시
+- 사업자 페이지
+  - 내 가게 정보 표시 및 수정
+  - 가게 예약 확인 및 수락, 거절
+  - 가게 리뷰 확인 및 코멘트 작성
 
 # :computer: Design
 
 ### 기술스택
 
-![](C:\Users\multicampus\AppData\Roaming\marktext\images\2023-04-05-12-42-12-image.png)
+![stackimg](C:\Users\multicampus\Desktop\특화PJT\readmeimg\stack.png)
 
 ### 시스템 구조
 
-![mishana.png](C:\Users\multicampus\Desktop\특화PJT\readmeimg\Web%20App%20Reference%20Architecture.png)
+![systemimg](C:\Users\multicampus\Desktop\특화PJT\readmeimg\system.png)
 
 ### ERD 다이어그램
 
-![](C:\Users\multicampus\Desktop\특화PJT\readmeimg\여가어때.png)
+![erdimg](C:\Users\multicampus\Desktop\특화PJT\readmeimg\erd.png)
 
 ### 기능명세서
 
+![feature1](C:\Users\multicampus\Desktop\특화PJT\readmeimg\feature1.png)
 
+![feature2](C:\Users\multicampus\Desktop\특화PJT\readmeimg\feature2.png)
 
 ### 와이어프레임
 
+![wireframe](C:\Users\multicampus\Desktop\특화PJT\readmeimg\wire.png)
+
 ### 피그마
+
+[Figma](https://www.figma.com/file/ayUe2QnQwDTYR6QJzeS2o4/D110-%ED%8A%B9%ED%99%94-NP?t=6RB53WVDtJvXjXH9-0)
+
+![figma](C:\Users\multicampus\Desktop\특화PJT\readmeimg\figma.png)
 
 ### 사용 라이브러리
 
@@ -130,10 +142,17 @@
 
 ##### FrontEnd
 
-| 이름  | 사용 이유 |
-| --- |:----- |
-|     |       |
-|     |       |
+| 이름                     | 사용 이유                                |
+| ---------------------- |:------------------------------------ |
+| Recoil                 | 전역 상태 관리                             |
+| react-query            | 서버 fetch data 전역 관리 및 fetch 관련 상태 관리 |
+| Tailwind               |                                      |
+| Styled-components      | CSS in js를 통해 JS에서 CSS를 조작 하기 위해     |
+| axios                  | 서버 통신                                |
+| graphql                | 복잡한 서버 request를 간단하게 처리              |
+| react-cookie           | 사용자 accessToken 관리                   |
+| naver map api          | 네이버 지도 표시                            |
+| react-hook-geolocation | 네이버 지도 api에서 위,경도 변환                 |
 
 ### Directory 구조
 
@@ -141,13 +160,60 @@
 
 ##### FrontEnd
 
-### JWT 인증 플로우
+```
+📁Front
+├──📁public
+├──📁src
+│ ├──📁assets
+│ ├──📁components
+│ │ ├──📁AuthForm
+│ │ ├──📁HomePage
+│ │ ├──📁MyPage
+│ │ ├──📁Navbar
+│ │ ├──📁OwnerForm
+│ │ ├──📁OwnerPage
+│ │ ├──📁OwnerReview
+│ │ ├──📁Places
+│ │ ├──📁SearchPage
+│ │ ├──📁Topbar
+│ ├──📁pages
+│ │ ├──📁home
+│ │ ├──📁owner
+│ │ ├──📁places
+│ │ ├──📁search
+│ │ ├──📁user
+│ ├──📁svg
+│ ├──📁utils
+│ │ ├──📁api
+│ │ ├──📁hooks
+│ │ ├──📁recoil
+│ │ ├──📄PrivateRouter.tsx
+│ ├──📄App.tsx
+│ ├──📄Desktop.tsx
+│ ├──📄index.css
+│ ├──📄main.tsx
+│ ├──📄Mobile.tsx
+├──📄Dockerfile
+├──📄package.json
+├──📄package-lock.json
+├──📄postcss.config.cjs
+├──📄tail.wind.config.cjs
+├──📄tsconfig.json
+├──📄tsconfig.node.js
+├──📄vite.config.ts
+```
 
-# :trollface: 구 사 일 생 팀
+
+
+# 구사 일생 팀
 
 ---
 
-## Rule
+
+
+---
+
+## Conventions Rule
 
 ### Commit Type
 

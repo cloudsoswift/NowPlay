@@ -3,6 +3,7 @@ package com.ssafy.specialized.service;
 
 import com.ssafy.specialized.domain.dto.user.*;
 import com.ssafy.specialized.domain.entity.Bookmark;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -16,8 +17,8 @@ public interface UserService {
 
     List<Bookmark> getMyBookmarkList();
 
-    //    Page<?> getMyReviewList(Pageable pageable);
-    List<Object[]> getMyReviewList(Pageable pageable);
+        Page<?> getMyReviewList(Pageable pageable);
+//    List<Object[]> getMyReviewList(Pageable pageable);
 
 
     LoginResponseDto login(UserLoginDTO login) throws Exception;

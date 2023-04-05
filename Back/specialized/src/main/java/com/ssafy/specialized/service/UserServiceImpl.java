@@ -117,11 +117,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-//    public Page<?> getMyReviewList(Pageable pageable) {
-    public List<Object[]> getMyReviewList(Pageable pageable) {
+    public Page<?> getMyReviewList(Pageable pageable) {
+//    public List<Object[]> getMyReviewList(Pageable pageable) {
         User user = userRepository.findByName(SecurityUtil.getLoginUsername());
-        List<Object[]> list = reviewRepository.findAllByWriter(user);
-//        Page<Object[]> list = reviewRepository.findAllByWriter(user.getIdx(), pageable);
+//        List<Object[]> list = reviewRepository.findAllByWriter(user);
+        Page<Object[]> list = reviewRepository.findAllByWriter(user.getIdx(), pageable);
         return list;
     }
 

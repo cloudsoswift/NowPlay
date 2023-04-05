@@ -5,10 +5,10 @@ import { BsBellFill } from "react-icons/bs";
 
 import { useOwnerLogout } from "../../utils/hooks/useOwnerLogout";
 import { useRecoilValue } from 'recoil';
-import { userInfoAtom } from '../../utils/recoil/userAtom';
+import { ownerInfoAtion, userInfoAtom } from '../../utils/recoil/userAtom';
 
 const OwnerTopbar = () => {
-  const ownerInfo = useRecoilValue(userInfoAtom)
+  const ownerInfo = useRecoilValue(ownerInfoAtion)
 
   const logoutMutation = useOwnerLogout();
 

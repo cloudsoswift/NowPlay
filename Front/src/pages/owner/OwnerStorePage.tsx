@@ -21,8 +21,6 @@ const OwnerStorePageComp = () => {
 
   const ownerInfo = useRecoilValue(ownerInfoAtion);
 
-  console.log(queryClient)
-
   const { isLoading, data, isError, isSuccess } = useQuery<TinitialValues>(
     ["storeInfo"],
     async () => {

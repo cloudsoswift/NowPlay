@@ -6,8 +6,8 @@ import { ReviewInfo } from '../../components/Places/Detail/ReviewInfo';
 import { StarRating } from '../../components/Places/StarRating';
 import { useQuery } from '@tanstack/react-query';
 import api from '../../utils/api/api';
-import { TStoreDetail } from '../../components/Places/Types';
 import { PopupImage } from '../../components/Places/PopupImage';
+import { TStoreDetail } from '../../utils/api/graphql';
 type Props = {
   
 };
@@ -31,7 +31,7 @@ export const PlaceDetailPage = (props: Props) => {
         <div className='text-3xl text-center'>{data.name}</div>
         <StarRating rating={data.averageRating} className={"justify-center"}/>
         <div className="flex justify-center">
-        <Link to="reservation" className="w-full border my-2 text-center">예약</Link>
+        {data.owner?.idx !== undefined && data.owner.idx !== 0 && <Link to="reservation" className="w-full border my-2 text-center">예약</Link>}
         </div>
       </div>
       <div className="flex justify-center border-y-2 [&>*]:mx-2">

@@ -231,10 +231,10 @@ type TBusinessHour = {
   idx: number;
   store: TStore;
   dayOfWeek: string;
-  openAt: string;
-  closeAt: string;
+  open: string;
+  close: string;
   reservationInterval: string;
-  isDayOff: boolean;
+  storeHoliday: boolean;
 }
 
 interface TStoreOutput {

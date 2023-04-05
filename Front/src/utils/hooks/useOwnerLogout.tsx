@@ -15,6 +15,7 @@ export const useOwnerLogout = () => {
 
   return useMutation(() => logoutAPI(), {
     onError: () => {
+      navigation("/owner/login");
       removeCookie("accessToken", { path: "/owner" });
       setIsLogin(false);
       setOwnerInfo({
@@ -24,7 +25,6 @@ export const useOwnerLogout = () => {
         userAddress: "",
         userDistance: "",
       });
-      navigation("/owner");
     },
   });
 };

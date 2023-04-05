@@ -8,7 +8,7 @@ const MyReview = () => {
   const {data} = useQuery(["userReview"], async () => {
     const { data } = await api({
       method: "GET",
-      url: "/accounts/reviews?page=1",
+      url: "/accounts/reviews",
     });
     return data
   });

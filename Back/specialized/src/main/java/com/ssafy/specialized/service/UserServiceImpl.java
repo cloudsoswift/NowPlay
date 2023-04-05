@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
 //            throw new Exception();
 //        }
 //        User user = optionalUser.get();
-        List<Review> reviewList = reviewRepository.findAllByWriter(user);
+        List<Review> reviewList = reviewRepository.findAllByWriter(user.getIdx());
         List<MyReviewDto> myReviewDtoList = new ArrayList<>();
         for (Review review : reviewList) {
             List<ReviewImage> reviewImageList = reviewImageRepository.findAllByReview(review);

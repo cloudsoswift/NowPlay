@@ -12,4 +12,5 @@ public class LoginResponseDto {
     private String userAddress;
     private String userNickname;
     private String userDistance;
+    private int userIdx;
 }

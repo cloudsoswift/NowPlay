@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { BiX } from "react-icons/bi";
-import { useMutation } from '@tanstack/react-query';
-import { queryClient } from '../../main';
-import { ownerapi } from '../../utils/api/api';
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "../../main";
+import { ownerapi } from "../../utils/api/api";
 
 type TreviewData = {
   review_index: number;
@@ -28,7 +28,7 @@ const OwnerReviewModal = ({
 }) => {
   const [modalOpacity, setModalOpacity] = useState(0);
 
-  const [comment, setComment] = useState<string>("")
+  const [comment, setComment] = useState<string>("");
 
   useEffect(() => {
     setModalOpacity(1);
@@ -42,27 +42,49 @@ const OwnerReviewModal = ({
     setTimeout(() => modalclose(), 500);
   };
 
-  const commentPostMutation = useMutation(({id, comment}: {id: number, comment: string}) =>  ownerapi({method: "POST", url: `places/${id}/comments`, data: {comment}}), {onSuccess: () => {
-    queryClient.invalidateQueries([`storeReviews`])
-  }})
+  const commentPostMutation = useMutation(
+    ({ id, comment }: { id: number; comment: string }) =>
+      ownerapi({
+        method: "POST",
+        url: `places/${id}/comments`,
+        data: { comment },
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([`storeReviews`]);
+        setComment("");
+      },
+    }
+  );
 
-  const commentPutMutation = useMutation(({id, comment}: {id: number, comment: string}) =>  ownerapi({method: "PUT", url: `places/${id}/comments`, data: {comment}}), {onSuccess: () => {
-    queryClient.invalidateQueries([`storeReviews`])
-  }})
+  const commentPutMutation = useMutation(
+    ({ id, comment }: { id: number; comment: string }) =>
+      ownerapi({
+        method: "POST",
+        url: `places/${id}/comments/update`,
+        data: { comment },
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([`storeReviews`]);
+        setComment("");
+      },
+    }
+  );
 
   const commentHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setComment(e.currentTarget.value)
-  }
+    setComment(e.currentTarget.value);
+  };
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     if (review[2]) {
-      console.log(comment)
-      commentPutMutation.mutate({id: review[0].idx, comment})
+      console.log(comment);
+      commentPutMutation.mutate({ id: review[2].idx, comment });
     } else {
-      commentPostMutation.mutate({id: review[0].idx, comment})
+      commentPostMutation.mutate({ id: review[0].idx, comment });
     }
-  }
+  };
 
   return (
     <>
@@ -106,14 +128,17 @@ const OwnerReviewModal = ({
 
             <ReviewerChatting>{review[0].content}</ReviewerChatting>
             {review[2] ? (
-              <OwnerChatting>
-                {review[2].content}
-              </OwnerChatting>
+              <OwnerChatting>{review[2].content}</OwnerChatting>
             ) : null}
           </ChatRoom>
           <ChattingInput onSubmit={submitHandler}>
-            <input type="text" name='comment' value={comment} onChange={commentHandler} />
-            <button type='submit'>제출</button>
+            <input
+              type="text"
+              name="comment"
+              value={comment}
+              onChange={commentHandler}
+            />
+            <button type="submit">제출</button>
           </ChattingInput>
         </ReviewChat>
       </ReviewModal>
@@ -223,12 +248,12 @@ const ReviewChat = styled.div`
 const ChatRoom = styled.div`
   height: 100%;
   width: 100%;
-`
+`;
 
 const ReviewerChatting = styled.div`
   position: relative;
   background-color: #f9e000;
-  
+
   max-width: 350px;
 
   padding: 10px;
@@ -264,7 +289,7 @@ const OwnerChatting = styled.div`
   width: 100%;
   max-width: 350px;
 
-  word-break:break-all;
+  word-break: break-all;
 
   margin: 20px;
   margin-left: auto;

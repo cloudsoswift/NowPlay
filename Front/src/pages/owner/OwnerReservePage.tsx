@@ -2,15 +2,18 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 
 import { BiRightArrowAlt, BiLeftArrowAlt } from "react-icons/bi";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled, { keyframes } from "styled-components";
-import { queryClient } from '../../main';
+import { queryClient } from "../../main";
 import { ownerapi } from "../../utils/api/api";
+import { ownerInfoAtion } from "../../utils/recoil/userAtom";
 
 const OwnerReservePage = () => {
-  // useDateInfo??
   const [dateInfo, setDateInfo] = useState<string>(
     new Date().toISOString().slice(0, 10)
   );
+
+  const ownerInfo = useRecoilValue(ownerInfoAtion);
 
   const dateChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDateInfo(e.currentTarget.value);
@@ -29,26 +32,38 @@ const OwnerReservePage = () => {
   const { data } = useQuery([`storeReservation${dateInfo}`], async () => {
     const { data } = await ownerapi({
       method: "GET",
-      url: `reservation/store/1/date?reservationDate=${dateInfo}`,
+      url: `reservation/store/${ownerInfo.storeIdx}/date?reservationDate=${dateInfo}`,
     });
     return data;
   });
 
-  const confirmMutation = useMutation((id: number) =>  ownerapi({method: "PUT", url: `reservation/${id}/confirm`}), {onSuccess: () => {
-    queryClient.invalidateQueries([`storeReservation${dateInfo}`])
-  }})
+  const confirmMutation = useMutation(
+    (id: number) =>
+      ownerapi({ method: "PUT", url: `reservation/${id}/confirm` }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([`storeReservation${dateInfo}`]);
+      },
+    }
+  );
 
-  const rejectMutation = useMutation((id: number) => ownerapi({method: "PUT", url: `reservation/${id}/reject`}), {onSuccess: () => {
-    queryClient.invalidateQueries([`storeReservation${dateInfo}`])
-  }})
+  const rejectMutation = useMutation(
+    (id: number) =>
+      ownerapi({ method: "PUT", url: `reservation/${id}/reject` }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([`storeReservation${dateInfo}`]);
+      },
+    }
+  );
 
   const confirmHandler = (id: number) => {
-    confirmMutation.mutate(id)
-  }
+    confirmMutation.mutate(id);
+  };
 
   const rejectHandler = (id: number) => {
-    rejectMutation.mutate(id)
-  }
+    rejectMutation.mutate(id);
+  };
 
   return (
     <>
@@ -59,7 +74,7 @@ const OwnerReservePage = () => {
         <BiRightArrowAlt onClick={() => dayHandler("plus")} />
       </DateHeader>
       <DateBody>
-        {data &&
+        {data && data.length !== 0 ? (
           data.map((reserve: any, index: number) => (
             <ReserveCard delay={index} key={index} accept={reserve.isConfirmed}>
               <div className='reserveInfo'>
@@ -79,19 +94,71 @@ const OwnerReservePage = () => {
               <div>
                 {reserve.isConfirmed === 0 && (
                   <>
-                    <button className='accept' onClick={() => confirmHandler(reserve.idx)}>승낙</button>
-                    <button className='decline' onClick={() => rejectHandler(reserve.idx)}>거절</button>
+                    <button
+                      className='accept'
+                      onClick={() => confirmHandler(reserve.idx)}
+                    >
+                      승낙
+                    </button>
+                    <button
+                      className='decline'
+                      onClick={() => rejectHandler(reserve.idx)}
+                    >
+                      거절
+                    </button>
                   </>
                 )}
               </div>
             </ReserveCard>
-          ))}
+          ))
+        ) : (
+          <NoContentCard>
+            <div className='photo-box'>
+              <img src='../src/assets/LeisureLogo.png' />
+            </div>
+            <div className='text-box'>
+              <h1>예약이 </h1>
+              <h1>존재하지</h1>
+              <h1>않습니다</h1>
+            </div>
+          </NoContentCard>
+        )}
       </DateBody>
     </>
   );
 };
 
 export default OwnerReservePage;
+
+const NoContentCard = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
+  height: auto;
+  width: 30vw;
+
+  background-color: var(--body-color);
+
+  box-shadow: 10px 10px 10px var(--primary-color-light);
+
+  .photo-box {
+    width: 25vw;
+    padding: 20px;
+  }
+
+  .text-box {
+    width: 100%;
+    text-align: start;
+    padding: 40px;
+  }
+
+  h1 {
+    font-size: var(--large-text);
+    font-weight: bold;
+  }
+`;
 
 const DateHeader = styled.div`
   display: flex;
@@ -134,6 +201,10 @@ const DateHeader = styled.div`
 const DateBody = styled.div`
   display: flex;
   flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
   width: 100%;
 
   min-height: calc(90vh - 130px);
@@ -180,15 +251,16 @@ const ReserveCard = styled.div<{ delay: number; accept: number }>`
 
   padding: 20px;
   margin: 20px;
-  border: solid 2px ${(props) => {
-    if (props.accept === 0) {
-      return "var(--primary-color-light)";
-    } else if (props.accept === 1) {
-      return "#31d731";
-    } else {
-      return "red";
-    }
-  }};
+  border: solid 2px
+    ${(props) => {
+      if (props.accept === 0) {
+        return "var(--primary-color-light)";
+      } else if (props.accept === 1) {
+        return "#31d731";
+      } else {
+        return "red";
+      }
+    }};
   border-radius: 10px;
 
   animation: ${openCard} 2s forwards;

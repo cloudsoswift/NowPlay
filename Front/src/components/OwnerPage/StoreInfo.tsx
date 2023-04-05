@@ -39,7 +39,7 @@ const StoreInfo = ({
     return (
       <div key={idx}>
         <p>{weekdays[days]}</p>
-        {values.businessHour  && values.businessHour?.[days] ?  (
+        {values.businessHour  && values.businessHour?.[days] && !values.businessHour?.[days].storeHoliday ?  (
           <>
             <span>OPEN : {values.businessHour?.[days].open}</span>
             <span>CLOSE : {values.businessHour?.[days].close}</span>

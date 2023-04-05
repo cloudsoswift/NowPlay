@@ -18,7 +18,7 @@ export const useOwnerLogout = () => {
       removeCookie("accessToken", { path: "/owner" });
       setIsLogin(false);
       setOwnerInfo({
-        storeIndex: 0,
+        storeIdx: 0,
         userName: "",
         userNickname: "",
         userAddress: "",

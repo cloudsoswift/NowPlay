@@ -35,7 +35,9 @@ const TimeList = ({date, businessHour}: {date: Moment, businessHour: TBusinessHo
   const closeHour = moment(today).add(moment.duration(todayBusinessHour?.close))
   today.add(moment.duration(todayBusinessHour?.open));
   while(!today.isAfter(closeHour)){
-    arr.push(<Time time={moment(today)} isSelected={date.isSame(moment(today))}/>)
+    if(!today.isBefore(moment())){
+      arr.push(<Time time={moment(today)} isSelected={date.isSame(moment(today))}/>)
+    }
     today.add(todayBusinessHour?.reservationInterval || 30, "minute")
   }
   return <div className='grid grid-cols-3'>

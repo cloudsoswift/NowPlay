@@ -21,7 +21,7 @@ export type TReservationInfo = {
 export const reservationInfo = atom<TReservationInfo>({key: "reservationInfo", default: {dateTime: moment(), request: "", dateChecked: false, timeChecked: false,}});
 export const PlaceReservationPage = (props: Props) => {
   const reservationInfoValue = useRecoilValue(reservationInfo);
-  // const {userIdx} = useRecoilValue(userInfoAtom);
+  const {userIdx} = useRecoilValue(userInfoAtom);
   const {id} = useParams();
   const fetchStoreDetail = () => {
     return api.get(`place/${id}/store`).then(({data})=>data);
@@ -32,7 +32,7 @@ export const PlaceReservationPage = (props: Props) => {
     console.log(reservationInfoValue.dateTime.format());
     api.post("reservation", {
       "history": reservationInfoValue.request,
-      "reserverIdx": 1,
+      "reserverIdx": userIdx,
       "storeIdx": id,
       "time": reservationInfoValue.dateTime.format('YYYY-MM-DDTHH:mm:ss[Z]')
     }).then((response)=>{

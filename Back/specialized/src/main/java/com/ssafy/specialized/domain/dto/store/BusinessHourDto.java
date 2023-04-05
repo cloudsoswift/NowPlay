@@ -16,4 +16,8 @@ public class BusinessHourDto {
     private String reservationInterval;
 
     private boolean storeHoliday;
+
+    public boolean getStoreHoliday() {
+        return storeHoliday;
+    }
 }

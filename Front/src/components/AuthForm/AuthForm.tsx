@@ -6,7 +6,7 @@ import {
   CheckBoxField,
   SubmitButton,
 } from "./AuthFields";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLogin } from "../../utils/hooks/useLogin";
 import { useSignup } from "../../utils/hooks/useSignup";
 import { TinitialValues } from "../../utils/hooks/useForm";
@@ -44,10 +44,6 @@ const LoginAuthForm = () => {
         아직 회원이 아니신가요?{" "}
         <Link to={"/mobile/mypage/signup"}>회원가입</Link>
       </span>
-      <span>
-        <Link to={"/mobile/mypage/signup"}>아이디 찾기</Link> /{" "}
-        <Link to={"/mobile/mypage/signup"}>비밀번호 찾기</Link>
-      </span>
     </Form>
   );
 };
@@ -63,8 +59,11 @@ const SignupAuthForm = () => {
 
   const signupMutation = useSignup();
 
-  const signupHandleSubmit = (values: TinitialValues) => {
+  const navigate = useNavigate()
+
+  const signupHandleSubmit = async (values: TinitialValues) => {
     signupMutation.mutate(values);
+    navigate("/mobile/hobby")
   };
 
   return (

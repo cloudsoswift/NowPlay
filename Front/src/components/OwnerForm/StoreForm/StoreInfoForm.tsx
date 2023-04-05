@@ -5,6 +5,8 @@ import { FileField, CategotySelectField, BusinessHourField } from '../OwnerAuthF
 import { TinitialValues } from '../../../utils/hooks/useForm'; 
 import { category } from '../OwnerAuthForm/OwnerAuthDescription';
 import useStoreUpdate from '../../../utils/hooks/useStoreUpdate';
+import { useRecoilValue } from "recoil";
+import { ownerInfoAtion } from "../../../utils/recoil/userAtom";
 
 const StoreInfoForm = ({
   initialValues, updateHandle
@@ -16,9 +18,10 @@ const StoreInfoForm = ({
 
   const storeInfoMutation = useStoreUpdate()
 
+  const ownerInfo = useRecoilValue(ownerInfoAtion)
+
   const StoreUpdateHandler = (values: TinitialValues) => {
-    console.log(123);
-    storeInfoMutation.mutate(values)
+    storeInfoMutation.mutate({values, idx: ownerInfo.storeIdx})
     updateHandle()
   };
 
@@ -36,7 +39,7 @@ const StoreInfoForm = ({
       >
         <SubmitButton type='submit'>회원정보 수정 완료</SubmitButton>
         <Field type='text' name='storeName' />
-        <OldImageField />
+        {/* <OldImageField /> */}
         <FileField type='file' name='newStoreBrcImages' />
         <Field type='text' name='storeAddress' />
         <Field type='text' name='storeContactNumber' />

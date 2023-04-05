@@ -24,7 +24,7 @@ export const useSignup = () => {
         userName: data.userName,
         userDistance: data.userDistance,
       });
-      navigation("/mobile/mypage");
+      navigation("/mobile/hobby");
     },
   });
 };

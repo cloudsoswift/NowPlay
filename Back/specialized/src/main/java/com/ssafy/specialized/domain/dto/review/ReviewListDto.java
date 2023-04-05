@@ -20,4 +20,8 @@ public class ReviewListDto {
     private boolean reviewIsHidden;
     private List<ReviewImage> reviewImages;
     private OwnerComment ownerComment;
+
+    public boolean getReviewIsHidden() {
+        return reviewIsHidden;
+    }
 }

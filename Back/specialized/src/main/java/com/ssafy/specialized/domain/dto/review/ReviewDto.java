@@ -15,4 +15,7 @@ public class ReviewDto {
 
     private  boolean isHidden;
 
+    public boolean getIsHidden() {
+        return isHidden;
+    }
 }

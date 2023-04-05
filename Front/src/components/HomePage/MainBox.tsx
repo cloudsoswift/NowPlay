@@ -14,12 +14,12 @@ import { Suspense, useEffect } from "react";
 
 const MainBox = () => {
   const categories = useRecoilValue(categoriesSelector);
-  const cultureFilter: THobbySubCategory[] = categories.find(c=>c.mainCategory==="문화생활")?.subcategories;
-  const gameFilter: THobbySubCategory[] = categories.find(c=>c.mainCategory==="오락")?.subcategories;
-  const healingFilter: THobbySubCategory[] = categories.find(c=>c.mainCategory==="힐링")?.subcategories;
-  const leisureFilter: THobbySubCategory[] = categories.find(c=>c.mainCategory==="레저")?.subcategories;
-  const sportsFilter: THobbySubCategory[] = categories.find(c=>c.mainCategory==="체육")?.subcategories;
-  const themeFilter: THobbySubCategory[] = categories.find(c=>c.mainCategory==="테마")?.subcategories;
+  const cultureFilter: THobbySubCategory[] | undefined = categories.find(c=>c.mainCategory==="문화생활")?.subcategories;
+  const gameFilter: THobbySubCategory[] | undefined  = categories.find(c=>c.mainCategory==="오락")?.subcategories;
+  const healingFilter: THobbySubCategory[] | undefined  = categories.find(c=>c.mainCategory==="힐링")?.subcategories;
+  const leisureFilter: THobbySubCategory[] | undefined  = categories.find(c=>c.mainCategory==="레저")?.subcategories;
+  const sportsFilter: THobbySubCategory[] | undefined = categories.find(c=>c.mainCategory==="체육")?.subcategories;
+  const themeFilter: THobbySubCategory[] | undefined = categories.find(c=>c.mainCategory==="테마")?.subcategories;
   return (
     <Suspense fallback={<div>로딩중...</div>}>
       <MainFilter>

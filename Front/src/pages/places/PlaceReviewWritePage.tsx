@@ -18,7 +18,7 @@ export const PlaceReviewWritePage = (props: Props) => {
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState("");
   const [imageFile, setImageFile] = useState<File>();
-  const [imagePreview, setImagePreview] = useState();
+  const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(null);
   const [isHidden, setIsHidden] = useState(false);
 
   const contentRef = useRef<HTMLTextAreaElement>(null);
@@ -67,7 +67,7 @@ export const PlaceReviewWritePage = (props: Props) => {
     console.log(imageFile, content, rating, isHidden);
     const form = new FormData();
     if(imageFile){
-      form.append("file", imageFile);
+      form.append("files", imageFile);
     }
     form.append("review", new Blob([JSON.stringify({
       content,
@@ -80,18 +80,20 @@ export const PlaceReviewWritePage = (props: Props) => {
         switch(status){
           case 200:
             alert("리뷰를 수정했습니다.");
-            navigate(`/mobile/places/${id}/`);
-          default:
-            alert("서버와 통신에 실패했습니다.");
-        }
-      })
+            navigate(-1);
+            break;
+            default:
+              alert("서버와 통신에 실패했습니다.");
+            }
+          })
     } else {
       api.post(`places/${id}/reviews`,form, {headers:{"Content-Type": undefined}})
       .then(({status})=>{
         switch(status){
           case 200:
             alert("리뷰를 등록했습니다.");
-            navigate(`/mobile/places/${id}/`);
+            navigate(`/mobile/places/${location.state.store}/`);
+            break;
           default:
             alert("서버와 통신에 실패했습니다.");
         }
@@ -187,7 +189,7 @@ export const PlaceReviewWritePage = (props: Props) => {
         {imagePreview && (
           <img
             className="w-full h-full object-contain"
-            src={imagePreview}
+            src={ typeof imagePreview === 'string' ? imagePreview : "" }
             alt=""
           />
         )}

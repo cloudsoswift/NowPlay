@@ -91,7 +91,7 @@ export const Review = ({ review, isEditable, refetch }: ReviewProps) => {
   return (
     <div className="relative border p-4 w-full h-[30vh] shadow-sm">
       <div>
-        <span className="text-lg">{review.writer?.nickname}</span>{" "}
+        <span className="text-lg">{review.writer && review.writer.nickname && review.writer.nickname || ""}</span>{" "}
         <span className="text-sm">{dateString}</span>{" "}
         <span>
           <AiFillStar className="inline text-[var(--primary-color)]" />
@@ -111,7 +111,7 @@ export const Review = ({ review, isEditable, refetch }: ReviewProps) => {
   );
 };
 
-export const ReviewInfo = forwardRef((props: ReviewInfoProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+export const ReviewInfo = forwardRef((props: any, ref: React.ForwardedRef<HTMLDivElement>) => {
   const { id } = useParams();
   const {userNickname} = useRecoilValue(userInfoAtom);
   const fetchReviewList = async ({ pageParam = 0 }) => {

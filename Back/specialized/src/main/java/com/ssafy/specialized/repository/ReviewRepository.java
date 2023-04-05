@@ -24,6 +24,8 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 //    Page<Object[]> findAllByWriter(int userid, Pageable pageable);
     List<GetMyReviewsInterface> findAllByWriter(@Param("userIdx") int userIdx);
 
+    List<Review> findAllByWriter(User writer);
+
     @Query(value = "SELECT avg(r.rating) FROM Review r WHERE r.store.idx = :storeid")
     float findAvgByStore(int storeid);
 }

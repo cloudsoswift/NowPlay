@@ -18,4 +18,8 @@ public class ReviewDetailDto {
     private List<String> reviewImageUrlList;
 
     private LocalDateTime creatat;
+
+    public boolean getIsHidden() {
+        return isHidden;
+    }
 }

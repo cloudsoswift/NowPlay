@@ -336,7 +336,7 @@ public class StoreServiceImpl implements StoreService {
                     .open(businessHourDto.getOpen())
                     .close(businessHourDto.getClose())
                     .reservationInterval(businessHourDto.getReservationInterval())
-                    .storeHoliday(businessHourDto.isStoreHoliday())
+                    .storeHoliday(businessHourDto.getStoreHoliday())
                     .build();
             businessHourRepository.save(businessHour);
         }

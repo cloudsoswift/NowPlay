@@ -30,4 +30,7 @@ public class UpdateStoreDto {
 
     private List<MultipartFile> multipartFiles;
 
+    public boolean getIsClosedOnHolidays() {
+        return isClosedOnHolidays;
+    }
 }

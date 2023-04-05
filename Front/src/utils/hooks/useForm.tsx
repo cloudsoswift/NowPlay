@@ -133,7 +133,7 @@ function useForm({
     }
     setValues({
       ...values,
-      [e.target.name]: e.target.value.trim(),
+      [e.target.name]: e.target.value,
     });
   };
 

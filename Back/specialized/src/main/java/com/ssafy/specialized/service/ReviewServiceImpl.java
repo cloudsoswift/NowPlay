@@ -77,7 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .content(reviewDto.getContent())
                 .rating(reviewDto.getRating())
                 .createdAt(LocalDateTime.now())
-                .isHidden(reviewDto.isHidden())
+                .isHidden(reviewDto.getIsHidden())
                 .build();
         review = reviewRepository.save(review);
         if (files != null) {

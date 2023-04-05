@@ -5,8 +5,10 @@ import {
   useLayoutEffect,
   useEffect,
 } from "react";
-import { useRecoilState } from "recoil";
+import { redirect, useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
+import api from "../../utils/api/api";
 import { selectHobbyAction } from "../../utils/recoil/userAtom";
 
 const GERMAN_DIGITS = [
@@ -56,11 +58,24 @@ const GERMAN_DIGITS = [
 ];
 
 const HobbyPage = () => {
+  const [hobbyList, setHobbyList] = useRecoilState(selectHobbyAction)
+  const navigate = useNavigate()
+
+  // useEffect(() => {
+  //   api({method: "GET", url: "accounts/user-hobbies", data: {hobbies: hobbyList}}).then(res => console.log(res.data)).catch(err => console.log(err))
+  //   navigate('/mobile/mypage')
+  // })
+  
+  const buttonHandler = () => {
+    api({method: "POST", url: "accounts/user-hobbies", data: {hobbies: hobbyList}}).catch(err => console.log(err))
+    navigate('/mobile/mypage')
+  }
+
   return (
     <HobbyContainer>
       <SelectedHobbyBox />
       <InfiniteScrollLoop surroundingBackup={2} />
-      <button>선택완료</button>
+      <button onClick={buttonHandler}>선택완료</button>
     </HobbyContainer>
   );
 };

@@ -1,6 +1,7 @@
 import { atom, AtomEffect } from "recoil";
 
 export type TRecoilUserInfo = {
+  userIdx: number;
   userName: string;
   userNickname: string;
   userAddress: string;
@@ -8,7 +9,7 @@ export type TRecoilUserInfo = {
 };
 
 export type TRecoilOwnerInfo = {
-  storeIndex: number;
+  storeIdx: number;
   userName: string;
   userNickname: string;
   userAddress: string;
@@ -32,6 +33,7 @@ const localStorageEffect: <T>(key: string) => AtomEffect<T> =
 export const userInfoAtom = atom<TRecoilUserInfo>({
   key: "userInfo",
   default: {
+    userIdx: 0,
     userName: "",
     userNickname: "",
     userAddress: "",
@@ -43,7 +45,7 @@ export const userInfoAtom = atom<TRecoilUserInfo>({
 export const ownerInfoAtion = atom<TRecoilOwnerInfo>({
   key: "ownerInfo",
   default: {
-    storeIndex: 0,
+    storeIdx: 0,
     userName: "",
     userNickname: "",
     userAddress: "",

@@ -3,6 +3,7 @@ import api from "./api";
 import { ownerapi } from './api';
 
 export type TAxoisUserInfo = {
+  userIdx: number;
   accessToken: string;
   userName: string;
   userNickname: string;
@@ -11,7 +12,7 @@ export type TAxoisUserInfo = {
 };
 
 export type TAxoisOwnerInfo = {
-  storeIndex: number;
+  storeIdx: number;
   accessToken: string;
   userName: string;
   userNickname: string;

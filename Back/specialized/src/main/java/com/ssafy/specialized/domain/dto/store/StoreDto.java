@@ -45,4 +45,12 @@ public class StoreDto {
     private float averageRating;
 
     private boolean isFaverite;
+
+    public boolean getIsClosedOnHolidays() {
+        return isClosedOnHolidays;
+    }
+
+    public boolean getIsFaverite() {
+        return isFaverite;
+    }
 }

@@ -8,12 +8,6 @@ const CustomerService = () => {
 
   const noContentAlert = () => {
     alert("아직 구현중입니다...");
-    api({
-      method: "POST",
-      url: "api/users/tomtom",
-    })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
   };
 
   const logout = () => {

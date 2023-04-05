@@ -1,5 +1,6 @@
 package com.ssafy.specialized.controller;
 
+import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.review.ReviewDto;
 import com.ssafy.specialized.domain.dto.store.UpdateStoreDto;
 import com.ssafy.specialized.domain.graphql.input.NearbyStoreInput;

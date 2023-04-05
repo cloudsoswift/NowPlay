@@ -152,6 +152,7 @@ public class UserServiceImpl implements UserService {
         loginResponseDto.setUserName(user.getName());
         loginResponseDto.setUserAddress(user.getAddress());
         loginResponseDto.setRefreshToken(tokenDto.getRefreshToken());
+        loginResponseDto.setUserIdx(user.getIdx());
         return loginResponseDto;
     }
 

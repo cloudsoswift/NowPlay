@@ -1,17 +1,17 @@
 import { ChangeEvent, useRef } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { motion } from "framer-motion";
 import { filterState } from "../Map";
 
 type Props = {};
 
 export const DistanceSlider = (props: Props) => {
-  const setFilter = useSetRecoilState(filterState);
+  const [{maxDistance} ,setFilter] = useRecoilState(filterState);
   const draggableArea = useRef<HTMLDivElement>(null);
   const draggableTarget = useRef<HTMLDivElement>(null);
   const modifyTarget = (target: number) => {
     let pos = 0;
-    let distance = 1;
+    let maxDistance = 1;
     if (draggableArea.current && draggableTarget.current) {
       const appRect = draggableArea.current.getBoundingClientRect();
       const pipRect = draggableTarget.current.getBoundingClientRect();
@@ -20,28 +20,28 @@ export const DistanceSlider = (props: Props) => {
       const spot = appRect.width / 5;
       if (pipMiddleX < divider) {
         pos = 0;
-        distance = 2;
+        maxDistance = 2;
       } else if (pipMiddleX >= divider && pipMiddleX < spot + divider){
         pos = spot - pipRect.width / 2;
-        distance = 5;
+        maxDistance = 5;
       } else if (pipMiddleX >= spot + divider && pipMiddleX < spot * 2 + divider){
         pos = (spot - pipRect.width / 4) * 2;
-        distance = 10;
+        maxDistance = 10;
       } else if (pipMiddleX >= spot * 2 + divider && pipMiddleX < spot * 3 + divider){
         pos = (spot  - pipRect.width / 6 ) * 3;
-        distance = 20;
+        maxDistance = 20;
       } else if (pipMiddleX >= spot * 3 + divider && pipMiddleX < spot * 4 + divider) {
         pos = (spot  - pipRect.width / 8 ) * 4;
-        distance = 50;
+        maxDistance = 50;
       }else if (pipMiddleX >= spot * 4 + divider && pipMiddleX < spot * 5 + divider) {
         pos = (spot  - pipRect.width / 8 ) * 5;
-        distance = 500;
+        maxDistance = 500;
       }
     }
     setFilter((prevData) => {
       return {
         ...prevData,
-        distance,
+        maxDistance,
       };
     });
     return pos;
@@ -54,7 +54,6 @@ export const DistanceSlider = (props: Props) => {
       >
         <motion.div
           drag="x"
-          onDragEnd={(event, info) => console.log(info.point.x, info.point.y)}
           dragConstraints={draggableArea}
           dragElastic={0.1}
           dragTransition={{ modifyTarget, power: 0.1, min: 0, max: 200, timeConstant: 100 }}
@@ -70,11 +69,6 @@ export const DistanceSlider = (props: Props) => {
         <span className="w-1 h-5 mt-8 flex justify-right">20km</span>
         <span className="w-1 h-5 mt-8 flex justify-right">50km</span>
         <span className="w-9 h-5 mt-8 flex justify-right text-[var(--primary-color)]">MAX</span>
-        {/* <span className="w-1 h-5 block bg-black" />
-        <span className="w-1 h-5 block bg-black" />
-        <span className="w-1 h-5 block bg-black" />
-        <span className="w-1 h-5 block bg-black" />
-        <span className="w-1 h-5 block bg-black" /> */}
       </div>
     </div>
   );

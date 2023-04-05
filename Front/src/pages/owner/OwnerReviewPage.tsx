@@ -5,6 +5,7 @@ import api, { ownerapi } from "../../utils/api/api";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { ownerInfoAtion } from "../../utils/recoil/userAtom";
+import nocontentimg from '../../assets/LeisureLogo.png'
 
 const OwnerReviewPage = () => {
   const ownerInfo = useRecoilValue(ownerInfoAtion);
@@ -64,7 +65,7 @@ const OwnerReviewPage = () => {
         ) : (
           <NoContentCard>
             <div className='photo-box'>
-              <img src='../src/assets/LeisureLogo.png' />
+              <img src={nocontentimg} />
             </div>
             <div className='text-box'>
               <h1>리뷰가</h1>

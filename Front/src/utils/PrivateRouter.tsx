@@ -25,20 +25,9 @@ export default function PrivateRoute({authentication, type}:PrivateRouteProps):R
 
   const [isLogin, setIsLogin] = useRecoilState(userIsLogin)
 
-
-  // useEffect(() => {
-  //   setIsAuthenticated(isLogin)
-  //   if (cookie.accessToken !== undefined){
-  //     setIsAuthenticated(true)
-  //   }
-  // }, [])
-
-  // useEffect(() => {
-  //   setIsAuthenticated(isLogin)
-  //   if (cookie.accessToken !== undefined){
-  //     setIsAuthenticated(true)
-  //   }
-  // }, [isLogin])
+  useEffect(() => {
+    setIsAuthenticated(cookie.accessToken !== undefined)
+  }, [cookie])
   
   if(authentication) {
     // 인증이 반드시 필요한 페이지

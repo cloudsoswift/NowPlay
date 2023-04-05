@@ -56,6 +56,7 @@ public class StoreController {
         return ResponseEntity.ok(null);
     }
 
+
 //    @QueryMapping
 //    public NearbyStoreOutputWithTotalCount getNearbyStoreList(@Argument NearbyStoreInput nearbyStoreInput) {
 //        return storeService.getNearbyStoreList(nearbyStoreInput);
@@ -70,6 +71,5 @@ public class StoreController {
 //    public List<NearbyStoreOutput> storeRecommendationByCoordinate(@Argument float lat, @Argument float lon){
 //        return storeService.storeRecommendationByCoordinate(lat, lon);
 //    }
-
 
 }

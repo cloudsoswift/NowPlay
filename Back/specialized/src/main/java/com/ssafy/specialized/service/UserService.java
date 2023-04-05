@@ -40,4 +40,6 @@ public interface UserService {
     void findMyPassword(FindMyPasswordRequestDTO findPasswordDTO) throws Exception;
 
     TokenDTO reissue(TokenDTO tokenDTO) throws Exception;
+
+    void addUserHobby(List<String> userHobbyListInput) throws Exception;
 }

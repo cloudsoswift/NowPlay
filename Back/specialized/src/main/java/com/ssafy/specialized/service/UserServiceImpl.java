@@ -154,6 +154,7 @@ public class UserServiceImpl implements UserService {
         loginResponseDto.setRefreshToken(tokenDto.getRefreshToken());
         return loginResponseDto;
     }
+
     // 사업자 로그인 서비스
     @Override
     public BusinessLoginResponseDto businessLogin(UserLoginDTO login) {
@@ -168,7 +169,7 @@ public class UserServiceImpl implements UserService {
         TokenDTO tokenDto = jwtTokenProvider.generateToken(authentication);
         // 가게 정보 조회
         Optional<Store> optstore = storeRepository.findByOwner(user);
-        Store store= null;
+        Store store = null;
         if (optstore.isPresent()) {
             store = optstore.get();
         }
@@ -305,5 +306,29 @@ public class UserServiceImpl implements UserService {
                 .set("RT:" + authentication.getName(), token.getRefreshToken(),
                         token.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
         return token;
+    }
+
+    @Override
+    public void addUserHobby(List<String> userHobbyListInput) throws Exception {
+        String name = SecurityUtil.getLoginUsername();
+        User user = userRepository.findByName(name);
+        List<UserHobby> userHobbyList = userHobbyRepository.findAllByUser(user);
+        for (UserHobby userHobby : userHobbyList) {
+            userHobbyRepository.delete(userHobby);
+        }
+        userHobbyList.clear();
+        for(String userHobbyString: userHobbyListInput) {
+            Optional<HobbySubcategory> optionalHobbySubcategory = hobbySubcategoryRepository.findBySubcategory(userHobbyString);
+            if(optionalHobbySubcategory.isEmpty()){
+                throw new Exception();
+            }
+            HobbySubcategory hobbySubcategory = optionalHobbySubcategory.get();
+            UserHobby userHobby = UserHobby.builder()
+                    .user(user)
+                    .mainCategory(hobbySubcategory.getMainCategory())
+                    .subcategory(hobbySubcategory)
+                    .build();
+            userHobbyList.add(userHobby);
+        }
     }
 }

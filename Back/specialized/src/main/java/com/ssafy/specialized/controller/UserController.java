@@ -4,12 +4,10 @@ package com.ssafy.specialized.controller;
 import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.user.*;
 import com.ssafy.specialized.domain.entity.Bookmark;
-import com.ssafy.specialized.domain.entity.Review;
 import com.ssafy.specialized.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -60,6 +58,7 @@ public class UserController {
         loginResponseDto.setRefreshToken(null);
         return ResponseEntity.ok(loginResponseDto);
     }
+
     // 사업자로그인
     @PostMapping("/businesslogin")
     public ResponseEntity<BusinessLoginResponseDto> businessLogin(@Validated @RequestBody UserLoginDTO login, HttpServletResponse response) throws Exception {
@@ -179,7 +178,7 @@ public class UserController {
 
     //내 리뷰 목록
     @GetMapping("/reviews")
-    public ResponseEntity<?> getMyReviewList(@PageableDefault(size = 10, sort = "idx",direction = Sort.Direction.DESC)Pageable  pageable, HttpServletRequest request) {
+    public ResponseEntity<?> getMyReviewList(@PageableDefault(size = 10, sort = "idx", direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest request) {
         return ResponseEntity.ok(userService.getMyReviewList(pageable));
     }
 
@@ -188,4 +187,10 @@ public class UserController {
     public TokenDTO reissue(@Validated @RequestBody TokenDTO tokenDTO) throws Exception {
         return userService.reissue(tokenDTO);
     }
+
+    @PostMapping("/hobby")
+    public void addUserHobby(@RequestBody List<String> userHobbyListInput) throws Exception {
+        userService.addUserHobby(userHobbyListInput);
+    }
+
 }

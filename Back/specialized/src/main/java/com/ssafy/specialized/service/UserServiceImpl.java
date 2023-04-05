@@ -56,7 +56,9 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
     @Autowired
     private final RedisTemplate redisTemplate;
+    @Autowired
     private ReviewImageRepository reviewImageRepository;
+    @Autowired
     private OwnerCommentRepository ownerCommentRepository;
 
     @Override
@@ -119,19 +121,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<MyReviewDto> getMyReviewList(Pageable pageable) {
+    public List<MyReviewDto> getMyReviewList(Pageable pageable) throws Exception {
 //    public List<Object[]> getMyReviewList(Pageable pageable) {
         User user = userRepository.findByName(SecurityUtil.getLoginUsername());
-
+//        Optional<User> optionalUser = userRepository.findById(28);
+//        if (optionalUser.isEmpty()) {
+//            throw new Exception();
+//        }
+//        User user = optionalUser.get();
         List<Review> reviewList = reviewRepository.findAllByWriter(user);
         List<MyReviewDto> myReviewDtoList = new ArrayList<>();
         for (Review review : reviewList) {
             List<ReviewImage> reviewImageList = reviewImageRepository.findAllByReview(review);
             OwnerComment ownerComment = ownerCommentRepository.findByReview(review);
             MyReviewDto myReviewDto = new MyReviewDto();
-            myReviewDto.setReviewImage(reviewImageList);
+            if (reviewImageList != null) {
+                myReviewDto.setReviewImage(reviewImageList);
+            }
+            if (ownerComment != null) {
+                myReviewDto.setOwnerComment(ownerComment);
+            }
             myReviewDto.setReview(review);
-            myReviewDto.setOwnerComment(ownerComment);
             myReviewDtoList.add(myReviewDto);
         }
 

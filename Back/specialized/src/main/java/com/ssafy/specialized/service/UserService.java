@@ -20,7 +20,7 @@ public interface UserService {
 
     //        Page<?> getMyReviewList(Pageable pageable);
 //    List<GetMyReviewsInterface> getMyReviewList(Pageable pageable);
-    List<MyReviewDto> getMyReviewList(Pageable pageable);
+    List<MyReviewDto> getMyReviewList(Pageable pageable) throws Exception;
 
 
     LoginResponseDto login(UserLoginDTO login) throws Exception;

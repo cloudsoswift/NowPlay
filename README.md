@@ -105,31 +105,31 @@
 
 ### 기술스택
 
-![stackimg](.\readmeimg\stack.png)
+![stackimg](./readmeimg/stack.png)
 
 ### 시스템 구조
 
-![systemimg](.\readmeimg\system.png)
+![systemimg](./readmeimg/system.png)
 
 ### ERD 다이어그램
 
-![erdimg](.\readmeimg\erd.png)
+![erdimg](./readmeimg/erd.png)
 
 ### 기능명세서
 
-![feature1](.\readmeimg\feature1.png)
+![feature1](./readmeimg/feature1.png)
 
-![feature2](.\readmeimg\feature2.png)
+![feature2](./readmeimg/feature2.png)
 
 ### 와이어프레임
 
-![wireframe](.\readmeimg\wire.png)
+![wireframe](./readmeimg/wire.png)
 
 ### 피그마
 
 [Figma](https://www.figma.com/file/ayUe2QnQwDTYR6QJzeS2o4/D110-%ED%8A%B9%ED%99%94-NP?t=6RB53WVDtJvXjXH9-0)
 
-![figma](.\readmeimg\figma.png)
+![figma](./readmeimg/figma.png)
 
 ### 사용 라이브러리
 

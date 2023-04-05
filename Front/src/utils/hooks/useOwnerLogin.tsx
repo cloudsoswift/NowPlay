@@ -20,8 +20,9 @@ export const useOwnerLogin = () => {
         setCookies("accessToken", data.accessToken, { path: "/owner" });
       }
       setIsLogin(true)
+      console.log(data)
       setOwnerInfo({
-        storeIndex: data.storeIndex,
+        storeIdx: data.storeIdx,
         userName: data.userName,
         userNickname: data.userNickname,
         userAddress: data.userAddress,

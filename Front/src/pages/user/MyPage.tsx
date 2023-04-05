@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { Routes, Route } from "react-router-dom";
 
-import MyRecent from "../../components/MyPage/MyRecent";
 import MyReview from "../../components/MyPage/MyReview";
 import MyReservation from "../../components/MyPage/MyReservation";
 import CustomerService from "../../components/MyPage/CustomerService";
@@ -18,8 +17,7 @@ const MyPage = () => {
       <MyPageCategory />
       <MyPageContent>
         <Routes>
-          <Route path="/" element={<MyRecent />}></Route>
-          <Route path="recent" element={<MyRecent />}></Route>
+          <Route path="/" element={<MyReview />}></Route>
           <Route path="my-review" element={<MyReview />}></Route>
           <Route path="my-reservation" element={<MyReservation />}></Route>
           <Route path="customer-service" element={<CustomerService />}></Route>

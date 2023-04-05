@@ -11,7 +11,7 @@ export type TAxoisUserInfo = {
 };
 
 export type TAxoisOwnerInfo = {
-  storeIndex: number;
+  storeIdx: number;
   accessToken: string;
   userName: string;
   userNickname: string;

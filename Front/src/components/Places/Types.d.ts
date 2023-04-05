@@ -28,7 +28,7 @@ type TBusinessHour = {
   
 type TReview = {
   idx: number,
-  writer?: object,
+  writer?: { nickname: string },
   store?: object,
   content: string,
   rating: number,

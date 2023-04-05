@@ -18,6 +18,7 @@ export const useLogout = () => {
       removeCookie("accessToken", { path: "/mobile" });
       setIsLogin(false)
       setUserInfo({
+        userIdx: 0,
         userNickname: "",
         userAddress: "",
         userName: "",

@@ -45,7 +45,7 @@ public class StoreController {
                                          @RequestPart (name = "UpdateStoreDto") UpdateStoreDto updateStoreDto,
                                          @RequestPart (name = "files", required = false) List<MultipartFile> multipartFile) throws Exception {
         List<MultipartFile> list = new ArrayList<>();
-        if (multipartFile.size() >= 1) {
+        if (multipartFile != null) {
             for (MultipartFile file : multipartFile) {
                 list.add(file);
             }

@@ -39,7 +39,10 @@ interface ModalDefaultType {
         }
     >
   >;
-  searchAddressToCoordinate(address: string, check: boolean): void;
+  searchAddressToCoordinate(address: string, setAddress: React.Dispatch<React.SetStateAction<string | {
+    latitude: number;
+    longitude: number;
+}>>): void
 }
 
 const MyLocationModal = ({
@@ -67,6 +70,12 @@ const MyLocationModal = ({
     setIsMap(!isMap);
   }, [isMap]);
 
+  const [nowAddress, setNowAddress] = useState<string>("");
+  
+  const [nowLocation, setNowLocation] = useState<
+    { latitude: number; longitude: number } | string
+  >("");
+
   const ModalComponet = isMap ? (
     <MyLocationSearchMap
       onClickToggleMap={onClickToggleMap}
@@ -77,6 +86,10 @@ const MyLocationModal = ({
       defaultLocation={defaultLocation}
       selectLocation={selectLocation}
       setSelectLocation={setSelectLocation}
+      nowAddress={nowAddress}
+      setNowAddress={setNowAddress}
+      nowLocation={nowLocation}
+      setNowLocation={setNowLocation}
       findAddress={findAddress}
       recentAddressData={recentAddressData}
     />
@@ -92,6 +105,10 @@ const MyLocationModal = ({
       setComponentCheck={setComponentCheck}
       searchLocation={searchLocation}
       setsearchLocation={setsearchLocation}
+      nowAddress={nowAddress}
+      setNowAddress={setNowAddress}
+      nowLocation={nowLocation}
+      setNowLocation={setNowLocation}
       searchAddressToCoordinate={searchAddressToCoordinate}
     />
   );

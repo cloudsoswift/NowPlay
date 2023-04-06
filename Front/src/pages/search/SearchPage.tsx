@@ -1,16 +1,25 @@
 import styled from "styled-components";
 import Search from "../../components/SearchPage/Search";
-import { useState } from 'react'
+import SearchStore from "../../components/SearchPage/SearchStore";
+import { useState, useEffect, useRef } from 'react'
 
 const SearchPage = () => {
   const [searchText, setSearchText] = useState<string>("")
-  const searchTest = () => {
-    console.log(searchText)
+  const [searchInput, setSearchInput] = useState<string>("")
+  const searchSubmit = () => {
+    setSearchInput(searchText)
+    console.log(searchInput)
   }
+  useEffect(() => {
+    if (searchText == "") {
+      setSearchInput("")
+    }
+  }, [searchText])
 
   return (
     <SearchBox>
-      <Search innerPlaceHolder="가게이름을 검색하세요"  searchId="id" submit={searchTest} valueText={setSearchText}/>
+      <Search innerPlaceHolder="가게이름을 검색하세요"  searchId="id" submit={searchSubmit} valueText={setSearchText}/>
+      {searchInput !== "" && <SearchStore searchInput={searchInput} />}
     </SearchBox>
   );
 };

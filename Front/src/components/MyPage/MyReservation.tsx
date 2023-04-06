@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import styled, { keyframes } from "styled-components";
 import { queryClient } from "../../main";
 import api from "../../utils/api/api";
+import nocontentimg from '../../assets/LeisureLogo.png'
 
 const MyReservation = () => {
   const {data} = useQuery(["userReservation"], async () => {
@@ -15,6 +16,8 @@ const MyReservation = () => {
   const removeMutation = useMutation((id: number) =>  api({method: "DELETE", url: `reservation/${id}`}), {onSuccess: () => {
     queryClient.invalidateQueries(["userReservation"])
   }})
+
+  console.log(data)
 
   const rejectHandler = (idx: number) => {
     removeMutation.mutate(idx)
@@ -38,7 +41,7 @@ const MyReservation = () => {
       </ReserveCard>
     )) : <NoContentCard>
     <div className='photo-box'>
-      <img src='../../src/assets/LeisureLogo.png' />
+      <img src={nocontentimg} />
     </div>
     <div className='text-box'>
       <h1>예약이 </h1>

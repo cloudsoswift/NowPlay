@@ -25,6 +25,7 @@ export const useLogin = () => {
         }
         setIsLogin(true)
         setUserInfo({
+          userIdx: data.userIdx,
           userNickname: data.userNickname,
           userAddress: data.userAddress,
           userName: data.userName,

@@ -26,11 +26,12 @@ type ExpandableMenuProps = {
 const ExpandableMenu = ({id, refetch} : ExpandableMenuProps) => {
   const navigate = useNavigate();
   const handleClickDelete = () => {
-    api.delete(`/spring/places/${id}/reviews`).then((response)=>{
+    api.delete(`places/${id}/reviews`).then((response)=>{
       switch(response.status){
         case 200:
           alert('리뷰를 삭제했습니다.');
           refetch();
+          break;
         default:
           alert('서버와 통신에 실패했습니다');
         }
@@ -85,14 +86,14 @@ const ExpandableMenu = ({id, refetch} : ExpandableMenuProps) => {
 )}
 
 
-export const Review = ({ review, isEditable, refetch }: ReviewProps) => {
+export const Review = ({ review, isEditable, refetch, ownerComment }: ReviewProps) => {
   const date = new Date(review.createdAt);
   const dateString = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`;
   return (
-    <div className="relative border p-4 w-full h-[30vh] shadow-sm">
+    <div className="relative border-2 p-4 w-full h-min-[30vh] shadow-sm rounded-t-3xl rounded-br-3xl">
       <div>
         <span className="text-lg">{review.writer && review.writer.nickname && review.writer.nickname || ""}</span>{" "}
-        <span className="text-sm">{dateString}</span>{" "}
+        <span className="text-sm opacity-50">{dateString}</span>{" "}
         <span>
           <AiFillStar className="inline text-[var(--primary-color)]" />
           {review.rating}
@@ -107,9 +108,23 @@ export const Review = ({ review, isEditable, refetch }: ReviewProps) => {
         <ReviewBox>{review.content}</ReviewBox>
       </div>
       { isEditable && <ExpandableMenu id={review.idx} refetch={refetch}/> }
+      { ownerComment && <OwnerComment data={ownerComment} />}
     </div>
   );
 };
+
+export const OwnerComment = ({data} : {data: TOwnerComment}) => {
+  const date = new Date(data.createdAt);
+  const dateString = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`;
+  return (
+    <div className="border rounded-t-3xl rounded-bl-3xl shadow-sm p-4 bg-gray-100">
+      <span className="text-lg">사장님<span className="opacity-50">{" " + dateString}</span></span>
+      <div className="p-2">
+        {data.content}
+      </div>
+    </div>
+  )
+}
 
 export const ReviewInfo = forwardRef((props: any, ref: React.ForwardedRef<HTMLDivElement>) => {
   const { id } = useParams();
@@ -157,6 +172,9 @@ export const ReviewInfo = forwardRef((props: any, ref: React.ForwardedRef<HTMLDi
         {data?.pages.map((page) => (
           page?.content?.map((reviewList: Array<any>)=>{
             const ReviewData: TReview = reviewList.at(0);
+            if(ReviewData.hidden && (!userNickname || (ReviewData.writer?.nickname && (userNickname !== ReviewData.writer?.nickname)) )){
+              return <></>
+            }
             const {reviewImageUrl} = reviewList.at(1) !== null ? reviewList.at(1) : {reviewImageUrl: ""};
             const ownerComment: TOwnerComment = reviewList.at(2) !== null ? reviewList.at(2) : undefined;
             const review = {

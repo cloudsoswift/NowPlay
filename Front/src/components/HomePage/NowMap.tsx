@@ -45,7 +45,6 @@ const NowMap = ({
   setSelectLocation,
   children,
 }: PropsWithChildren<NowMapType>) => {
-
   const onClickNowLocation = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -73,7 +72,7 @@ const NowMap = ({
       });
 
       findAddress(position, map as naver.maps.Map, setNowAddress);
-      setSelectLocation(nowLocation)
+      // setSelectLocation(nowLocation);
 
       naver.maps.Event.addListener(map, "click", function (e) {
         marker.setPosition(e.coord);
@@ -100,6 +99,7 @@ const NowMap = ({
   }, []);
 
   useEffect(() => {
+    console.log(selectLocation)
     if (typeof selectLocation !== "string") {
       const position = new naver.maps.LatLng(
         selectLocation.latitude,
@@ -166,7 +166,7 @@ const NowMap = ({
         });
         findAddress(e.coord, map as naver.maps.Map, setNowAddress);
       });
-          } else if (typeof defaultLocation !== "string") {
+    } else if (typeof defaultLocation !== "string") {
       const position = new naver.maps.LatLng(
         defaultLocation.latitude,
         defaultLocation.longitude
@@ -201,13 +201,11 @@ const NowMap = ({
       });
     }
   }, [nowLocation]);
-  
+
   return (
     <div>
       <MapBox id="map" />
-      <NowGeo
-        onClick={onClickNowLocation}
-      >
+      <NowGeo onClick={onClickNowLocation}>
         <img src={Aim} />
       </NowGeo>
     </div>
@@ -220,7 +218,7 @@ const MapBox = styled.div`
   width: 100vw;
   height: 40vh;
   max-height: 100%;
-`
+`;
 
 const NowGeo = styled.div`
   position: absolute;
@@ -238,4 +236,4 @@ const NowGeo = styled.div`
     width: 30px;
     height: 30px;
   }
-`
+`;

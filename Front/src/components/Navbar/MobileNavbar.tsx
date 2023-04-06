@@ -23,7 +23,7 @@ const MobileNavbar = () => {
       case /^\/mobile\/mypage/.test(navLocation.pathname):
         setNavActive(4);
         break;
-      case /^\/mobile\/homepage/.test(navLocation.pathname):
+      case /^\/mobile/.test(navLocation.pathname):
         setNavActive(2);
         break;
       default:

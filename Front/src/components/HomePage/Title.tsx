@@ -54,7 +54,10 @@ const Title = ({
     { latitude: number; longitude: number } | string
   >("");
 
-  function searchAddressToCoordinate(address: string, check: boolean) {
+  function searchAddressToCoordinate(address: string, setAddress: React.Dispatch<React.SetStateAction<string | {
+    latitude: number;
+    longitude: number;
+}>>) {
     naver.maps.Service.geocode(
       {
         query: address,
@@ -73,18 +76,12 @@ const Title = ({
         if (item.jibunAddress) {
           setSearchJibunAddress(item.jibunAddress);
         }
-        if (check) {
-          setsearchLocation({
-            latitude: Number(item.y),
-            longitude: Number(item.x),
-          });
-          setComponentCheck(true);
-        } else {
-          setSelectLocation({
-            latitude: Number(item.y),
-            longitude: Number(item.x),
-          });
-        }
+
+        console.log(item.y, item.x)
+        setAddress({
+          latitude: Number(item.y),
+          longitude: Number(item.x),
+        });
       }
     );
   }
@@ -131,7 +128,7 @@ const Title = ({
 
   useEffect(() => {
     if (recentAddressData.length !== 0) {
-      searchAddressToCoordinate(recentAddressData[0], false);
+      searchAddressToCoordinate(recentAddressData[0], setSelectLocation);
       setSelectAddress(recentAddressData[0]);
     }
   }, []);

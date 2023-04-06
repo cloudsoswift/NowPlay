@@ -19,6 +19,7 @@ export const useSignup = () => {
       setCookies("accessToken", data.accessToken, { path: "/mobile" });
       setIsLogin(true)
       setUserInfo({
+        userIdx: data.userIdx,
         userNickname: data.userNickname,
         userAddress: data.userAddress,
         userName: data.userName,

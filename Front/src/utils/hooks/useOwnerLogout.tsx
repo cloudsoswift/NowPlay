@@ -15,16 +15,16 @@ export const useOwnerLogout = () => {
 
   return useMutation(() => logoutAPI(), {
     onError: () => {
+      navigation("/owner/login");
       removeCookie("accessToken", { path: "/owner" });
       setIsLogin(false);
       setOwnerInfo({
-        storeIndex: 0,
+        storeIdx: 0,
         userName: "",
         userNickname: "",
         userAddress: "",
         userDistance: "",
       });
-      navigation("/owner");
     },
   });
 };

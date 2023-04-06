@@ -74,28 +74,28 @@ export const PlaceReviewWritePage = (props: Props) => {
       rating,
       isHidden,
     })], {type: "application/json"}))
-    if(location.state.mode === "MODIFY" && location.state.idx) {
+    if(location.state?.mode === "MODIFY" && location.state.idx) {
       api.put(`places/${location.state.idx}/reviews`,form, {headers:{"Content-Type": undefined}})
       .then(({status})=>{
         switch(status){
           case 200:
             alert("리뷰를 수정했습니다.");
-            navigate(-1);
+            navigate(`/mobile/places/${location.state.store}/`);
             break;
             default:
               alert("서버와 통신에 실패했습니다.");
             }
           })
-    } else {
-      api.post(`places/${id}/reviews`,form, {headers:{"Content-Type": undefined}})
-      .then(({status})=>{
-        switch(status){
-          case 200:
-            alert("리뷰를 등록했습니다.");
-            navigate(`/mobile/places/${location.state.store}/`);
-            break;
-          default:
-            alert("서버와 통신에 실패했습니다.");
+        } else {
+          api.post(`places/${id}/reviews`,form, {headers:{"Content-Type": undefined}})
+          .then(({status})=>{
+            switch(status){
+              case 200:
+                alert("리뷰를 등록했습니다.");
+                navigate(-1);
+                break;
+              default:
+                alert("서버와 통신에 실패했습니다.");
         }
       })
     }

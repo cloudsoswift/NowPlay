@@ -1,22 +1,40 @@
 import styled from "styled-components";
+import { useRecoilValue } from "recoil";
+import { categoriesSelector } from "../Places/Map";
 
+interface Mini  {
+  name: string;
+  distance: number;
+  thisRating: number;
+  imagesUrl: string;
+  subCategory: string;
+}
 
-const MiniCard = () => {
-  const thisRating = 3.75
+const MiniCard = ({name, distance, thisRating, imagesUrl, subCategory}: Mini) => {
+  const categories = useRecoilValue(categoriesSelector);
+  let subImg: string | undefined
+
+  categories.map(main => {
+    if (main.subcategories?.find(c => c.subcategory===subCategory)?.subcategoryImageUrl !== undefined) {
+      subImg = main.subcategories?.find(c => c.subcategory===subCategory)?.subcategoryImageUrl
+    }
+  })
+
+  const imgDefault = imagesUrl !== "" ? imagesUrl : subImg
+
   const percentRating = thisRating * 20
-  const name = '스파크노래타운'
-  const distance = '513'
-
   return (
     <CardBox>
-      <img src="src\components\HomePage\card.PNG"/>
+      <img src={imgDefault}/>
       <div>
         <Top>
           <Name>
             {name}
           </Name>
           <Distance>
-            {distance}m
+            {distance < 1
+            ? `${(distance * 1000).toFixed(0)}m`
+            : `${distance.toFixed(2)}km`}
           </Distance>
         </Top>
         <Bottom>

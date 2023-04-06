@@ -28,6 +28,7 @@ const MyReservation = () => {
       <ReserveCard delay={index} key={index} accept={reserve.isConfirmed}>
         <div className='reserveInfo'>
           <div>
+            <h1>{reserve.isConfirmed === 0 ? "미확인" : ""}{reserve.isConfirmed === 1 ? "승낙" : ""}{reserve.isConfirmed === 2 ? "거절" : ""}</h1>
             <h1>예약자</h1>
             <h1>{reserve.time.slice(0, 10)}</h1>
           </div>

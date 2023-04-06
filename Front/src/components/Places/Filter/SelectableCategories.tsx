@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { categoriesSelector, filterState } from "../Map";
 import { TFilter, THobbyMainCategory, THobbySubCategory } from "../../../utils/api/graphql";
+import { preparedFilterState } from "./Filter";
 
 type sCategoryProps = {
   category: THobbyMainCategory | THobbySubCategory;
@@ -73,7 +74,7 @@ const selectedCategoryClass =
   "bg-[var(--body-color)] m-1 border-b-4 border-b-[var(--primary-color)]";
 
 export const SelectableCategories = (props: sCategoriesProps) => {
-  const [ {subcategory}, setFilter] = useRecoilState(filterState);
+  const [ {subcategory}, setFilter] = useRecoilState(preparedFilterState);
   const [subCategories, setSubcategories] = useState<subCategoryList>();
   const categoryList = useRecoilValue(categoriesSelector);
 

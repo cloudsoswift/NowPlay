@@ -28,7 +28,6 @@ const MyReview = () => {
     });
     const newData: Treview[] = []
     data.forEach((review: any) => {
-      console.log(review)
       newData.push({
         ownerComment: {
           content: review.ownerComment?.content,

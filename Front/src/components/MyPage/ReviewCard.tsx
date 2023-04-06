@@ -36,9 +36,7 @@ const ReviewCard = ({ review }: { review: Treview }) => {
 
   const updateMutation = useMutation(
     async () => {
-      console.log(reviewContent,
-        rating,
-        isHidden,)
+      console.log(reviewContent, rating, isHidden);
       const form = new FormData();
       if (updateImg) {
         form.append("files", updateImg[0]);
@@ -48,18 +46,18 @@ const ReviewCard = ({ review }: { review: Treview }) => {
         new Blob(
           [
             JSON.stringify({
-              reviewContent,
+              content: reviewContent,
               rating,
               isHidden,
             }),
           ],
           { type: "application/json" }
         )
-      )
+      );
       return api({
         method: "PUT",
         url: `places/${review.review.idx}/reviews`,
-        data: form
+        data: form,
       });
     },
     {
@@ -100,14 +98,30 @@ const ReviewCard = ({ review }: { review: Treview }) => {
         <MyReviewCard scale={scaleState}>
           <h1>{review.review.storeName}</h1>
           <h2>{review.review.createdAt.slice(0, 10)}</h2>
-          <h2>별점</h2>
+          <h2><StarRating>
+              <StarRatingFill style={{ width: review.review.rating * 20 + "%" }}>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </StarRatingFill>
+              <StarRatingBase>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </StarRatingBase>
+            </StarRating></h2>
           <ImgBox>
-            <img
-              src='http://www.bizhankook.com/upload/bk/article/202002/thumb/19402-44437-sampleM.jpg'
-              alt=''
-            />
+            {review.review.image !== "" ? (
+              <img src={review.review.image} alt="" />
+            ) : (
+              <img src={"https://www.namdokorea.com/site/jeonnam/tour/images/noimage.gif"} alt="" />
+            )}
           </ImgBox>
-          <div className='chat-box'>
+          <div className="chat-box">
             <ReviewerChatting>{review.review.content}</ReviewerChatting>
             {review.ownerComment.content ? (
               <OwnerChatting>{review.ownerComment.content}</OwnerChatting>
@@ -128,13 +142,13 @@ const ReviewCard = ({ review }: { review: Treview }) => {
           }
           scale={scaleState}
         >
-          <input type='file' accept='image/*' onChange={imgHandler} />
-          <ImgBox className='img-box'>
-            <img src={uploadImg} alt='' />
+          <input type="file" accept="image/*" onChange={imgHandler} />
+          <ImgBox className="img-box">
+            <img src={uploadImg} alt="" />
           </ImgBox>
           <RatingBox>
             <button
-              type='button'
+              type="button"
               onClick={() => {
                 setRating(1);
               }}
@@ -142,7 +156,7 @@ const ReviewCard = ({ review }: { review: Treview }) => {
               {rating >= 1 ? <AiFillStar /> : <AiOutlineStar />}
             </button>
             <button
-              type='button'
+              type="button"
               onClick={() => {
                 setRating(2);
               }}
@@ -150,7 +164,7 @@ const ReviewCard = ({ review }: { review: Treview }) => {
               {rating >= 2 ? <AiFillStar /> : <AiOutlineStar />}
             </button>
             <button
-              type='button'
+              type="button"
               onClick={() => {
                 setRating(3);
               }}
@@ -158,7 +172,7 @@ const ReviewCard = ({ review }: { review: Treview }) => {
               {rating >= 3 ? <AiFillStar /> : <AiOutlineStar />}
             </button>
             <button
-              type='button'
+              type="button"
               onClick={() => {
                 setRating(4);
               }}
@@ -166,7 +180,7 @@ const ReviewCard = ({ review }: { review: Treview }) => {
               {rating >= 4 ? <AiFillStar /> : <AiOutlineStar />}
             </button>
             <button
-              type='button'
+              type="button"
               onClick={() => {
                 setRating(5);
               }}
@@ -175,8 +189,8 @@ const ReviewCard = ({ review }: { review: Treview }) => {
             </button>
           </RatingBox>
           <textarea
-            name=''
-            id=''
+            name=""
+            id=""
             cols={40}
             rows={4}
             value={reviewContent}
@@ -389,5 +403,36 @@ const OwnerChatting = styled.div`
     position: absolute;
     bottom: 0px;
     right: -10px;
+  }
+`;
+
+
+const StarRating = styled.div`
+  position: relative;
+  unicode-bidi: bidi-override;
+  width: max-content;
+  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 0.2px;
+  -webkit-text-stroke-color: #2b2a29;
+`;
+
+const StarRatingFill = styled.div`
+  padding: 0;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  left: 0;
+  overflow: hidden;
+  -webkit-text-fill-color: var(--primary-color);
+  > span {
+    font-size: var(--large-text);
+  }
+`;
+
+const StarRatingBase = styled.div`
+  z-index: 0;
+  padding: 0;
+  > span {
+    font-size: var(--large-text);
   }
 `;

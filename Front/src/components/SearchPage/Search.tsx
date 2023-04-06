@@ -13,8 +13,7 @@ const Search = ({ innerPlaceHolder, searchId, submit, valueText, children }: Pro
   const onChangeSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
     valueText(e.target.value)
   }
-
-
+  
   return (
     <SearchBar>
       <SearchBarInput id={searchId} placeholder={innerPlaceHolder} onChange={onChangeSubmit} />

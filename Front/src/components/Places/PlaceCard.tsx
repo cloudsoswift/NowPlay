@@ -186,7 +186,7 @@ type PlaceCardsProps = {
 };
 
 export const MIN_Y = 120; // 바텀시트가 최대로 높이 올라갔을 때의 y 값
-export const MAX_Y = window.innerHeight - 60; // 바텀시트가 최소로 내려갔을 때의 y 값
+export const MAX_Y = window.innerHeight - 120; // 바텀시트가 최소로 내려갔을 때의 y 값
 export const BOTTOM_SHEET_HEIGHT = window.innerHeight; // 바텀시트의 세로 길이
 
 export const PlaceCardSheet = ({ result }: PlaceCardsProps) => {
@@ -194,7 +194,7 @@ export const PlaceCardSheet = ({ result }: PlaceCardsProps) => {
   const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, refetch } = result;
   useEffect(()=>{
     const handleTouchEnd = (e: TouchEvent) => {
-      if(content.current?.scrollHeight === content.current!.scrollTop + content.current!.clientHeight){
+      if(content.current!.scrollHeight < content.current!.scrollTop + content.current!.clientHeight + 50){
         fetchNextPage();
       }
     }
@@ -205,7 +205,9 @@ export const PlaceCardSheet = ({ result }: PlaceCardsProps) => {
   }, [])
   return (
     <Wrapper ref={sheet}>
-      <div className="h-20 rounded-t-lg pt-4 pb-1 bg-[var(--gray-color-light)]" id="bottomSheetHeader">
+      <div className="h-20 rounded-t-lg pt-4 pb-1 bg-[var(--gray-color-light)]" id="bottomSheetHeader" onClick={()=>{
+        sheet.current?.style.setProperty('transform', `translateY(0px)`);
+        content.current!.scrollTop = 0;}}>
         <div className="w-8 h-1 rounded-sm m-auto bg-[var(--primary-color)]"></div>
       </div>
       <div
@@ -238,7 +240,7 @@ const Wrapper = styled(motion.div)`
   border-top-right-radius: 8px;
   background-color: #fff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
-  height: ${BOTTOM_SHEET_HEIGHT - MIN_Y}px;
+  height: ${BOTTOM_SHEET_HEIGHT - MIN_Y - 80}px;
 `;
 
 
@@ -275,6 +277,7 @@ const Category = styled.div`
   width: auto;
   font-size: var(--title-2);
   color: var(--gray-color);
+  white-space: nowrap;
 `;
 
 const Middle = styled.div`

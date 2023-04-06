@@ -1,12 +1,12 @@
 import { ChangeEvent, useRef } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { motion } from "framer-motion";
-import { filterState } from "../Map";
+import { preparedFilterState } from "./Filter";
 
 type Props = {};
 
 export const DistanceSlider = (props: Props) => {
-  const [{maxDistance} ,setFilter] = useRecoilState(filterState);
+  const [{maxDistance} ,setFilter] = useRecoilState(preparedFilterState);
   const draggableArea = useRef<HTMLDivElement>(null);
   const draggableTarget = useRef<HTMLDivElement>(null);
   const modifyTarget = (target: number) => {

@@ -1,24 +1,43 @@
-import moment, { Moment } from "moment";
+import moment, { Moment, weekdays } from "moment";
 
 import { useState } from "react";
+import { RxDotFilled } from "react-icons/rx";
 import { SetterOrUpdater, useRecoilState } from "recoil";
 import { reservationInfo, TReservationInfo } from "../../../pages/places/PlaceReservationPage";
+import { TBusinessHour } from "../../../utils/api/graphql";
+
+export type ENUM_DAYS = "monday" | "tuesday" | "wendesday" | "thursday" | "friday" | "saturday" | "sunday";
+export const WEEK_OF_DAYS = {
+  "monday": 1,
+  "tuesday": 2,
+  "wendesday": 3,
+  "thursday": 4,
+  "friday": 5,
+  "saturday": 6,
+  "sunday": 0,
+}
 type DayProps = {
   onClick: SetterOrUpdater<TReservationInfo>;
   isSelected: boolean;
   isPresentMonth: boolean;
   date: Moment;
+  isHoliday: boolean;
 };
-const Day = ({ onClick, isSelected, isPresentMonth, date }: DayProps) => {
+const Day = ({ onClick, isSelected, isPresentMonth, date, isHoliday }: DayProps) => {
   const weekday = date.weekday();
   return (
     <td
-      className={`${(!isPresentMonth && "text-opacity-30") || ""} ${
+      className={`${((!isPresentMonth || isHoliday) && "text-opacity-30") || ""} ${
         (isSelected && "text-white bg-[var(--primary-color)]") || 
         (weekday === 6 && "text-blue-500") ||
-        (weekday === 0 && "text-red-500") || "text-black"
-      } py-2`}
+        (weekday === 0 && "text-red-500") ||
+        "text-black"
+      } py-2 relative`}
       onClick={() => {
+        if(isHoliday) {
+          alert("예약이 불가능한 날짜 입니다.");
+          return;
+        }
         onClick((prevReservationInfo)=>{
           return {
             ...prevReservationInfo,
@@ -29,11 +48,14 @@ const Day = ({ onClick, isSelected, isPresentMonth, date }: DayProps) => {
       }}
     >
       {date.date()}
+      {!isHoliday && <RxDotFilled className="absolute bottom-0 left-1/2 -translate-x-1/2"/>}
     </td>
   );
 };
-
-const Calendar = () => {
+type CalendarProps = {
+  businessHour: TBusinessHour[]
+}
+const Calendar = ({businessHour} : CalendarProps) => {
   const [calendarDate, setCalendarDate] = useState(moment());
   const [{dateTime}, setReservationInfo] = useRecoilState(reservationInfo);
 
@@ -93,38 +115,58 @@ const Calendar = () => {
                   // 현재 달의 첫 날이 일요일이 아닌 경우
                   // 달력에서 지난 달 마지막 주 ~ 현재 달의 첫 날 표시하는 부분
                   if (previousMonthLWS <= dayOfPreviousMonth) {
-                    // return <td>{previousMonthLWS++}</td>
+                    const pM = moment(previousMonth).date(previousMonthLWS)
+                    const isHoliday = pM.isAfter(moment()) || businessHour.some(bh=>{
+                      const key: ENUM_DAYS = bh.dayOfWeek as ENUM_DAYS;
+                      return bh.storeHoliday && WEEK_OF_DAYS[key] === pM.weekday();
+                    })
                     return (
                       <Day
-                        date={moment(previousMonth).date(previousMonthLWS++)}
-                        isSelected={moment(previousMonth)
-                          .date(previousMonthLWS - 1)
-                          .isSame(dateTime, 'day')}
+                      key={`b-${previousMonthLWS}`}
+                      date={moment(previousMonth).date(previousMonthLWS++)}
+                      isSelected={moment(previousMonth)
+                        .date(previousMonthLWS - 1)
+                        .isSame(dateTime, 'day')}
                         onClick={setReservationInfo}
                         isPresentMonth={false}
-                      />
-                    );
-                  } else if (presentMonthCount <= dayOfMonth) {
+                        isHoliday={isHoliday}
+                        />
+                        );
+                      } else if (presentMonthCount <= dayOfMonth) {
+                    const cM = moment(calendarDate).date(presentMonthCount)
+                    const isHoliday = cM.isAfter(moment()) || businessHour.some(bh=>{
+                      const key: ENUM_DAYS = bh.dayOfWeek as ENUM_DAYS;
+                      return bh.storeHoliday && WEEK_OF_DAYS[key] === cM.weekday()
+                    })
                     return (
                       <Day
+                        key={`n-${presentMonthCount}`}
                         date={moment(calendarDate).date(presentMonthCount++)}
                         isSelected={moment(calendarDate)
                           .date(presentMonthCount - 1)
                           .isSame(dateTime, 'day')}
                         onClick={setReservationInfo}
                         isPresentMonth={true}
+                        isHoliday={isHoliday}
                       />
                     );
                     // 현재 달의 마지막 날 ~ 다음 달의 두 번째 주(현재 달의 마지막 날이 토요일이면 첫 번째 주 까지만) 표시하는 부분
                   } else if (nextMonthFWSCount <= nextMonthFWS) {
+                    const aM = moment(nextMonth).date(nextMonthFWSCount);
+                    const isHoliday = aM.isAfter(moment()) || businessHour.some(bh=>{
+                      const key: ENUM_DAYS = bh.dayOfWeek as ENUM_DAYS;
+                      return bh.storeHoliday && WEEK_OF_DAYS[key] === aM.weekday();
+                    })
                     return (
                       <Day
+                        key={`a-${nextMonthFWSCount}`}
                         date={moment(nextMonth).date(nextMonthFWSCount++)}
                         isSelected={moment(nextMonth)
                           .date(nextMonthFWSCount - 1)
                           .isSame(dateTime, 'day')}
                         onClick={setReservationInfo}
                         isPresentMonth={false}
+                        isHoliday={isHoliday}
                       />
                     );
                   }
@@ -137,8 +179,10 @@ const Calendar = () => {
     </div>
   );
 };
-
-export const DatePicker = () => {
+type DatePickerProps = {
+  businessHour: TBusinessHour[]
+}
+export const DatePicker = ({businessHour}: DatePickerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div
@@ -152,7 +196,7 @@ export const DatePicker = () => {
       >
         1. 날짜 선택
       </div>
-      {isOpen && <Calendar />}
+      {isOpen && <Calendar businessHour={businessHour}/>}
     </div>
   );
 };

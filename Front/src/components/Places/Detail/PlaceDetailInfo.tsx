@@ -1,7 +1,7 @@
 import { GrDocumentText, GrMapLocation } from "react-icons/gr";
 import { ImPhone } from "react-icons/im";
-import { TStoreDetail } from "../Types";
 import { HiOutlineGlobeAlt } from "react-icons/hi";
+import { TStoreDetail } from "../../../utils/api/graphql";
 type Props = {
   placeDetail: TStoreDetail;
 };

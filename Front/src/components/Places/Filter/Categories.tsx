@@ -3,13 +3,14 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { filterState } from "../Map";
 import { RxCross2 } from "react-icons/rx";
 import { THobbySubCategory } from "../../../utils/api/graphql";
+import { preparedFilterState } from "./Filter";
 type CategoriesProps = {};
 type CategoryProps = {
   subCategory: THobbySubCategory;
 };
 
 export const Category = ({ subCategory }: CategoryProps) => {
-  const setFilter = useSetRecoilState(filterState);
+  const setFilter = useSetRecoilState(preparedFilterState);
   const handleCategoryClick = () => {
     setFilter((prevFilter) => {
       return {

@@ -11,7 +11,7 @@ const api = axios.create({
 });
 
 // timeout 설정 4초
-api.defaults.timeout = 4000;
+// api.defaults.timeout = 4000;
 
 // axios interceptor로 헤더에 Authorization 설정
 api.interceptors.request.use(function (config) {

@@ -275,6 +275,7 @@ const Category = styled.div`
   width: auto;
   font-size: var(--title-2);
   color: var(--gray-color);
+  white-space: nowrap;
 `;
 
 const Middle = styled.div`

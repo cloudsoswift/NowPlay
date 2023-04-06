@@ -7,6 +7,7 @@ import MobileNavbar from "./components/Navbar/MobileNavbar";
 import HomePage from "./pages/home/HomePage";
 import SearchPage from "./pages/search/SearchPage";
 import Topbar from "./components/Topbar/Topbar";
+import LikePage from "./pages/like/LikePage";
 
 import styled from "styled-components";
 import { PlacesPage } from "./pages/places/PlacesPage";
@@ -37,7 +38,10 @@ function Mobile() {
           <Route element={<PrivateRoute authentication={true} type="mobile" />}>
             <Route path="/mypage/*" element={<MyPage />} />
           </Route>
-          <Route path="/homepage/*" element={<HomePage />} />
+          <Route element={<PrivateRoute authentication={true} type="mobile" />}>
+            <Route path="/like/*" element={<LikePage />} />
+          </Route>
+          <Route path="/*" element={<HomePage />} />
           <Route path="/search/*" element={<SearchPage />} />
           <Route path="/places" element={<PlacesPage />} />
           <Route path="/places/:id" element={<PlaceDetailPage />} />

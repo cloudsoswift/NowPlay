@@ -5,7 +5,9 @@ import Aim from "../../svg/aim.svg";
 
 interface NowMapType {
   nowAddress: string;
+  locationCheck: boolean;
   setNowAddress: React.Dispatch<React.SetStateAction<string>>;
+  setLocationCheck: React.Dispatch<React.SetStateAction<boolean>>;
   findAddress: (
     latlng: naver.maps.LatLng,
     map: naver.maps.Map,
@@ -43,6 +45,8 @@ const NowMap = ({
   setNowLocation,
   selectLocation,
   setSelectLocation,
+  locationCheck,
+  setLocationCheck,
   children,
 }: PropsWithChildren<NowMapType>) => {
   const onClickNowLocation = (
@@ -72,7 +76,7 @@ const NowMap = ({
       });
 
       findAddress(position, map as naver.maps.Map, setNowAddress);
-      // setSelectLocation(nowLocation);
+      setSelectLocation(nowLocation);
 
       naver.maps.Event.addListener(map, "click", function (e) {
         marker.setPosition(e.coord);
@@ -200,7 +204,8 @@ const NowMap = ({
         findAddress(e.coord, map as naver.maps.Map, setNowAddress);
       });
     }
-  }, [nowLocation]);
+    setLocationCheck(false)
+  }, [nowLocation, locationCheck]);
 
   return (
     <div>

@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import api from "../../utils/api/api";
 import BigCard from "./BigCard";
 import { TPlaceCard } from "../Places/Types";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "../../main";
 
 const LikeContent = () => {
   const { data } = useQuery(["LikeStore"], async () => {
@@ -12,6 +14,20 @@ const LikeContent = () => {
     });
     return data;
   });
+
+  const toggleBookmark = useMutation(
+    (id: number) => 
+    api({
+      method: "POST",
+      url: `place/${id}/favorite`,
+    }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([`LikeStore`]);
+      },
+    }
+  )
+
   return (
     <LikeContentBox>
       {data?.map((data: any, index: number) => {
@@ -26,7 +42,7 @@ const LikeContent = () => {
           reviewCount: 5,
           isBookmark: true,
         }
-        return <BigCard key={index} place={store}></BigCard>
+        return <BigCard key={index} place={store} toggleBookmark={toggleBookmark}></BigCard>
       })}
     </LikeContentBox>
   )

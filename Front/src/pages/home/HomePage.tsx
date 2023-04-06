@@ -34,8 +34,8 @@ const HomePage = () => {
       </Suspense>
       <hr />
       <Recommend />
-      <hr />
-      <UserRecommend />
+      {/* <hr />
+      <UserRecommend /> */}
     </HomeBox>
   );
 };

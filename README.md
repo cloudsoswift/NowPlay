@@ -114,8 +114,16 @@
 
 | 이름 | 사용 이유 |
 | :--: | :-------- |
-|      |           |
-|      |           |
+| Hadoop | 빅데이터 분산 처리  |
+| Hive |   Hadoop 데이터 쿼리 처리     |
+| Docker |   컨테이너화 배포 && 서버 분산        |
+| graphql |   복잡한 서버 request를 간단하게 처리        |
+| Springboot |   CRUD API 설계 및 REST 배포   |
+| Jwt |    로그인 기능 구현     |
+| Jenkins |    CICD 배포 자동화    |
+| MariaDB |   Relational DataBase    |
+| Workbench |   RDBMS    |
+
 
 ##### FrontEnd
 

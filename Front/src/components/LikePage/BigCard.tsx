@@ -5,32 +5,34 @@ import { Link } from "react-router-dom";
 import { TPlaceCard } from "../Places/Types";
 import { useRecoilValue } from "recoil";
 import { categoriesSelector } from "../Places/Map";
+import { UseMutationResult } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
 
 
 type PlaceCardProps = {
   place: TPlaceCard;
+  toggleBookmark: UseMutationResult<AxiosResponse<any, any>, unknown, number, unknown>
 };
 
-const BigCard = ({ place }: PlaceCardProps) => {
-  // const toggleBookmark = async (id: number) => {
-  //   const { data } = await api({
-  //     method: "POST",
-  //     url: `place/${id}/favorite`,
-  //   });
-  //   return;
-  // }
-  // const categories = useRecoilValue(categoriesSelector);
+const BigCard = ({ place, toggleBookmark }: PlaceCardProps) => {
+
+  const categories = useRecoilValue(categoriesSelector);
   let subImg: string | undefined
 
-  // categories.map(main => {
-  //   if (main.subcategories?.find(c => c.subcategory===place.subCategory)?.subcategoryImageUrl !== undefined) {
-  //     subImg = main.subcategories?.find(c => c.subcategory===place.subCategory)?.subcategoryImageUrl
-  //   }
-  // })
+  categories.map(main => {
+    if (main.subcategories?.find(c => c.subcategory===place.subCategory)?.subcategoryImageUrl !== undefined) {
+      subImg = main.subcategories?.find(c => c.subcategory===place.subCategory)?.subcategoryImageUrl
+    }
+  })
 
   const imgDefault = place.imageURL !== "" ? place.imageURL : subImg
 
   const percentRating = place.averageRating * 20;
+
+  const bookmarkHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    toggleBookmark.mutate(place.idx)
+  }
 
   return (
     <Link to={`/mobile/places/${place.idx}`}>
@@ -40,10 +42,7 @@ const BigCard = ({ place }: PlaceCardProps) => {
           <Top>
             <Name>{place.name}</Name>
             <Category>{place.subCategory}</Category>
-            <BookmarkDiv onClick={(e: React.MouseEvent) => {
-              // e.preventDefault()
-              // toggleBookmark(place.idx)
-            }}>
+            <BookmarkDiv onClick={bookmarkHandler}>
               {place.isBookmark ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
             </BookmarkDiv>
           </Top>

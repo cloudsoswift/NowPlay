@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import RecommendDistance from "./RecommendDistance";
-import RecommendPopular from "./RecommendPopular";
+import UserRecommend from "./UserRecommend";
 import { NavLink, Routes, Route } from "react-router-dom";
 
 const Recommend = () => {
@@ -10,7 +10,7 @@ const Recommend = () => {
     <>
       <HomePageRecommend>
         <NavLink to="" end>
-          <li>인기순</li>
+          <li>추천</li>
         </NavLink>
         <NavLink to="recent">
           <li>거리순</li>
@@ -18,8 +18,7 @@ const Recommend = () => {
       </HomePageRecommend>
       <HomePageContent>
         <Routes>
-          <Route path="" element={<RecommendPopular />} />
-          {/* <Route path="popular" element={<RecommendPopular />} /> */}
+          <Route path="" element={<UserRecommend />} />
           <Route path="recent" element={<RecommendDistance />} />
         </Routes>
       </HomePageContent>

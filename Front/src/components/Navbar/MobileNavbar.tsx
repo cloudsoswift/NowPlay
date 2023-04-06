@@ -43,7 +43,7 @@ const MobileNavbar = () => {
         <BiStar />
         <span>즐겨찾기</span>
       </NavStyle>
-      <NavStyle to='homepage'>
+      <NavStyle to='' end>
         <BiHome />
         <span>홈</span>
       </NavStyle>

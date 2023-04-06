@@ -30,36 +30,41 @@ const RecommendDistance = () => {
         variables,
       })
     ).data?.data;
-    return data.storeRecommendationByCoordinate ? data.storeRecommendationByCoordinate : [];
+    return data.storeRecommendationByCoordinate
+      ? data.storeRecommendationByCoordinate
+      : [];
   };
   const result = useQuery({
     queryKey: ["recommendDistanceList"],
-    queryFn: fetchCardList
-  })
+    queryFn: fetchCardList,
+  });
 
-  const {
-    data,
-    error,
-    isFetching,
-    status,
-    refetch,
-  } = result;
+  const { data, error, isFetching, status, refetch } = result;
 
   return (
     <CardList>
-        {data
-          ?
-          data?.map((data: any, index: number) => {
-            return <MiniCard key={index} name={data.store.name} distance={data.distance} thisRating={data.averageRating} imagesUrl={data.store.imagesUrl} subCategory={data.store.subcategory.subcategory} />
-          })
-          :
-          <img src="https://t1.daumcdn.net/cfile/tistory/184F8A4E4E55932B06" />
-        }
+      {data ? (
+        data?.map((data: any, index: number) => {
+          return (
+            <MiniCard
+              key={index}
+              idx={data.store.idx}
+              name={data.store.name}
+              distance={data.distance}
+              thisRating={data.averageRating}
+              imagesUrl={data.store.imagesUrl}
+              subCategory={data.store.subcategory.subcategory}
+            />
+          );
+        })
+      ) : (
+        <img src="https://t1.daumcdn.net/cfile/tistory/184F8A4E4E55932B06" />
+      )}
     </CardList>
-  )
+  );
 };
 
-export default RecommendDistance
+export default RecommendDistance;
 
 const CardList = styled.div`
   display: flex;
@@ -67,6 +72,6 @@ const CardList = styled.div`
   overflow-y: hidden;
   > img {
     margin-inline: auto;
-    height: 236px;
+    height: 150px;
   }
-`
+`;

@@ -14,6 +14,7 @@ import { filterState } from "../Places/Map";
 import { QSearchStore } from "../../utils/api/graphql";
 import BigCard from "../LikePage/BigCard";
 import { TPlaceCard } from "../Places/Types";
+import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../main";
 
 interface SearchBarType {
@@ -56,6 +57,19 @@ const SearchStore = ({
         : undefined,
     // staleTime: 20000,
   });
+
+  const toggleBookmark = useMutation(
+    (id: number) => 
+    api({
+      method: "POST",
+      url: `place/${id}/favorite`,
+    }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([`searchList`]);
+      },
+    }
+  )
 
   const {
     data,
@@ -110,7 +124,7 @@ const SearchStore = ({
             reviewCount: data.reviewCount,
             isBookmark: data.isBookmark,
           };
-          return <BigCard key={index} place={store}></BigCard>;
+          return <BigCard key={index} place={store} toggleBookmark={toggleBookmark}></BigCard>;
         });
       })}
       <div ref={observerElem}></div>

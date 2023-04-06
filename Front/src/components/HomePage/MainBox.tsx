@@ -22,38 +22,36 @@ const MainBox = () => {
   const sportsFilter: THobbySubCategory[] | undefined = categories.find(c=>c.mainCategory==="체육")?.subcategories;
   const themeFilter: THobbySubCategory[] | undefined = categories.find(c=>c.mainCategory==="테마")?.subcategories;
   return (
-    <Suspense fallback={<div>로딩중...</div>}>
-      <MainFilter>
-        <div>
-          <Link to={`/mobile/places`} state={sportsFilter}>
-            <img src={Sports} />
-            <div>체육</div>
-          </Link>
-          <Link to={`/mobile/places`} state={gameFilter}>
-            <img src={Game} />
-            <div>오락</div>
-          </Link>
-          <Link to={`/mobile/places`} state={leisureFilter}>
-            <img src={Leisure} />
-            <div>레저</div>
-          </Link>
-        </div>
-        <div>
-          <Link to={`/mobile/places`} state={themeFilter}>
-            <img src={Theme} />
-            <div>테마</div>
-          </Link>
-          <Link to={`/mobile/places`} state={cultureFilter}>
-            <img src={Culture} />
-            <div>문화</div>
-          </Link>
-          <Link to={`/mobile/places`} state={healingFilter}>
-            <img src={Healing} />
-            <div>힐링</div>
-          </Link>
-        </div>
-      </MainFilter>
-    </Suspense>
+    <MainFilter>
+      <div>
+        <Link to={`/mobile/places`} state={cultureFilter}>
+          <img src={Culture} />
+          <div>문화</div>
+        </Link>
+        <Link to={`/mobile/places`} state={gameFilter}>
+          <img src={Game} />
+          <div>오락</div>
+        </Link>
+        <Link to={`/mobile/places`} state={healingFilter}>
+          <img src={Healing} />
+          <div>힐링</div>
+        </Link>
+      </div>
+      <div>
+        <Link to={`/mobile/places`} state={leisureFilter}>
+          <img src={Leisure} />
+          <div>레저</div>
+        </Link>
+        <Link to={`/mobile/places`} state={sportsFilter}>
+          <img src={Sports} />
+          <div>체육</div>
+        </Link>
+        <Link to={`/mobile/places`} state={themeFilter}>
+          <img src={Theme} />
+          <div>테마</div>
+        </Link>
+      </div>
+    </MainFilter>
   );
 };
 

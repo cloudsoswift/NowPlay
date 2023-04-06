@@ -7,7 +7,7 @@ import { SelectableCategories } from "./SelectableCategories";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import styled, { keyframes } from "styled-components";
-import { useSetRecoilState } from "recoil";
+import { atom, useRecoilState, useSetRecoilState } from "recoil";
 import { filterState } from "../Map";
 import { TFilter } from "../../../utils/api/graphql";
 import Pin2 from "../../../svg/pin2.svg";
@@ -22,6 +22,17 @@ type Props = {
   setIsOpenModalBox: React.Dispatch<React.SetStateAction<boolean>>;
   recentAddress: string[];
 };
+export const preparedFilterState = atom<TFilter>({
+  key: "preparedFilterState",
+  default: {
+    mainHobby: [],
+    subcategory: [],
+    latitude: 36.1078224,
+    longitude: 128.4177517,
+    maxDistance: 10,
+    count: 1,
+  },
+});
 export const Filter = ({
   className,
   onClose,
@@ -32,11 +43,17 @@ export const Filter = ({
   onSubmit,
   recentAddress,
 }: Props) => {
-  const setFilterValue = useSetRecoilState(filterState);
+  const [filterValue ,setFilterValue] = useRecoilState(filterState);
+  const [preparedFilterValue, setPreparedFilterValue] = useRecoilState(preparedFilterState);
   const handleApplyFilter = () => {
-    onSubmit();
+    setFilterValue({...preparedFilterValue});
     onClose(false);
   }
+  React.useEffect(()=>{
+    setPreparedFilterValue({
+      ...filterValue
+    });
+  }, [])
   return (
     <FilterModalBox>
       <FilterModalContent isModalShown={isModalShown}>
@@ -52,7 +69,6 @@ export const Filter = ({
             e.preventDefault();
             setIsOpenModal(true);
             setIsOpenModalBox(true);
-            onClose(false)
           }}
         >
           <img src={Pin2} />

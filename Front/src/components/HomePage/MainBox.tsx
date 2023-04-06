@@ -14,10 +14,11 @@ import { Suspense, useEffect } from "react";
 
 const MainBox = () => {
   const categories = useRecoilValue(categoriesSelector);
+
   const cultureFilter: THobbySubCategory[] | undefined = categories.find(c=>c.mainCategory==="문화생활")?.subcategories;
-  const gameFilter: THobbySubCategory[] | undefined  = categories.find(c=>c.mainCategory==="오락")?.subcategories;
-  const healingFilter: THobbySubCategory[] | undefined  = categories.find(c=>c.mainCategory==="힐링")?.subcategories;
-  const leisureFilter: THobbySubCategory[] | undefined  = categories.find(c=>c.mainCategory==="레저")?.subcategories;
+  const gameFilter: THobbySubCategory[] | undefined = categories.find(c=>c.mainCategory==="오락")?.subcategories;
+  const healingFilter: THobbySubCategory[] | undefined = categories.find(c=>c.mainCategory==="힐링")?.subcategories;
+  const leisureFilter: THobbySubCategory[] | undefined = categories.find(c=>c.mainCategory==="레저")?.subcategories;
   const sportsFilter: THobbySubCategory[] | undefined = categories.find(c=>c.mainCategory==="체육")?.subcategories;
   const themeFilter: THobbySubCategory[] | undefined = categories.find(c=>c.mainCategory==="테마")?.subcategories;
   return (

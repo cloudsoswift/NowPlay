@@ -2,7 +2,6 @@ import axios from "axios";
 import { Cookies } from "react-cookie";
 
 // 쿠키 객체 생성
-const cookie = new Cookies();
 
 const api = axios.create({
   baseURL: "https://j8d110.p.ssafy.io/spring/",
@@ -15,6 +14,7 @@ const api = axios.create({
 
 // axios interceptor로 헤더에 Authorization 설정
 api.interceptors.request.use(function (config) {
+  const cookie = new Cookies();
   const cookieAccessToken = cookie.get("accessToken");
 
   if (!cookieAccessToken) {
@@ -28,37 +28,37 @@ api.interceptors.request.use(function (config) {
 
 // 401에러 반환시 refresh로 요청 후 기존 요청 다시 보냄
 api.interceptors.response.use(
-    function (response) {
-        return response;
-      },
-      async function (error) {
-        if (error.response && error.response.status === 401) {
-          try {
-            const originalRequest = error.config;
-            const data = await api.get("accounts/access/");
-            if (data) {
-              const accessToken = data.data.access_token;
-              cookie.remove("accessToken");
-              cookie.set("accessToken", accessToken, { path: "/mobile" });
-              originalRequest.headers["Authorization"] = `Bearer ${cookie.get(
-                "accessToken"
-              )}`;
-              return await api.request(originalRequest);
-            }
-          } catch (error) {
-            cookie.remove("accessToken");
-            console.log(error);
-    
-            localStorage.removeItem("userInfo")
-          }
-          return Promise.reject(error);
+  function (response) {
+    return response;
+  },
+  async function (error) {
+    if (error.response && error.response.status === 401) {
+      const cookie = new Cookies();
+      try {
+        const originalRequest = error.config;
+        const data = await api.get("accounts/access/");
+        if (data) {
+          const accessToken = data.data.access_token;
+          cookie.remove("accessToken");
+          cookie.set("accessToken", accessToken, { path: "/mobile" });
+          originalRequest.headers["Authorization"] = `Bearer ${cookie.get(
+            "accessToken"
+          )}`;
+          return await api.request(originalRequest);
         }
-        return Promise.reject(error);
+      } catch (error) {
+        cookie.remove("accessToken");
+        console.log(error);
+
+        localStorage.removeItem("userInfo");
       }
+      return Promise.reject(error);
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default api;
-
 
 const ownerapi = axios.create({
   baseURL: "https://j8d110.p.ssafy.io/spring/",
@@ -71,6 +71,7 @@ const ownerapi = axios.create({
 
 // axios interceptor로 헤더에 Authorization 설정
 ownerapi.interceptors.request.use(function (config) {
+  const cookie = new Cookies();
   const cookieAccessToken = cookie.get("accessToken");
 
   if (!cookieAccessToken) {
@@ -84,33 +85,34 @@ ownerapi.interceptors.request.use(function (config) {
 
 // 401에러 반환시 refresh로 요청 후 기존 요청 다시 보냄
 ownerapi.interceptors.response.use(
-    function (response) {
-        return response;
-      },
-      async function (error) {
-        if (error.response && error.response.status === 401) {
-          try {
-            const originalRequest = error.config;
-            const data = await api.get("accounts/access/");
-            if (data) {
-              const accessToken = data.data.access_token;
-              cookie.remove("accessToken");
-              cookie.set("accessToken", accessToken, { path: "/owner" });
-              originalRequest.headers["Authorization"] = `Bearer ${cookie.get(
-                "accessToken"
-              )}`;
-              return await api.request(originalRequest);
-            }
-          } catch (error) {
-            cookie.remove("accessToken");
-            console.log(error);
-    
-            localStorage.removeItem("userInfo")
-          }
-          return Promise.reject(error);
+  function (response) {
+    return response;
+  },
+  async function (error) {
+    if (error.response && error.response.status === 401) {
+      const cookie = new Cookies();
+      try {
+        const originalRequest = error.config;
+        const data = await api.get("accounts/access/");
+        if (data) {
+          const accessToken = data.data.access_token;
+          cookie.remove("accessToken");
+          cookie.set("accessToken", accessToken, { path: "/owner" });
+          originalRequest.headers["Authorization"] = `Bearer ${cookie.get(
+            "accessToken"
+          )}`;
+          return await api.request(originalRequest);
         }
-        return Promise.reject(error);
+      } catch (error) {
+        cookie.remove("accessToken");
+        console.log(error);
+
+        localStorage.removeItem("userInfo");
       }
+      return Promise.reject(error);
+    }
+    return Promise.reject(error);
+  }
 );
 
-export {ownerapi}
+export { ownerapi };

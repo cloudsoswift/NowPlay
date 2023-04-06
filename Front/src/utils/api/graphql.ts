@@ -24,19 +24,22 @@ export const QGetNearbyStoreList =
 }`
 
 export const QSearchStore = 
-`query searchStore(searchInput: String, count: Int, lat: Float, lon: Float): StoreOutputWithTotalCount {
+`query searchStore($searchInput: String, $count: Int, $lat: Float, $lon: Float) {
   searchStore(searchInput: $searchInput, count: $count, lat: $lat, lon: $lon) {
-    stores {
-      idx
-      name
-      subcategory {
-        subcategory
-      }
-      address
-      distance
-      reviewCount
-      averageRating
-      isBookmark
+      storeOutput{
+        store {
+            idx
+            name
+            address
+            imagesUrl
+            subcategory {
+                subcategory
+            }
+        }
+        averageRating
+        distance
+        isBookmark
+        reviewCount
     }
     totalCount
   }
@@ -83,6 +86,7 @@ export const QGetRecommendStores =
               subcategory
           }
           address
+          imagesUrl
       }
       distance
       reviewCount
@@ -97,6 +101,7 @@ export const QGetRecommendStores =
               subcategory
           }
           address
+          imagesUrl
       }
       distance
       reviewCount

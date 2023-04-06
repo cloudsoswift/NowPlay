@@ -17,6 +17,8 @@ const MyReservation = () => {
     queryClient.invalidateQueries(["userReservation"])
   }})
 
+  console.log(data)
+
   const rejectHandler = (idx: number) => {
     removeMutation.mutate(idx)
   }

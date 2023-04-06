@@ -112,6 +112,7 @@ export const Map = (props: Props) => {
       }
     );
   }
+
   const fetchCardList = async({pageParam = 1}) => {
     const query = QGetNearbyStoreList;
     const variables: {"condition": TNearbyStoreInput} = {
@@ -148,20 +149,26 @@ export const Map = (props: Props) => {
   
 
   useEffect(() => {
-    if (!isOpenModal) {
-      mapInstance?.setCenter(new naver.maps.LatLng(
-        filterValue.latitude, 
-        filterValue.longitude))
-    } 
-  }, [isOpenModal, filterValue.latitude, filterValue.longitude]);
+    mapInstance?.setCenter(new naver.maps.LatLng(
+      filterValue.latitude, 
+      filterValue.longitude))
+  }, [ filterValue.latitude, filterValue.longitude ]);
+  useEffect(() => {
+  }, [ filterValue ]);
   
   const handleClickMarker = (e: any) => {
     console.log(e);
     console.log(e.overlay.title);
     setClickedStore
   }
+  const removeAllMarker = () => {
+    for(const marker of markerList){
+      marker.setMap(null);
+    }
+    markerList.splice(0);
+  }
   useEffect(()=>{
-    (result as UseInfiniteQueryResult<TStoreOutputWithTotalCount>).data?.pages.forEach((page)=>{
+    (result as UseInfiniteQueryResult<TStoreOutputWithTotalCount>).data?.pages?.forEach((page)=>{
       page.storeOutput.forEach((store)=>{
         markerList.push(new naver.maps.Marker({
           position: new naver.maps.LatLng(store.store.latitude, store.store.longitude),
@@ -179,19 +186,16 @@ export const Map = (props: Props) => {
       circle.setRadius(filterValue.maxDistance);
       circle.setCenter(new naver.maps.LatLng(filterValue.latitude, filterValue.longitude));
       return;
+    } else {
+      circle = new naver.maps.Circle({
+        map: mapInstance,
+        center: new naver.maps.LatLng(filterValue.latitude, filterValue.longitude),
+        radius: filterValue.maxDistance * 1000,
+        fillColor: 'blue',
+        fillOpacity: 0.1,
+      })
     }
-    circle = new naver.maps.Circle({
-      map: mapInstance,
-      center: new naver.maps.LatLng(filterValue.latitude, filterValue.longitude),
-      radius: filterValue.maxDistance * 1000,
-      fillColor: 'blue',
-      fillOpacity: 0.1,
-    })
-  }, [result]);
-
-  // useEffect(()=>{
-
-  // }, [filterValue.latitude, filterValue.longitude])
+  }, [result.data]);
 
   useEffect(()=>{
     // 최근 주소 기록 없으면, 주소 입력하도록 설정.
@@ -260,7 +264,7 @@ export const Map = (props: Props) => {
       >
         <IoReorderThree className="text-3xl" />
       </button>
-      {clickedStore && <PlaceCard2 key={clickedStore.idx}/>}
+      {clickedStore && <PlaceCard2 key={clickedStore.store.idx} place={clickedStore} />}
       {/* <button
         className="absolute bottom-20 left-1/2 -translate-x-1/2 border-2 border-black"
         onClick={handleCardListToggle}

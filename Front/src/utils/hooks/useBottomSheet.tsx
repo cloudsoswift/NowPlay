@@ -37,7 +37,7 @@ export const useBottomSheet = () => {
       }
       
       // 바텀 시트가 올라와 있는 상태가 아닐 때는 컨텐츠 영역 터치해도 바텀 시트 움직임
-      if(sheet.current?.getBoundingClientRect().y !== MIN_Y/2) {
+      if(sheet.current?.getBoundingClientRect().y !== MIN_Y) {
         return true;
       }
       
@@ -97,7 +97,7 @@ export const useBottomSheet = () => {
       // Snap Animation
       const currentSheetY = sheet.current?.getBoundingClientRect().y;
       
-      if(currentSheetY !== MIN_Y/2){
+      if(currentSheetY !== MIN_Y){
         if(touchMove.movingDirection === 'down'){
           sheet.current?.style.setProperty('transform', 'translateY(0)');
         }

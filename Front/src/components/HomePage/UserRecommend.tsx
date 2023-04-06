@@ -56,6 +56,7 @@ const UserRecommend = () => {
         {data
           ?
           data?.map((data: any, index: number) => {
+            console.log(data)
             return <MiniCard key={index} name={data.store.name} distance={data.distance} thisRating={data.averageRating} imagesUrl={data.store.imagesUrl} subCategory={data.store.subcategory.subcategory} />
           })
           :

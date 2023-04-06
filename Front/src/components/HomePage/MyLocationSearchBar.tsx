@@ -23,7 +23,7 @@ interface ModalType {
   componentCheck: boolean;
   setComponentCheck: React.Dispatch<React.SetStateAction<boolean>>;
   searchLocation: { latitude: number; longitude: number } | string;
-  setsearchLocation: React.Dispatch<
+  setSearchLocation: React.Dispatch<
     React.SetStateAction<
       | string
       | {
@@ -32,11 +32,21 @@ interface ModalType {
         }
     >
   >;
-  searchAddressToCoordinate(address: string, setAddress: React.Dispatch<React.SetStateAction<string | {
-    latitude: number;
-    longitude: number;
-}>>): void;
-nowAddress: string;
+  searchAddressToCoordinate(
+    address: string,
+    setAddress: React.Dispatch<
+      React.SetStateAction<
+        | string
+        | {
+            latitude: number;
+            longitude: number;
+          }
+      >
+    >,
+    check: boolean,
+    searchBar: boolean
+  ): void;
+  nowAddress: string;
   setNowAddress: React.Dispatch<React.SetStateAction<string>>;
   nowLocation: { latitude: number; longitude: number } | string;
   setNowLocation: React.Dispatch<
@@ -60,7 +70,7 @@ const MyLocationSearchBar = ({
   componentCheck,
   setComponentCheck,
   searchLocation,
-  setsearchLocation,
+  setSearchLocation,
   searchAddressToCoordinate,
   nowLocation,
   setNowLocation,
@@ -77,7 +87,7 @@ const MyLocationSearchBar = ({
   }, [searchMapText]);
 
   const searchSubmit = () => {
-    searchAddressToCoordinate(searchMapText, setsearchLocation);
+    searchAddressToCoordinate(searchMapText, setSearchLocation, false, true);
   };
 
   const RecentSearchBox =
@@ -90,11 +100,10 @@ const MyLocationSearchBar = ({
             key={address}
             onClick={(e: React.MouseEvent) => {
               e.preventDefault();
-              searchAddressToCoordinate(address, setSelectLocation);
-              searchAddressToCoordinate(address, setNowLocation);
+              searchAddressToCoordinate(address, setSelectLocation, true, false);
               if (onClickToggleMap) {
-                onClickToggleMap()
-              };
+                onClickToggleMap();
+              }
             }}
           >
             <img src={Pin1} />

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import MainBox from "../../components/HomePage/MainBox";
 import Recommend from "../../components/HomePage/Recommend";
 import UserRecommend from "../../components/HomePage/UserRecommend";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Title from "../../components/HomePage/Title";
 
 const HomePage = () => {
@@ -29,7 +29,9 @@ const HomePage = () => {
         />
       </TitleBox>
       <hr />
-      <MainBox />
+      <Suspense fallback={<div>로딩중...</div>}>
+        <MainBox />
+      </Suspense>
       <hr />
       <Recommend />
       <hr />

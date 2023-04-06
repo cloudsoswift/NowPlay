@@ -28,9 +28,11 @@ interface ModalDefaultType {
   searchRoadAddress: string;
   searchJibunAddress: string;
   componentCheck: boolean;
+  locationCheck: boolean;
   setComponentCheck: React.Dispatch<React.SetStateAction<boolean>>;
+  setLocationCheck: React.Dispatch<React.SetStateAction<boolean>>;
   searchLocation: { latitude: number; longitude: number } | string;
-  setsearchLocation: React.Dispatch<
+  setSearchLocation: React.Dispatch<
     React.SetStateAction<
       | string
       | {
@@ -39,10 +41,20 @@ interface ModalDefaultType {
         }
     >
   >;
-  searchAddressToCoordinate(address: string, setAddress: React.Dispatch<React.SetStateAction<string | {
-    latitude: number;
-    longitude: number;
-}>>): void
+  searchAddressToCoordinate(
+    address: string,
+    setAddress: React.Dispatch<
+      React.SetStateAction<
+        | string
+        | {
+            latitude: number;
+            longitude: number;
+          }
+      >
+    >,
+    check: boolean,
+    searchBar: boolean
+  ): void;
 }
 
 const MyLocationModal = ({
@@ -60,8 +72,10 @@ const MyLocationModal = ({
   componentCheck,
   setComponentCheck,
   searchLocation,
-  setsearchLocation,
+  setSearchLocation,
   searchAddressToCoordinate,
+  locationCheck,
+  setLocationCheck,
   children,
 }: PropsWithChildren<ModalDefaultType>) => {
   const [isMap, setIsMap] = useState<boolean>(false);
@@ -71,7 +85,7 @@ const MyLocationModal = ({
   }, [isMap]);
 
   const [nowAddress, setNowAddress] = useState<string>("");
-  
+
   const [nowLocation, setNowLocation] = useState<
     { latitude: number; longitude: number } | string
   >("");
@@ -92,6 +106,8 @@ const MyLocationModal = ({
       setNowLocation={setNowLocation}
       findAddress={findAddress}
       recentAddressData={recentAddressData}
+      locationCheck={locationCheck}
+      setLocationCheck={setLocationCheck}
     />
   ) : (
     <MyLocationSearchBar
@@ -104,7 +120,7 @@ const MyLocationModal = ({
       componentCheck={componentCheck}
       setComponentCheck={setComponentCheck}
       searchLocation={searchLocation}
-      setsearchLocation={setsearchLocation}
+      setSearchLocation={setSearchLocation}
       nowAddress={nowAddress}
       setNowAddress={setNowAddress}
       nowLocation={nowLocation}

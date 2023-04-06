@@ -14,16 +14,17 @@ export const useLogout = () => {
   const [isLogin, setIsLogin] = useRecoilState(userIsLogin)
 
   return useMutation(() => logoutAPI(), {
-    onError: () => {
+    onError: async () => {
       removeCookie("accessToken", { path: "/mobile" });
       setIsLogin(false)
       setUserInfo({
+        userIdx: 0,
         userNickname: "",
         userAddress: "",
         userName: "",
         userDistance: "",
       });
-      navigation("/mobile/mypage");
+      navigation("/mobile/mypage/login");
     },
   });
 };

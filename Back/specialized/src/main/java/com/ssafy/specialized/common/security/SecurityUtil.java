@@ -5,10 +5,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtil {
 
-    // 현재 사용자 정보 조회
+    // 현재 사용자 이름 조회
     public static String getLoginUsername() {
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
         String username = loggedInUser.getName();
         return username;
+    }
+    // 현재 사용자 정보 조회
+    public static String getLoginUserId() {
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        String userId = loggedInUser.getPrincipal().toString();
+        return userId;
     }
 }

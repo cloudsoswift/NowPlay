@@ -279,7 +279,7 @@ public class StoreServiceImpl implements StoreService {
         store.setHomepage(updateStoreDto.getHomepage());
         store.setImagesUrl(updateStoreDto.getImagesUrl());
         store.setExplanation(updateStoreDto.getExplanation());
-        store.setClosedOnHolidays(updateStoreDto.isClosedOnHolidays());
+        store.setClosedOnHolidays(updateStoreDto.getIsClosedOnHolidays());
 
         if (updateStoreDto.getMultipartFiles().size() > 0) {
             MultipartFile newfile = updateStoreDto.getMultipartFiles().get(0);
@@ -336,7 +336,7 @@ public class StoreServiceImpl implements StoreService {
                     .open(businessHourDto.getOpen())
                     .close(businessHourDto.getClose())
                     .reservationInterval(businessHourDto.getReservationInterval())
-                    .storeHoliday(businessHourDto.isStoreHoliday())
+                    .storeHoliday(businessHourDto.getStoreHoliday())
                     .build();
             businessHourRepository.save(businessHour);
         }

@@ -1,5 +1,6 @@
 package com.ssafy.specialized.controller;
 
+import com.ssafy.specialized.common.security.SecurityUtil;
 import com.ssafy.specialized.domain.dto.review.ReviewDto;
 import com.ssafy.specialized.domain.dto.store.UpdateStoreDto;
 import com.ssafy.specialized.domain.graphql.input.NearbyStoreInput;
@@ -45,7 +46,7 @@ public class StoreController {
                                          @RequestPart (name = "UpdateStoreDto") UpdateStoreDto updateStoreDto,
                                          @RequestPart (name = "files", required = false) List<MultipartFile> multipartFile) throws Exception {
         List<MultipartFile> list = new ArrayList<>();
-        if (multipartFile.size() >= 1) {
+        if (multipartFile != null) {
             for (MultipartFile file : multipartFile) {
                 list.add(file);
             }

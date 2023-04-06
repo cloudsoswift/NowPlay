@@ -32,9 +32,9 @@ function Mobile() {
           >
             <Route path="/mypage/signup" element={<SignupPage />} />
           </Route>
-          <Route element={<PrivateRoute authentication={true} type="mobile" />}>
-            <Route path="/mypage/hobby" element={<HobbyPage />} />
-          </Route>
+
+          <Route path="/hobby" element={<HobbyPage />} />
+
           <Route element={<PrivateRoute authentication={true} type="mobile" />}>
             <Route path="/mypage/*" element={<MyPage />} />
           </Route>

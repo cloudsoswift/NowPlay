@@ -34,23 +34,23 @@ export const PlaceCard2 = ({ place }: PlaceCardProps) => {
       const previousList = useQuery(["getCardList"]);
       console.log("prev",previousList);
       if(previousList){
-        queryClient.setQueryData<InfiniteData<Array<TStoreOutputWithTotalCount>>>(["getCardList"], (oldData)=>{
-          const newData = oldData?.pages.map(page =>
-            page.map(item => {
-              return {
-                ...item,
-                storeOutput: item.storeOutput.map((st)=>({
-                  ...st,
-                  isBookmark: !st.isBookmark,
-                }))
-              }
-            })
-          );
-          return {
-            ...oldData,
-            pages: newData,
-          };
-        })
+        // queryClient.setQueryData<InfiniteData<Array<TStoreOutputWithTotalCount>>>(["getCardList"], (oldData)=>{
+        //   const newData = oldData?.pages.map(page =>
+        //     page.map(item => {
+        //       return {
+        //         ...item,
+        //         storeOutput: item.storeOutput.map((st)=>({
+        //           ...st,
+        //           isBookmark: !st.isBookmark,
+        //         }))
+        //       }
+        //     })
+        //   );
+        //   return {
+        //     ...oldData,
+        //     pages: newData,
+        //   };
+        // })
       }
       return () => queryClient.setQueryData(["getCardList"], previousList);
     },

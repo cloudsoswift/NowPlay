@@ -27,6 +27,18 @@ interface ModalType {
   >;
   isMap: boolean;
   recentAddressData: string[];
+  nowAddress: string;
+  setNowAddress: React.Dispatch<React.SetStateAction<string>>;
+  nowLocation: { latitude: number; longitude: number } | string;
+  setNowLocation: React.Dispatch<
+    React.SetStateAction<
+      | string
+      | {
+          latitude: number;
+          longitude: number;
+        }
+    >
+  >;
 }
 
 const MyLocationSearchMap = ({
@@ -40,14 +52,13 @@ const MyLocationSearchMap = ({
   findAddress,
   isMap,
   recentAddressData,
+  nowLocation,
+  setNowLocation,
+  nowAddress,
+  setNowAddress,
   children,
 }: PropsWithChildren<ModalType>) => {
 
-  const [nowAddress, setNowAddress] = useState<string>("");
-  
-  const [nowLocation, setNowLocation] = useState<
-    { latitude: number; longitude: number } | string
-  >("");
 
   useEffect(() => {
     if (selectAddress !== null) {
@@ -58,6 +69,7 @@ const MyLocationSearchMap = ({
   const setMap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
     setSelectAddress(nowAddress);
+    setSelectLocation(nowLocation);
     const duplicationAddress =  recentAddressData.findIndex(address => address === nowAddress)
     if (duplicationAddress !== -1) {
       recentAddressData.splice(duplicationAddress, 1)

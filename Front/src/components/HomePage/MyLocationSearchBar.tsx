@@ -32,7 +32,22 @@ interface ModalType {
         }
     >
   >;
-  searchAddressToCoordinate(address: string, check: boolean): void;
+  searchAddressToCoordinate(address: string, setAddress: React.Dispatch<React.SetStateAction<string | {
+    latitude: number;
+    longitude: number;
+}>>): void;
+nowAddress: string;
+  setNowAddress: React.Dispatch<React.SetStateAction<string>>;
+  nowLocation: { latitude: number; longitude: number } | string;
+  setNowLocation: React.Dispatch<
+    React.SetStateAction<
+      | string
+      | {
+          latitude: number;
+          longitude: number;
+        }
+    >
+  >;
 }
 
 const MyLocationSearchBar = ({
@@ -47,6 +62,10 @@ const MyLocationSearchBar = ({
   searchLocation,
   setsearchLocation,
   searchAddressToCoordinate,
+  nowLocation,
+  setNowLocation,
+  nowAddress,
+  setNowAddress,
   children,
 }: PropsWithChildren<ModalType>) => {
   const [searchMapText, setSearchMapText] = useState<string>("");
@@ -58,7 +77,7 @@ const MyLocationSearchBar = ({
   }, [searchMapText]);
 
   const searchSubmit = () => {
-    searchAddressToCoordinate(searchMapText, true);
+    searchAddressToCoordinate(searchMapText, setsearchLocation);
   };
 
   const RecentSearchBox =
@@ -71,10 +90,11 @@ const MyLocationSearchBar = ({
             key={address}
             onClick={(e: React.MouseEvent) => {
               e.preventDefault();
-              searchAddressToCoordinate(address, false);
+              searchAddressToCoordinate(address, setSelectLocation);
+              searchAddressToCoordinate(address, setNowLocation);
               if (onClickToggleMap) {
-                onClickToggleMap();
-              }
+                onClickToggleMap()
+              };
             }}
           >
             <img src={Pin1} />

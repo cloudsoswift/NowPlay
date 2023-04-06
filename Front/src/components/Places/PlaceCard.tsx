@@ -58,11 +58,11 @@ export const PlaceCard2 = ({ place }: PlaceCardProps) => {
   })
   return (
     <CardBox onClick={handleClick}>
-      <img src={`${place.store.imagesUrl}`} />
+      {place.store.imagesUrl && <img src={`${place.store.imagesUrl}`} className="h-[20vh]"/>}
       <div>
         <Top>
           <Name>{place.store.name}</Name>
-          <Category>{place.store.subcategory.subcategory}</Category>
+          <Category>{place.store.subcategory?.subcategory}</Category>
           <BookmarkDiv onClick={(e)=>{e.preventDefault; e.stopPropagation; toggleBookmarkMutation.mutate()}} className="z-30">
             {place.isBookmark ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
           </BookmarkDiv>
@@ -104,83 +104,6 @@ export const PlaceCard2 = ({ place }: PlaceCardProps) => {
   );
 };
 
-// export const PlaceCard1 = ({ place }: PlaceCardProps) => {
-//   const navigate = useNavigate();
-//   const handleClick = () => {
-//     navigate(`${place.id}`);
-//   };
-//   return (
-//     <div
-//       className="w-full h-[40vh] grid justify-self-center border rounded-xl p-2 shadow-md"
-//       onClick={handleClick}
-//     >
-//       <img src={`/pics/${place.imageURL}`} alt="" className="h-[25vh] w-full" />
-//       <div className="flex space-x-2">
-//         <span className="text-xl">{place.name}</span>
-//         <span className="text-[var(--gray-color)]">{place.subCategory}</span>
-//       </div>
-//       <div>{place.address}</div>
-//       <div className="flex space-x-2 items-center">
-//         <div className="text-[var(--primary-color)]">
-//           {place.distance < 1
-//             ? `${place.distance * 1000}m`
-//             : `${place.distance.toFixed(2)}km`}
-//         </div>
-//         <div>{`리뷰 ${place.reviewCount}개`}</div>
-//         <StarRating rating={place.averageRating} />
-//       </div>
-//       <div>{place.isBookmark}</div>
-//     </div>
-//   );
-// };
-
-// const TEST_DATA: Array<TPlaceCard> = [
-//   {
-//     id: 1,
-//     imageURL: "place_test_image.png",
-//     name: "스파크 노래타운",
-//     subCategory: "노래방",
-//     address: "경북 구미시 인동중앙로1길 5",
-//     distance: 0.513,
-//     averageRating: 3.5,
-//     reviewCount: 4,
-//     isBookmark: true,
-//   },
-//   {
-//     id: 2,
-//     imageURL: "place_test_image.png",
-//     name: "스파크 노래타운",
-//     subCategory: "노래방",
-//     address: "경북 구미시 인동중앙로1길 5",
-//     distance: 0.513,
-//     averageRating: 4.0,
-//     reviewCount: 4,
-//     isBookmark: false,
-//   },
-//   {
-//     id: 3,
-//     imageURL: "place_test_image.png",
-//     name: "스파크 노래타운",
-//     subCategory: "노래방",
-//     address: "경북 구미시 인동중앙로1길 5",
-//     distance: 0.513,
-//     averageRating: 4.0,
-//     reviewCount: 4,
-//     isBookmark: true,
-//   },
-//   {
-//     id: 4,
-//     imageURL: "place_test_image.png",
-//     name: "스파크 노래타운",
-//     subCategory: "노래방",
-//     address: "경북 구미시 인동중앙로1길 5",
-//     distance: 0.513,
-//     averageRating: 4.0,
-//     reviewCount: 4,
-//     isBookmark: false,
-//   },
-// ];
-
 type PlaceCardsProps = {
   result: UseInfiniteQueryResult<TStoreOutputWithTotalCount>
 };
@@ -191,7 +114,7 @@ export const BOTTOM_SHEET_HEIGHT = window.innerHeight; // 바텀시트의 세로
 
 export const PlaceCardSheet = ({ result }: PlaceCardsProps) => {
   const { sheet, content } = useBottomSheet();
-  const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, refetch } = result;
+  const { data, error, fetchNextPage, hasNextPage, isFetching, isLoading, isFetchingNextPage, status, refetch } = result;
   useEffect(()=>{
     const handleTouchEnd = (e: TouchEvent) => {
       if(content.current!.scrollHeight < content.current!.scrollTop + content.current!.clientHeight + 50){
@@ -223,6 +146,7 @@ export const PlaceCardSheet = ({ result }: PlaceCardsProps) => {
             <PlaceCard2 key={store.store.idx} place={store} onBookmark={refetch}/>
           ))
         ))}
+        {isFetching && <div>로딩중 입니다...</div>}
       </div>
     </Wrapper>
   );
@@ -246,7 +170,8 @@ const Wrapper = styled(motion.div)`
 
 const CardBox = styled.div`
   width: 100%;
-  padding: 30px 30px 15px 30px;
+  max-height: 40vh;
+  padding: 20px;
   > img {
     width: 100%;
     border-radius: 20px;

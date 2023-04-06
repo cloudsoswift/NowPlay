@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { MAX_Y, MIN_Y } from "../../components/Places/PlaceCard";
 
-type BottomSheetMetrics = {
+export type BottomSheetMetrics = {
   touchStart: {
     sheetY: number; // touchstart에서 BottomSheet의 최상단 모서리의 Y값
     touchY: number; // touchstart에서 터치 포인트의 Y값
@@ -12,7 +12,7 @@ type BottomSheetMetrics = {
   }
   isContentAreTouched: boolean; // 컨텐츠 영역을 터치하고 있음을 기록
 }
-const initialMetrics:BottomSheetMetrics = {
+export const initialMetrics:BottomSheetMetrics = {
   touchStart: {
     sheetY: 0,
     touchY: 0,

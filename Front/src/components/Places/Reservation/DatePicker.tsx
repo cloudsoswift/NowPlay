@@ -116,7 +116,7 @@ const Calendar = ({businessHour} : CalendarProps) => {
                   // 달력에서 지난 달 마지막 주 ~ 현재 달의 첫 날 표시하는 부분
                   if (previousMonthLWS <= dayOfPreviousMonth) {
                     const pM = moment(previousMonth).date(previousMonthLWS)
-                    const isHoliday = pM.isAfter(moment()) || businessHour.some(bh=>{
+                    const isHoliday = pM.isBefore(moment()) || businessHour.some(bh=>{
                       const key: ENUM_DAYS = bh.dayOfWeek as ENUM_DAYS;
                       return bh.storeHoliday && WEEK_OF_DAYS[key] === pM.weekday();
                     })
@@ -134,7 +134,7 @@ const Calendar = ({businessHour} : CalendarProps) => {
                         );
                       } else if (presentMonthCount <= dayOfMonth) {
                     const cM = moment(calendarDate).date(presentMonthCount)
-                    const isHoliday = cM.isAfter(moment()) || businessHour.some(bh=>{
+                    const isHoliday = cM.isBefore(moment()) || businessHour.some(bh=>{
                       const key: ENUM_DAYS = bh.dayOfWeek as ENUM_DAYS;
                       return bh.storeHoliday && WEEK_OF_DAYS[key] === cM.weekday()
                     })
@@ -153,7 +153,7 @@ const Calendar = ({businessHour} : CalendarProps) => {
                     // 현재 달의 마지막 날 ~ 다음 달의 두 번째 주(현재 달의 마지막 날이 토요일이면 첫 번째 주 까지만) 표시하는 부분
                   } else if (nextMonthFWSCount <= nextMonthFWS) {
                     const aM = moment(nextMonth).date(nextMonthFWSCount);
-                    const isHoliday = aM.isAfter(moment()) || businessHour.some(bh=>{
+                    const isHoliday = aM.isBefore(moment()) || businessHour.some(bh=>{
                       const key: ENUM_DAYS = bh.dayOfWeek as ENUM_DAYS;
                       return bh.storeHoliday && WEEK_OF_DAYS[key] === aM.weekday();
                     })

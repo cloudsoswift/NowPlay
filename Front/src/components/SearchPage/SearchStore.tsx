@@ -70,7 +70,7 @@ const SearchStore = ({
 
   useEffect(() => {
     console.log(error)
-  }, error)
+  }, [error])
 
   const observerElem = useRef<HTMLDivElement>(null);
 

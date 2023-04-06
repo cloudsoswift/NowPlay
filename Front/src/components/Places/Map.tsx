@@ -264,7 +264,7 @@ export const Map = (props: Props) => {
       >
         <IoReorderThree className="text-3xl" />
       </button>
-      {clickedStore && <PlaceCard2 key={clickedStore.store.idx} place={clickedStore} />}
+      {clickedStore && <PlaceCard2 key={clickedStore.store.idx} place={clickedStore} onBookmark={result.refetch}/>}
       {/* <button
         className="absolute bottom-20 left-1/2 -translate-x-1/2 border-2 border-black"
         onClick={handleCardListToggle}

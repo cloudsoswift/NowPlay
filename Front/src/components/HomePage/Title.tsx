@@ -50,14 +50,25 @@ const Title = ({
   const [searchRoadAddress, setSearchRoadAddress] = useState<string>("");
   const [searchJibunAddress, setSearchJibunAddress] = useState<string>("");
   const [componentCheck, setComponentCheck] = useState<boolean>(false);
-  const [searchLocation, setsearchLocation] = useState<
+  const [locationCheck, setLocationCheck] = useState<boolean>(false);
+  const [searchLocation, setSearchLocation] = useState<
     { latitude: number; longitude: number } | string
   >("");
 
-  function searchAddressToCoordinate(address: string, setAddress: React.Dispatch<React.SetStateAction<string | {
-    latitude: number;
-    longitude: number;
-}>>) {
+  function searchAddressToCoordinate(
+    address: string,
+    setAddress: React.Dispatch<
+      React.SetStateAction<
+        | string
+        | {
+            latitude: number;
+            longitude: number;
+          }
+      >
+    >,
+    check: boolean,
+    searchBar: boolean
+  ) {
     naver.maps.Service.geocode(
       {
         query: address,
@@ -70,18 +81,20 @@ const Title = ({
           return alert("올바른 주소를 입력해주세요.");
         }
         const item = response.v2.addresses[0];
-        if (item.roadAddress) {
-          setSearchRoadAddress(item.roadAddress);
-        }
-        if (item.jibunAddress) {
-          setSearchJibunAddress(item.jibunAddress);
-        }
-
-        console.log(item.y, item.x)
+        setLocationCheck(check)
         setAddress({
           latitude: Number(item.y),
           longitude: Number(item.x),
         });
+        if (searchBar === true) {
+          setComponentCheck(searchBar)
+          if (item.roadAddress) {
+            setSearchRoadAddress(item.roadAddress);
+          }
+          if (item.jibunAddress) {
+            setSearchJibunAddress(item.jibunAddress);
+          }
+        }
       }
     );
   }
@@ -128,7 +141,7 @@ const Title = ({
 
   useEffect(() => {
     if (recentAddressData.length !== 0) {
-      searchAddressToCoordinate(recentAddressData[0], setSelectLocation);
+      searchAddressToCoordinate(recentAddressData[0], setSelectLocation, false, false);
       setSelectAddress(recentAddressData[0]);
     }
   }, []);
@@ -151,8 +164,10 @@ const Title = ({
           componentCheck={componentCheck}
           setComponentCheck={setComponentCheck}
           searchLocation={searchLocation}
-          setsearchLocation={setsearchLocation}
+          setSearchLocation={setSearchLocation}
           searchAddressToCoordinate={searchAddressToCoordinate}
+          locationCheck={locationCheck}
+          setLocationCheck={setLocationCheck}
         />
       )}
       {textBoolean && (

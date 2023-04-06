@@ -3,6 +3,8 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import Vector from "../../svg/vector.svg";
 import Pin2 from "../../svg/pin2.svg";
 import NowMap from "./NowMap";
+import { useSetRecoilState } from "recoil";
+import { filterState } from "../Places/Map";
 
 interface ModalType {
   onClickToggleMap: () => void;
@@ -59,7 +61,7 @@ const MyLocationSearchMap = ({
   children,
 }: PropsWithChildren<ModalType>) => {
 
-
+  const setFilterValue = useSetRecoilState(filterState);
   useEffect(() => {
     if (selectAddress !== null) {
       setNowAddress(selectAddress)
@@ -69,7 +71,13 @@ const MyLocationSearchMap = ({
   const setMap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
     setSelectAddress(nowAddress);
-    setSelectLocation(nowLocation);
+    if(typeof selectLocation !== 'string'){
+      setFilterValue((prev)=>({
+        ...prev,
+        latitude: selectLocation.latitude,
+        longitude: selectLocation.longitude
+      }))
+    }
     const duplicationAddress =  recentAddressData.findIndex(address => address === nowAddress)
     if (duplicationAddress !== -1) {
       recentAddressData.splice(duplicationAddress, 1)

@@ -119,7 +119,6 @@ export const Map = (props: Props) => {
         })
       }
     };
-    console.log(variables);
     const data = (await api.post("/graphql", {
       query,
       variables,
@@ -136,7 +135,6 @@ export const Map = (props: Props) => {
   });  
 
   useEffect(() => {
-    console.log("뭔가 바뀜", filterValue.latitude, filterValue.longitude);
     mapInstance?.setCenter(new naver.maps.LatLng(
       filterValue.latitude, 
       filterValue.longitude))
@@ -158,8 +156,6 @@ export const Map = (props: Props) => {
   }, [ filterValue ]);
   
   const handleClickMarker = (e: any) => {
-    console.log(e);
-    console.log(Number(e.overlay.title));
     if(result.data){
       setClickedStore(result.data.pages.find((page)=>
         page.storeOutput.find((store)=>
@@ -195,10 +191,6 @@ export const Map = (props: Props) => {
           // 터치 시작점 부터 현재 터치 포인트 까지 y값 차이
           const touchOffset = currentTouch.clientY - touchStart.touchY;
           let nextSheetY = touchStart.sheetY + touchOffset;
-          console.log(touchStart.sheetY, touchOffset, currentTouch.clientY);
-          console.log(clickedRef.current?.getBoundingClientRect().height);
-          
-          
           // nextSheetY는 MIN_Y와 MAX_Y 사이의 값이어야 함.
           // if(nextSheetY < clickedRef.current?.getBoundingClientRect().height){
           //   nextSheetY = MIN_Y;
@@ -232,9 +224,9 @@ export const Map = (props: Props) => {
   }, [clickedStore])
 
   const removeAllMarker = () => {
-    for(const marker of markerList){
-      marker.setMap(null);
-    }
+    markerList.forEach((m)=>{
+      m.setMap(null);
+    })
     markerList.splice(0);
   }
   useEffect(()=>{
@@ -250,14 +242,12 @@ export const Map = (props: Props) => {
     for(const m of markerList){
       naver.maps.Event.addListener(m, 'click', handleClickMarker);
     }
-    console.log(circle);
   }, [result.data]);
 
   useEffect(()=>{
         // 라우터 state 있으면 ( 메인 페이지에서 대분류 눌러서 넘어온거면)
     // 해당 대분류에 포함되는 소분류 카테고리들 전부 선택된 채로 넘어감.
     if (location.state) {
-      console.log(location.state);
       location.state.map((subCategory: THobbySubCategory) => {
         setFilter((prevFilter) => {
           return {

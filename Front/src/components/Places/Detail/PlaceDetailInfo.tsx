@@ -5,16 +5,25 @@ import { TStoreDetail } from "../../../utils/api/graphql";
 type Props = {
   placeDetail: TStoreDetail;
 };
+const day: {[key:string]: string} = {
+  "monday": "월",
+  "tuesday": "화",
+  "wendesday": "수",
+  "thursday": "목",
+  "friday": "금",
+  "saturday": "토",
+  "sunday": "일",
+}
 export const PlaceDetailInfo = ({ placeDetail }: Props) => {
   return (
     <div className="[&>*]:border-t-2 first:border-t-0">
       <div className="border-t-0 flex p-2 text-lg items-center first:border-t-0">
         <GrMapLocation className="mr-2 text-lg" /> {placeDetail.address}
       </div>
-      <div>
+      <div className="grid p-2 text-lg items-center">
         영업시간{" "}
-        {placeDetail.businessHourList.map((a) => (
-          <div>a</div>
+        {placeDetail.businessHourList.map((bh) => (
+          <div className=""><span>{day[bh.dayOfWeek]}</span>{bh.open + " ~ " + bh.close}</div>
         ))}
       </div>
       <div className="flex p-2 text-lg items-center">

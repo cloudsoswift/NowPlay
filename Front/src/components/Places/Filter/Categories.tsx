@@ -32,7 +32,7 @@ export const Category = ({ subCategory }: CategoryProps) => {
 };
 
 export const Categories = (props: CategoriesProps) => {
-  const { subcategory } = useRecoilValue(filterState);
+  const { subcategory } = useRecoilValue(preparedFilterState);
 
   const CategoryBox = subcategory.length === 0 ? (
     <div className="mx-4 text-[var(--gray-color)] text-[20px]">

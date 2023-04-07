@@ -137,6 +137,9 @@ export const Map = (props: Props) => {
       setCircle((prevCircle)=>{
         // console.log("수정 전",prevCircle);
         if(prevCircle){
+          if(!prevCircle.getMap() && mapInstance){
+            prevCircle.setMap(mapInstance);
+          }
           prevCircle.setRadius(filterValue.maxDistance * 1000);
           prevCircle.setCenter(new naver.maps.LatLng(filterValue.latitude, filterValue.longitude));
           // console.log("수정 후",prevCircle);
@@ -248,7 +251,6 @@ export const Map = (props: Props) => {
         }))
       })
     })
-    // console.log("추가 당시 마커 리스트", arr);
     for(const m of arr){
       naver.maps.Event.addListener(m, 'click', handleClickMarker);
     }
@@ -256,6 +258,7 @@ export const Map = (props: Props) => {
   }, [result.data]);
 
   useEffect(()=>{
+    if(isRendered) return;
         // 라우터 state 있으면 ( 메인 페이지에서 대분류 눌러서 넘어온거면)
     // 해당 대분류에 포함되는 소분류 카테고리들 전부 선택된 채로 넘어감.
     if (location.state) {
@@ -307,7 +310,7 @@ export const Map = (props: Props) => {
 
   return (
     <>
-      {(result.isLoading || result.isFetching) && <div className="absolute w-full h-full bg-slate-400"> 로딩중입니다... </div>}
+      {(result.isLoading || result.isFetching) && <div className="absolute w-screen h-screen bg-slate-400"> 로딩중입니다... </div>}
       {/* <AnimatePresence initial={false}> */}
       {isOpenModal && (
         <TitleBox>

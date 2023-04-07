@@ -38,49 +38,42 @@ const UserRecommend = () => {
   };
   const result = useQuery({
     queryKey: ["recommendDistanceList"],
-    queryFn: fetchCardList
-  })
+    queryFn: fetchCardList,
+  });
 
-  const {
-    data,
-    error,
-    isFetching,
-    status,
-    refetch,
-  } = result;
+  const { data, error, isFetching, status, refetch } = result;
 
   const userRecommendContent = isLogin ? (
-    <LoggedIn>
-      <Font>지금 여기 어때?</Font>
-      <CardList>
-        {data
-          ?
-          data?.map((data: any, index: number) => {
-            return <MiniCard key={index} name={data.store.name} distance={data.distance} thisRating={data.averageRating} imagesUrl={data.store.imagesUrl} subCategory={data.store.subcategory.subcategory} />
-          })
-          :
-          <img src="https://t1.daumcdn.net/cfile/tistory/184F8A4E4E55932B06" />
-        }
-      </CardList>
-    </LoggedIn>
+    <CardList>
+      {data ? (
+        data?.map((data: any, index: number) => {
+          console.log(data);
+          return (
+            <MiniCard
+              key={index}
+              idx={data.store.idx}
+              name={data.store.name}
+              distance={data.distance}
+              thisRating={data.averageRating}
+              imagesUrl={data.store.imagesUrl}
+              subCategory={data.store.subcategory.subcategory}
+            />
+          );
+        })
+      ) : (
+        <img src="https://t1.daumcdn.net/cfile/tistory/184F8A4E4E55932B06" />
+      )}
+    </CardList>
   ) : (
     <NavLink to="/mobile/mypage/login">
       <ButtonArea>로그인하고 추천을 받아보세요</ButtonArea>
     </NavLink>
   );
 
-  return (
-    <UserRecommendBox>
-      {userRecommendContent}
-    </UserRecommendBox>
-  );
+  return <>{userRecommendContent}</>;
 };
 
 export default UserRecommend;
-
-const UserRecommendBox = styled.div`
-  padding: 16px;
-`;
 
 const CardList = styled.div`
   display: flex;
@@ -88,21 +81,14 @@ const CardList = styled.div`
   overflow-y: hidden;
   > img {
     margin-inline: auto;
-    height: 236px;
+    height: 150px;
   }
 `;
 
-const Font = styled.div`
-  font-size: var(--title-2);
-  margin-left: 16px;
-`;
-
-const LoggedIn = styled.div``;
-
 const ButtonArea = styled.div`
-  margin-inline: auto;
+  margin: 20px auto;
   text-align: center;
-  width: 80%;
+  width: 80vw;
   height: 40px;
   background-color: var(--primary-color);
   font-size: var(--caption);

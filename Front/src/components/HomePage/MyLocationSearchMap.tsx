@@ -10,7 +10,9 @@ interface ModalType {
   onClickToggleMap: () => void;
   onClickToggleModal: () => void;
   selectAddress: string | null;
+  locationCheck: boolean;
   setSelectAddress: React.Dispatch<React.SetStateAction<string | null>>;
+  setLocationCheck: React.Dispatch<React.SetStateAction<boolean>>;
   findAddress: (
     latlng: naver.maps.LatLng,
     map: naver.maps.Map,
@@ -58,6 +60,8 @@ const MyLocationSearchMap = ({
   setNowLocation,
   nowAddress,
   setNowAddress,
+  locationCheck,
+  setLocationCheck,
   children,
 }: PropsWithChildren<ModalType>) => {
 
@@ -118,6 +122,8 @@ const MyLocationSearchMap = ({
           nowAddress={nowAddress}
           setNowAddress={setNowAddress}
           findAddress={findAddress}
+          locationCheck={locationCheck}
+          setLocationCheck={setLocationCheck}
         />
       </MapArea>
       <LocationArea>

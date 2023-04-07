@@ -4,7 +4,7 @@ import Vector from "../../svg/vector.svg";
 import Pin2 from "../../svg/pin2.svg";
 import NowMap from "./NowMap";
 import { useSetRecoilState } from "recoil";
-import { filterState } from "../Places/Map";
+import { preparedFilterState } from "../Places/Filter/Filter";
 
 interface ModalType {
   onClickToggleMap: () => void;
@@ -65,7 +65,7 @@ const MyLocationSearchMap = ({
   children,
 }: PropsWithChildren<ModalType>) => {
 
-  const setFilterValue = useSetRecoilState(filterState);
+  const setFilterValue = useSetRecoilState(preparedFilterState);
   useEffect(() => {
     if (selectAddress !== null) {
       setNowAddress(selectAddress)

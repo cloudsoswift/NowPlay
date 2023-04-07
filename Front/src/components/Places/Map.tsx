@@ -3,17 +3,12 @@ import { atom, selector, useRecoilState, useRecoilValue, useSetRecoilState } fro
 import { Filter } from "./Filter/Filter";
 import { PlaceCard2, PlaceCardSheet } from "./PlaceCard";
 import { IoReorderThree } from "react-icons/io5";
-import { AnimatePresence } from "framer-motion";
 import api from "../../utils/api/api";
 import Title from "../HomePage/Title";
 import styled from "styled-components";
 import { QGetNearbyStoreList, TNearbyStoreInput, TFilter, THobbyMainCategory, THobbySubCategory, TStoreOutputWithTotalCount, TStoreOutput } from "../../utils/api/graphql";
-import { TMainCategory, TSubCategory } from "./Types";
 import { UseInfiniteQueryResult, useInfiniteQuery } from "@tanstack/react-query";
-import Pin2 from "../../svg/pin2.svg";
 import { useLocation } from "react-router-dom";
-import { SelectableCategory } from "./Filter/SelectableCategories";
-import { UsageState } from "aws-sdk/clients/tnb";
 import { BottomSheetMetrics, initialMetrics } from "../../utils/hooks/useBottomSheet";
 
 type Props = {};
@@ -38,7 +33,7 @@ export const filterState = atom<TFilter>({
 export const Map = (props: Props) => {
   const [isFilterShown, setIsFilterShown] = useState(false);
   const [isModalShown, setIsModalShown] = useState(false);
-  const markerList: Array<naver.maps.Marker> = [];
+  const [markerList, setMarkerList] = useState<Array<naver.maps.Marker>>([]);
   const [circle, setCircle] = useState<naver.maps.Circle>();
   const [clickedStore, setClickedStore] = useState<TStoreOutput | undefined>();
   const [mapInstance, setMapInstance] = useState<naver.maps.Map>();
@@ -61,14 +56,12 @@ export const Map = (props: Props) => {
     if (recentAddressJSON === null) return [];
     return JSON.parse(recentAddressJSON);
   }
-  const [isModalState, setIsModalState] = useState<boolean>(false);
 
   const setFilter = useSetRecoilState(filterState);
   const location = useLocation();
 
   const handleFilterToggle = (set: boolean) => {
     if (set) {
-      setIsModalState(set);
       setIsModalShown(set);
       setIsFilterShown(set);
     } else {
@@ -123,15 +116,17 @@ export const Map = (props: Props) => {
       query,
       variables,
     })).data?.data;
+    // console.log(variables, data);
     return data.getNearbyStoreList ? data.getNearbyStoreList : [] ;
   }
   const result = useInfiniteQuery<TStoreOutputWithTotalCount>({
-    queryKey: ["getCardList"],
+    queryKey: ["getCardList", filterValue],
     queryFn: fetchCardList,
     getNextPageParam: (lastPage, pages)=> {
      return pages.length + 1 < lastPage.totalCount/20 ? pages.length + 1 : undefined},
     staleTime: 20000,
     cacheTime: 0,
+    enabled: isRendered,
   });  
 
   useEffect(() => {
@@ -139,21 +134,28 @@ export const Map = (props: Props) => {
       filterValue.latitude, 
       filterValue.longitude))
     if(circle !== undefined){
-      circle.setRadius(filterValue.maxDistance * 1000);
-      circle.setCenter(new naver.maps.LatLng(filterValue.latitude, filterValue.longitude));
-      return;
+      setCircle((prevCircle)=>{
+        // console.log("수정 전",prevCircle);
+        if(prevCircle){
+          prevCircle.setRadius(filterValue.maxDistance * 1000);
+          prevCircle.setCenter(new naver.maps.LatLng(filterValue.latitude, filterValue.longitude));
+          // console.log("수정 후",prevCircle);
+        }
+        return prevCircle;
+      });
     } else {
-      setCircle(new naver.maps.Circle({
-        map: mapInstance,
-        center: new naver.maps.LatLng(filterValue.latitude, filterValue.longitude),
-        radius: filterValue.maxDistance * 1000,
-        fillColor: 'blue',
-        fillOpacity: 0.1,
-      }));
+      // console.log(mapInstance);
+      if(mapInstance){
+        setCircle(new naver.maps.Circle({
+          map: mapInstance,
+          center: new naver.maps.LatLng(filterValue.latitude, filterValue.longitude),
+          radius: filterValue.maxDistance * 1000,
+          fillColor: 'blue',
+          fillOpacity: 0.1,
+        }));
+      }
     }
-    removeAllMarker();
-    result.refetch();
-  }, [ filterValue ]);
+  }, [ filterValue.latitude, filterValue.longitude, filterValue.maxDistance]);
   
   const handleClickMarker = (e: any) => {
     if(result.data){
@@ -224,24 +226,33 @@ export const Map = (props: Props) => {
   }, [clickedStore])
 
   const removeAllMarker = () => {
-    markerList.forEach((m)=>{
-      m.setMap(null);
+    // console.log("호출됨");
+    setMarkerList((prev)=>{
+      // console.log("ㅎㅇ", prev);
+      prev.map((marker)=>{
+        marker.setMap(null);
+        marker.setVisible(false);
+      })
+      return [];
     })
-    markerList.splice(0);
   }
   useEffect(()=>{
+    removeAllMarker();
+    let arr:Array<naver.maps.Marker> = [];
     (result as UseInfiniteQueryResult<TStoreOutputWithTotalCount>).data?.pages?.forEach((page)=>{
       page.storeOutput.forEach((store)=>{
-        markerList.push(new naver.maps.Marker({
+        arr.push(new naver.maps.Marker({
           position: new naver.maps.LatLng(store.store.latitude, store.store.longitude),
           map: mapInstance,
           title: String(store.store.idx),
         }))
       })
     })
-    for(const m of markerList){
+    // console.log("추가 당시 마커 리스트", arr);
+    for(const m of arr){
       naver.maps.Event.addListener(m, 'click', handleClickMarker);
     }
+    setMarkerList(arr);
   }, [result.data]);
 
   useEffect(()=>{
@@ -282,7 +293,16 @@ export const Map = (props: Props) => {
         zoom: 18,
       })
     )
-    result.refetch();
+    if(mapInstance){
+      setCircle(new naver.maps.Circle({
+        map: mapInstance,
+        center: new naver.maps.LatLng(filterValue.latitude, filterValue.longitude),
+        radius: filterValue.maxDistance * 1000,
+        fillColor: 'blue',
+        fillOpacity: 0.1,
+      }));
+    }
+    setIsRendered(true);
   }, [])
 
   return (

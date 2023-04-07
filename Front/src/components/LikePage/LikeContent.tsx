@@ -37,9 +37,9 @@ const LikeContent = () => {
           name: data.store.name,
           subCategory: data.store.subcategory.subcategory,
           address: data.store.address,
-          distance: 5,
-          averageRating: 3,
-          reviewCount: 5,
+          distance: 0,
+          averageRating: 0,
+          reviewCount: 0,
           isBookmark: true,
         }
         return <BigCard key={index} place={store} toggleBookmark={toggleBookmark}></BigCard>

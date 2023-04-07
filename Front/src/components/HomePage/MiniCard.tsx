@@ -35,7 +35,7 @@ const MiniCard = ({
   });
 
   const imgDefault = imagesUrl !== "" ? imagesUrl : subImg;
-
+  
   const percentRating = thisRating * 20;
   return (
     <Link to={`/mobile/places/${idx}`}>

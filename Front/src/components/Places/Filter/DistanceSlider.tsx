@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent, useEffect, useRef } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { motion } from "framer-motion";
 import { preparedFilterState } from "./Filter";
@@ -11,7 +11,7 @@ export const DistanceSlider = (props: Props) => {
   const draggableTarget = useRef<HTMLDivElement>(null);
   const modifyTarget = (target: number) => {
     let pos = 0;
-    let maxDistance = 1;
+    let maxDistance = 2;
     if (draggableArea.current && draggableTarget.current) {
       const appRect = draggableArea.current.getBoundingClientRect();
       const pipRect = draggableTarget.current.getBoundingClientRect();
@@ -46,6 +46,12 @@ export const DistanceSlider = (props: Props) => {
     });
     return pos;
   };
+  useEffect(()=>{
+    setFilter((prev)=>({
+      ...prev,
+      maxDistance: 2,
+    }))
+  }, [])
   return (
     <div className="grid grid-cols-1 w-full border rounded-xl p-2">
       <div

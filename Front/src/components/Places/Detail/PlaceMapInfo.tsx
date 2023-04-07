@@ -11,6 +11,10 @@ export const PlaceMapInfo = ({address, latitude, longitude}: Props) => {
       center: new window.naver.maps.LatLng(latitude, longitude),
       zoom: 16,
     });
+    const marker = new naver.maps.Marker({
+      position: new naver.maps.LatLng(latitude, longitude),
+      map: map,
+    })
   }, [])
   return (
     <div>

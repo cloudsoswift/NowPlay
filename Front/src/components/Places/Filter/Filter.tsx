@@ -47,9 +47,7 @@ export const Filter = ({
   const [preparedFilterValue, setPreparedFilterValue] = useRecoilState(preparedFilterState);
   const handleApplyFilter = () => {
     console.log(preparedFilterValue);
-    setFilterValue({...preparedFilterValue,
-    latitude: filterValue.latitude,
-    longitude: filterValue.longitude,});
+    setFilterValue({...preparedFilterValue});
     onClose(false);
   }
   React.useEffect(()=>{

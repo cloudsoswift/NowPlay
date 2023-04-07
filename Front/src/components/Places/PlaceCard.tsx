@@ -27,35 +27,35 @@ export const PlaceCard2 = ({ place }: PlaceCardProps) => {
   const toggleBookmark = async () => {
     return (await api.post(`place/${place.store.idx}/favorite`)).status === 200 ? true : false;
   }
-  const toggleBookmarkMutation = useMutation({
-    mutationFn: toggleBookmark,
-    onMutate: async () => {
-      await queryClient.cancelQueries({queryKey: ["getCardList"]});
-      const previousList = useQuery(["getCardList"]);
-      console.log("prev",previousList);
-      if(previousList){
-        // queryClient.setQueryData<InfiniteData<Array<TStoreOutputWithTotalCount>>>(["getCardList"], (oldData)=>{
-        //   const newData = oldData?.pages.map(page =>
-        //     page.map(item => {
-        //       return {
-        //         ...item,
-        //         storeOutput: item.storeOutput.map((st)=>({
-        //           ...st,
-        //           isBookmark: !st.isBookmark,
-        //         }))
-        //       }
-        //     })
-        //   );
-        //   return {
-        //     ...oldData,
-        //     pages: newData,
-        //   };
-        // })
-      }
-      return () => queryClient.setQueryData(["getCardList"], previousList);
-    },
-    onSettled: () => queryClient.invalidateQueries(["getCardList"])
-  })
+  // const toggleBookmarkMutation = useMutation({
+  //   mutationFn: toggleBookmark,
+  //   onMutate: async () => {
+  //     await queryClient.cancelQueries({queryKey: ["getCardList"]});
+  //     const previousList = useQuery(["getCardList"]);
+  //     console.log("prev",previousList);
+  //     if(previousList){
+  //       // queryClient.setQueryData<InfiniteData<Array<TStoreOutputWithTotalCount>>>(["getCardList"], (oldData)=>{
+  //       //   const newData = oldData?.pages.map(page =>
+  //       //     page.map(item => {
+  //       //       return {
+  //       //         ...item,
+  //       //         storeOutput: item.storeOutput.map((st)=>({
+  //       //           ...st,
+  //       //           isBookmark: !st.isBookmark,
+  //       //         }))
+  //       //       }
+  //       //     })
+  //       //   );
+  //       //   return {
+  //       //     ...oldData,
+  //       //     pages: newData,
+  //       //   };
+  //       // })
+  //     }
+  //     return () => queryClient.setQueryData(["getCardList"], previousList);
+  //   },
+  //   onSettled: () => queryClient.invalidateQueries(["getCardList"])
+  // })
   return (
     <CardBox onClick={handleClick}>
       {place.store.imagesUrl && <img src={`${place.store.imagesUrl}`} className="h-[20vh]"/>}
@@ -63,7 +63,7 @@ export const PlaceCard2 = ({ place }: PlaceCardProps) => {
         <Top>
           <Name>{place.store.name}</Name>
           <Category>{place.store.subcategory?.subcategory}</Category>
-          <BookmarkDiv onClick={(e)=>{e.preventDefault; e.stopPropagation; toggleBookmarkMutation.mutate()}} className="z-30">
+          <BookmarkDiv className="z-30">
             {place.isBookmark ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
           </BookmarkDiv>
         </Top>

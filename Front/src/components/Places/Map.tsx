@@ -85,13 +85,6 @@ export const Map = (props: Props) => {
       });
     }
   }, [])
-  useEffect(()=> {
-    const handleTouchStart = () => {
-      metrics.current.isContentAreTouched = true;
-    }
-    clickedRef.current?.addEventListener('touchstart', handleTouchStart);
-    return () => clickedRef.current?.removeEventListener('touchstart', handleTouchStart);
-  }, []);
 
   const handleFilterToggle = (set: boolean) => {
     if (set) {
@@ -182,7 +175,7 @@ export const Map = (props: Props) => {
       }));
     }
     removeAllMarker();
-    result.refetch()
+    result.refetch();
   }, [ filterValue.latitude, filterValue.longitude ]);
 
   useEffect(() => {
@@ -259,8 +252,10 @@ export const Map = (props: Props) => {
         clickedRef.current?.removeEventListener('touchmove', handleTouchMove);
         clickedRef.current?.removeEventListener('touchend', handleTouchEnd);
       }
+      
     }
   }, [clickedStore])
+
   const removeAllMarker = () => {
     for(const marker of markerList){
       marker.setMap(null);

@@ -66,26 +66,6 @@ export const Map = (props: Props) => {
   const setFilter = useSetRecoilState(filterState);
   const location = useLocation();
 
-  useEffect(() => {
-    // 라우터 state 있으면 ( 메인 페이지에서 대분류 눌러서 넘어온거면)
-    // 해당 대분류에 포함되는 소분류 카테고리들 전부 선택된 채로 넘어감.
-    if (location.state) {
-      console.log(location.state);
-      location.state.map((subCategory: THobbySubCategory) => {
-        setFilter((prevFilter) => {
-          return {
-            ...prevFilter,
-            subcategory: prevFilter.subcategory.some(
-              (subC) => subC.subcategory === subCategory.subcategory
-            )
-              ? [...prevFilter.subcategory]
-              : [...prevFilter.subcategory, subCategory],
-          };
-        });
-      });
-    }
-  }, [])
-
   const handleFilterToggle = (set: boolean) => {
     if (set) {
       setIsModalState(set);
@@ -149,20 +129,19 @@ export const Map = (props: Props) => {
   const result = useInfiniteQuery<TStoreOutputWithTotalCount>({
     queryKey: ["getCardList"],
     queryFn: fetchCardList,
-    getNextPageParam: (lastPage, pages)=> {console.log(lastPage, pages);
+    getNextPageParam: (lastPage, pages)=> {
      return pages.length + 1 < lastPage.totalCount/20 ? pages.length + 1 : undefined},
     staleTime: 20000,
     cacheTime: 0,
   });  
 
   useEffect(() => {
-    if(!isRendered) return;
-    console.log("주소 바뀜", filterValue.latitude, filterValue.longitude);
+    console.log("뭔가 바뀜", filterValue.latitude, filterValue.longitude);
     mapInstance?.setCenter(new naver.maps.LatLng(
       filterValue.latitude, 
       filterValue.longitude))
-    if(circle != undefined){
-      circle.setRadius(filterValue.maxDistance);
+    if(circle !== undefined){
+      circle.setRadius(filterValue.maxDistance * 1000);
       circle.setCenter(new naver.maps.LatLng(filterValue.latitude, filterValue.longitude));
       return;
     } else {
@@ -176,9 +155,6 @@ export const Map = (props: Props) => {
     }
     removeAllMarker();
     result.refetch();
-  }, [ filterValue.latitude, filterValue.longitude ]);
-
-  useEffect(() => {
   }, [ filterValue ]);
   
   const handleClickMarker = (e: any) => {
@@ -212,7 +188,10 @@ export const Map = (props: Props) => {
         // 이전 터치 기록 - 현재 터치 위치 비교해서 위로 끌고가는지 아래로 끌고가는지 판단
         if(touchMove.prevTouchY < currentTouch.clientY){
           touchMove.movingDirection = 'down';
+        } else {
+          touchMove.movingDirection = 'none';
         }
+        if(touchMove.movingDirection === 'down'){
           // 터치 시작점 부터 현재 터치 포인트 까지 y값 차이
           const touchOffset = currentTouch.clientY - touchStart.touchY;
           let nextSheetY = touchStart.sheetY + touchOffset;
@@ -224,22 +203,18 @@ export const Map = (props: Props) => {
           // if(nextSheetY < clickedRef.current?.getBoundingClientRect().height){
           //   nextSheetY = MIN_Y;
           // }
-          // clickedRef.current?.style.setProperty('transform', `translateY(${nextSheetY - MAX_Y}px)`);
+            clickedRef.current?.style.setProperty('transform', `translateY(${touchOffset}px)`);
+          }
       };
   
       const handleTouchEnd = (e: TouchEvent) => {
         const {touchMove} = metrics.current;
-        // Snap Animation
         const currentSheetY = clickedRef.current?.getBoundingClientRect().y;
-        
-        // if(currentSheetY !== MIN_Y){
-        //   if(touchMove.movingDirection === 'down'){
-        //     clickedRef.current?.style.setProperty('transform', 'translateY(0)');
-        //   }
-        //   if(touchMove.movingDirection === 'up') {
-        //     clickedRef.current?.style.setProperty('transform', `translateY(${MIN_Y - MAX_Y}px)`);
-        //   }
-        // }
+        // Snap Animation
+        if(touchMove.movingDirection === 'down'){
+          clickedRef.current?.style.setProperty('transform', `translateY(${currentSheetY}px)`);
+          setClickedStore(undefined);
+        }
         // metrics 초기화
         metrics.current = initialMetrics;
       }
@@ -279,6 +254,23 @@ export const Map = (props: Props) => {
   }, [result.data]);
 
   useEffect(()=>{
+        // 라우터 state 있으면 ( 메인 페이지에서 대분류 눌러서 넘어온거면)
+    // 해당 대분류에 포함되는 소분류 카테고리들 전부 선택된 채로 넘어감.
+    if (location.state) {
+      console.log(location.state);
+      location.state.map((subCategory: THobbySubCategory) => {
+        setFilter((prevFilter) => {
+          return {
+            ...prevFilter,
+            subcategory: prevFilter.subcategory.some(
+              (subC) => subC.subcategory === subCategory.subcategory
+            )
+              ? [...prevFilter.subcategory]
+              : [...prevFilter.subcategory, subCategory],
+          };
+        });
+      });
+    }
     // 최근 주소 기록 없으면, 주소 입력하도록 설정.
     if (recentAddressData.length === 0) {
       setTimeout(() => {
@@ -300,7 +292,7 @@ export const Map = (props: Props) => {
         zoom: 18,
       })
     )
-    if(!isRendered) setIsRendered(true);
+    result.refetch();
   }, [])
 
   return (
@@ -336,7 +328,9 @@ export const Map = (props: Props) => {
         />
       )}
       {/* </AnimatePresence> */}
-
+      {
+       result.isLoading && <div>로딩중...</div> 
+      }
       <div id="map" className="w-screen h-[calc(100vh-122px)] -z-0" />
       <button
         className="absolute top-12 left-1/2 -translate-x-1/2 border-2 border-black bg-white rounded-full"

@@ -122,7 +122,7 @@ const ReserveCard = styled.div<{ delay: number; accept: number }>`
   margin: 10px;
   border: solid 2px ${(props) => {
     if (props.accept === 0) {
-      return "var(--primary-color-light)";
+      return "black";
     } else if (props.accept === 1) {
       return "#31d731";
     } else {

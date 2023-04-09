@@ -7,16 +7,18 @@ import { signupAPI } from "../api/authApiFunctions";
 import { TAxoisUserInfo } from "../api/authApiFunctions";
 import { TinitialValues } from "./useForm";
 
+import { axiosCookie } from '../PrivateRouter';
+
 export const useSignup = () => {
   const setUserInfo = useSetRecoilState(userInfoAtom);
-  const [cookies, setCookies, removeCooke] = useCookies(["accessToken"]);
+
   const navigation = useNavigate();
 
   const [isLogin, setIsLogin] = useRecoilState(userIsLogin)
 
   return useMutation((values: TinitialValues) => signupAPI(values), {
     onSuccess: (data: TAxoisUserInfo) => {
-      setCookies("accessToken", data.accessToken, { path: "/mobile" });
+      axiosCookie.set("accessToken", data.accessToken, { path: "/mobile" });
       setIsLogin(true)
       setUserInfo({
         userIdx: data.userIdx,

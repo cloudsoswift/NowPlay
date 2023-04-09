@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Cookies } from "react-cookie";
 
-import { axiosCookie } from '../PrivateRouter';
 
 // 쿠키 객체 생성
 
@@ -13,20 +12,21 @@ const api = axios.create({
   // withCredentials: true,
 });
 
-// timeout 설정 4초
-// api.defaults.timeout = 4000;
+// // timeout 설정 4초
+// // api.defaults.timeout = 4000;
 
-// axios interceptor로 헤더에 Authorization 설정
+// // axios interceptor로 헤더에 Authorization 설정
 api.interceptors.request.use(function (config) {
   
-  const cookieAccessToken = axiosCookie.get("accessToken");
+  const userAccessToken = localStorage.getItem("userIsLogin");
 
-  if (!cookieAccessToken) {
+  if (userAccessToken && JSON.parse(userAccessToken) === "") {
     config.headers["Authorization"] = null;
     return config;
   }
 
-  config.headers["Authorization"] = `Bearer ${cookieAccessToken}`;
+  console.log(userAccessToken && userAccessToken !== "")
+  config.headers["Authorization"] = userAccessToken && JSON.parse(userAccessToken) !== "" ? `Bearer ${JSON.parse(userAccessToken)}` : null;
   return config;
 });
 
@@ -43,17 +43,15 @@ api.interceptors.response.use(
         const data = await api.get("accounts/access/");
         if (data) {
           const accessToken = data.data.access_token;
-          axiosCookie.remove("accessToken");
-          axiosCookie.set("accessToken", accessToken, { path: "/mobile" });
-          originalRequest.headers["Authorization"] = `Bearer ${axiosCookie.get(
-            "accessToken"
-          )}`;
+          localStorage.removeItem("userIsLogin");
+          localStorage.setItem("userIsLogin", accessToken);
+          originalRequest.headers["Authorization"] = `Bearer ${data.data.access_token
+          }`;
           return await api.request(originalRequest);
         }
       } catch (error) {
-        axiosCookie.remove("accessToken");
+        localStorage.setItem("userIsLogin", "");
         console.log(error);
-
         localStorage.removeItem("userInfo");
       }
       return Promise.reject(error);
@@ -73,17 +71,17 @@ const ownerapi = axios.create({
 // timeout 설정 4초
 // ownerapi.defaults.timeout = 4000;
 
-// axios interceptor로 헤더에 Authorization 설정
+// // axios interceptor로 헤더에 Authorization 설정
 ownerapi.interceptors.request.use(function (config) {
 
-  const cookieAccessToken = axiosCookie.get("accessToken");
+  const ownerAccessToken = localStorage.getItem("ownerIsLogin");
 
-  if (!cookieAccessToken) {
+  if (ownerAccessToken && JSON.parse(ownerAccessToken) === "") {
     config.headers["Authorization"] = null;
     return config;
   }
 
-  config.headers["Authorization"] = `Bearer ${cookieAccessToken}`;
+  config.headers["Authorization"] = ownerAccessToken && JSON.parse(ownerAccessToken) !== "" ? `Bearer ${JSON.parse(ownerAccessToken)}` : null;
   return config;
 });
 
@@ -99,17 +97,15 @@ ownerapi.interceptors.response.use(
         const data = await api.get("accounts/access/");
         if (data) {
           const accessToken = data.data.access_token;
-          axiosCookie.remove("accessToken");
-          axiosCookie.set("accessToken", accessToken, { path: "/owner" });
-          originalRequest.headers["Authorization"] = `Bearer ${axiosCookie.get(
-            "accessToken"
-          )}`;
+          localStorage.removeItem("ownerIsLogin");
+          localStorage.setItem("ownerIsLogin", accessToken);
+          originalRequest.headers["Authorization"] = `Bearer ${data.data.access_token
+          }`;
           return await api.request(originalRequest);
         }
       } catch (error) {
-        axiosCookie.remove("accessToken");
+        localStorage.setItem("ownerIsLogin", "");
         console.log(error);
-
         localStorage.removeItem("userInfo");
       }
       return Promise.reject(error);

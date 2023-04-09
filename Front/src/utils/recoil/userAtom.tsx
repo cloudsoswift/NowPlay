@@ -59,7 +59,14 @@ export const selectHobbyAction = atom<string[]>({
   default: [],
 });
 
-export const userIsLogin = atom<boolean>({
+export const userIsLogin = atom<string>({
   key: "userIsLogin",
-  default: false,
+  default: "",
+  effects: [localStorageEffect("userIsLogin")],
+});
+
+export const ownerIsLogin = atom<string>({
+  key: "ownerIsLogin",
+  default: "",
+  effects: [localStorageEffect("ownerIsLogin")],
 });

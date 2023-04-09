@@ -6,10 +6,11 @@ import { ownerInfoAtion, userIsLogin } from "../recoil/userAtom";
 import { ownerloginAPI, } from "../api/authApiFunctions";
 import { TAxoisOwnerInfo } from "../api/authApiFunctions";
 import { TinitialValues } from "./useForm";
+import { axiosCookie } from '../PrivateRouter';
+
 
 export const useOwnerLogin = () => {
   const setOwnerInfo = useSetRecoilState(ownerInfoAtion);
-  const [cookies, setCookies, removeCooke] = useCookies(["accessToken"]);
   const navigation = useNavigate();
 
   const [isLogin, setIsLogin] = useRecoilState(userIsLogin)
@@ -17,7 +18,7 @@ export const useOwnerLogin = () => {
   return useMutation((values: TinitialValues) => ownerloginAPI(values), {
     onSuccess: (data: TAxoisOwnerInfo) => {
       if (data.accessToken) {
-        setCookies("accessToken", data.accessToken, { path: "/owner" });
+        axiosCookie.set("accessToken", data.accessToken, { path: "/owner" });
       }
       setIsLogin(true)
       console.log(data)

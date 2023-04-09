@@ -6,9 +6,10 @@ import { ownerInfoAtion, userIsLogin } from "../recoil/userAtom";
 import { logoutAPI } from "../api/authApiFunctions";
 import { TAxoisUserInfo } from "../api/authApiFunctions";
 
+import { axiosCookie } from '../PrivateRouter';
+
 export const useOwnerLogout = () => {
   const setOwnerInfo = useSetRecoilState(ownerInfoAtion);
-  const [cookies, setCookies, removeCookie] = useCookies(["accessToken"]);
   const navigation = useNavigate();
 
   const [isLogin, setIsLogin] = useRecoilState(userIsLogin);
@@ -16,7 +17,7 @@ export const useOwnerLogout = () => {
   return useMutation(() => logoutAPI(), {
     onError: () => {
       navigation("/owner/login");
-      removeCookie("accessToken", { path: "/owner" });
+      axiosCookie.remove("accessToken", {path: "/owner"});
       setIsLogin(false);
       setOwnerInfo({
         storeIdx: 0,

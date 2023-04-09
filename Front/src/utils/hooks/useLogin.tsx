@@ -6,10 +6,11 @@ import { userInfoAtom, userIsLogin } from "../recoil/userAtom";
 import { loginAPI } from "../api/authApiFunctions";
 import { TAxoisUserInfo } from "../api/authApiFunctions";
 import { TinitialValues } from "./useForm";
+import { axiosCookie } from '../PrivateRouter';
 
 export const useLogin = () => {
   const setUserInfo = useSetRecoilState(userInfoAtom);
-  const [cookies, setCookies, removeCooke] = useCookies(["accessToken"]);
+  // const [cookies, setCookies, removeCooke] = useCookies(["accessToken"]);
   const navigation = useNavigate();
 
   const [isLogin, setIsLogin] = useRecoilState(userIsLogin)
@@ -21,8 +22,9 @@ export const useLogin = () => {
     {
       onSuccess: async (data: TAxoisUserInfo) => {
         if (data.accessToken) {
-          setCookies("accessToken", data.accessToken, { path: "/mobile" });
+          axiosCookie.set("accessToken", data.accessToken, { path: "/mobile" });
         }
+        console.log(axiosCookie)
         setIsLogin(true)
         setUserInfo({
           userIdx: data.userIdx,
@@ -31,7 +33,6 @@ export const useLogin = () => {
           userName: data.userName,
           userDistance: data.userDistance,
         });
-        console.log(cookies)
         navigation("/mobile/mypage");
       },
     }

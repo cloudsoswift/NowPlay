@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Cookies, useCookies } from "react-cookie";
 import { Navigate, Outlet } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { userIsLogin } from "./recoil/userAtom";
+import { userIsLogin, ownerIsLogin } from "./recoil/userAtom";
 
 interface PrivateRouteProps {
   children?: React.ReactNode; // Router.tsx에서 PrivateRoute가 감싸고 있는 Componet Element
@@ -10,9 +10,6 @@ interface PrivateRouteProps {
   type: "mobile" | "desktop";
 }
 
-let axiosCookie = new Cookies()
-
-export {axiosCookie}
 
 export default function PrivateRoute({
   authentication,
@@ -22,49 +19,41 @@ export default function PrivateRoute({
    * 로그인 했는지 여부
    * 로그인 했을 경우 : true 라는 텍스트 반환
    * 로그인 안했을 경우 : null or false(로그아웃 버튼 눌렀을경우 false로 설정) 반환
-   */
-  const cookie = axiosCookie.get("accessToken");
-  console.log(cookie)
-
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    cookie !== undefined
-  );
+  */
 
   const [isLogin, setIsLogin] = useRecoilState(userIsLogin);
-  useEffect(() => {
-    axiosCookie = new Cookies()
-    setIsAuthenticated(cookie !== undefined);
-  }, [axiosCookie]);
+  const [ownerisLogin, setOwnerIsLogin] = useRecoilState(ownerIsLogin);
 
+  
   if (authentication) {
     // 인증이 반드시 필요한 페이지
-
+    
     // 인증을 안했을 경우 로그인 페이지로, 했을 경우 해당 페이지로
     if (type === "mobile")
-      return !(isAuthenticated || isLogin) ? (
+      return !(isLogin !== "") ? (
         <Navigate to='/mobile/mypage/login' />
-      ) : (
+        ) : (
         <Outlet />
-      );
-    return !(isAuthenticated || isLogin) ? (
+        );
+    return !(ownerisLogin !== "") ? (
       <Navigate to='/owner/login' />
     ) : (
       <Outlet />
-    );
+      );
   } else {
     // 인증이 반드시 필요 없는 페이지
 
     // 인증을 안햇을 경우 해당 페이지로 인증을 한 상태일 경우 main페이지로
     if (type === "mobile")
-      return !(isAuthenticated || isLogin) ? (
-        <Outlet />
+    return !(isLogin !== "") ? (
+      <Outlet />
       ) : (
         <Navigate to='/mobile/mypage' />
       );
-    return !(isAuthenticated || isLogin) ? (
+    return !(ownerisLogin !== "") ? (
       <Outlet />
-    ) : (
-      <Navigate to='/owner' />
-    );
+      ) : (
+        <Navigate to='/owner' />
+        );
   }
 }

@@ -6,7 +6,7 @@ import { userInfoAtom, userIsLogin } from "../recoil/userAtom";
 import { loginAPI } from "../api/authApiFunctions";
 import { TAxoisUserInfo } from "../api/authApiFunctions";
 import { TinitialValues } from "./useForm";
-import { axiosCookie } from '../PrivateRouter';
+
 
 export const useLogin = () => {
   const setUserInfo = useSetRecoilState(userInfoAtom);
@@ -21,11 +21,8 @@ export const useLogin = () => {
     },
     {
       onSuccess: async (data: TAxoisUserInfo) => {
-        if (data.accessToken) {
-          axiosCookie.set("accessToken", data.accessToken, { path: "/mobile" });
-        }
-        console.log(axiosCookie)
-        setIsLogin(true)
+        setIsLogin(data.accessToken)
+        console.log(isLogin)
         setUserInfo({
           userIdx: data.userIdx,
           userNickname: data.userNickname,

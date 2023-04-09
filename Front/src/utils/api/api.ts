@@ -1,7 +1,11 @@
 import axios from "axios";
 import { Cookies } from "react-cookie";
 
+import { axiosCookie } from '../PrivateRouter';
+
 // 쿠키 객체 생성
+
+
 
 const api = axios.create({
   baseURL: "https://j8d110.p.ssafy.io/spring/",
@@ -14,8 +18,8 @@ const api = axios.create({
 
 // axios interceptor로 헤더에 Authorization 설정
 api.interceptors.request.use(function (config) {
-  const cookie = new Cookies();
-  const cookieAccessToken = cookie.get("accessToken");
+  
+  const cookieAccessToken = axiosCookie.get("accessToken");
 
   if (!cookieAccessToken) {
     config.headers["Authorization"] = null;
@@ -33,21 +37,21 @@ api.interceptors.response.use(
   },
   async function (error) {
     if (error.response && error.response.status === 401) {
-      const cookie = new Cookies();
+
       try {
         const originalRequest = error.config;
         const data = await api.get("accounts/access/");
         if (data) {
           const accessToken = data.data.access_token;
-          cookie.remove("accessToken");
-          cookie.set("accessToken", accessToken, { path: "/mobile" });
-          originalRequest.headers["Authorization"] = `Bearer ${cookie.get(
+          axiosCookie.remove("accessToken");
+          axiosCookie.set("accessToken", accessToken, { path: "/mobile" });
+          originalRequest.headers["Authorization"] = `Bearer ${axiosCookie.get(
             "accessToken"
           )}`;
           return await api.request(originalRequest);
         }
       } catch (error) {
-        cookie.remove("accessToken");
+        axiosCookie.remove("accessToken");
         console.log(error);
 
         localStorage.removeItem("userInfo");
@@ -71,8 +75,8 @@ const ownerapi = axios.create({
 
 // axios interceptor로 헤더에 Authorization 설정
 ownerapi.interceptors.request.use(function (config) {
-  const cookie = new Cookies();
-  const cookieAccessToken = cookie.get("accessToken");
+
+  const cookieAccessToken = axiosCookie.get("accessToken");
 
   if (!cookieAccessToken) {
     config.headers["Authorization"] = null;
@@ -90,21 +94,20 @@ ownerapi.interceptors.response.use(
   },
   async function (error) {
     if (error.response && error.response.status === 401) {
-      const cookie = new Cookies();
       try {
         const originalRequest = error.config;
         const data = await api.get("accounts/access/");
         if (data) {
           const accessToken = data.data.access_token;
-          cookie.remove("accessToken");
-          cookie.set("accessToken", accessToken, { path: "/owner" });
-          originalRequest.headers["Authorization"] = `Bearer ${cookie.get(
+          axiosCookie.remove("accessToken");
+          axiosCookie.set("accessToken", accessToken, { path: "/owner" });
+          originalRequest.headers["Authorization"] = `Bearer ${axiosCookie.get(
             "accessToken"
           )}`;
           return await api.request(originalRequest);
         }
       } catch (error) {
-        cookie.remove("accessToken");
+        axiosCookie.remove("accessToken");
         console.log(error);
 
         localStorage.removeItem("userInfo");

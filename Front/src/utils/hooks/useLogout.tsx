@@ -6,6 +6,8 @@ import { userInfoAtom, userIsLogin } from "../recoil/userAtom";
 import { logoutAPI } from "../api/authApiFunctions";
 import { TAxoisUserInfo } from "../api/authApiFunctions";
 
+import { axiosCookie } from '../PrivateRouter';
+
 export const useLogout = () => {
   const setUserInfo = useSetRecoilState(userInfoAtom);
   const [cookies, setCookies, removeCookie] = useCookies(["accessToken"]);
@@ -15,7 +17,7 @@ export const useLogout = () => {
 
   return useMutation(() => logoutAPI(), {
     onError: async () => {
-      removeCookie("accessToken", { path: "/mobile" });
+      axiosCookie.remove("accessToken", {path: "/mobile"});
       setIsLogin(false)
       setUserInfo({
         userIdx: 0,

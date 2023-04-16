@@ -78,10 +78,6 @@ export const SelectableCategories = (props: sCategoriesProps) => {
   const [subCategories, setSubcategories] = useState<subCategoryList>();
   const categoryList = useRecoilValue(categoriesSelector);
 
-  // useEffect(() => {
-  //   console.log("메인스테이트", location.state);
-  //   console.log("selectedCategories", selectedCategories)
-  // }, selectedCategories);
 
   return (
     <div className="w-full p-1 grid grid-cols-3">

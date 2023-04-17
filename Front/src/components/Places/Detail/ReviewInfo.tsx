@@ -138,7 +138,6 @@ export const ReviewInfo = forwardRef((props: any, ref: React.ForwardedRef<HTMLDi
     queryFn: fetchReviewList,
     getNextPageParam: (lastPage, pages)=> lastPage.number + 1 < lastPage.totalPages ? lastPage.number + 1 : undefined,
   });
-  console.log(data, hasNextPage, isFetching, isFetchingNextPage, status);
   const contentRef = useRef<HTMLDivElement>(null);
   useEffect(()=>{
     const handleTouchEnd = (e: TouchEvent) => {

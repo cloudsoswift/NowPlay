@@ -34,7 +34,7 @@ export const Map = (props: Props) => {
   const [isFilterShown, setIsFilterShown] = useState(false);
   const [isModalShown, setIsModalShown] = useState(false);
   const [markerList, setMarkerList] = useState<Array<naver.maps.Marker>>([]);
-  const [circle, setCircle] = useState<naver.maps.Circle>();
+  const circle = useRef<naver.maps.Circle>(new naver.maps.Circle());
   const [clickedStore, setClickedStore] = useState<TStoreOutput | undefined>();
   const [mapInstance, setMapInstance] = useState<naver.maps.Map>();
   const [filterValue, setFilterValue] = useRecoilState(filterState);
@@ -116,7 +116,6 @@ export const Map = (props: Props) => {
       query,
       variables,
     })).data?.data;
-    // console.log(variables, data);
     return data.getNearbyStoreList ? data.getNearbyStoreList : [] ;
   }
   const result = useInfiniteQuery<TStoreOutputWithTotalCount>({
@@ -133,29 +132,12 @@ export const Map = (props: Props) => {
     mapInstance?.setCenter(new naver.maps.LatLng(
       filterValue.latitude, 
       filterValue.longitude))
-    if(circle !== undefined){
-      setCircle((prevCircle)=>{
-        // console.log("수정 전",prevCircle);
-        if(prevCircle){
-          prevCircle.setRadius(filterValue.maxDistance * 1000);
-          prevCircle.setCenter(new naver.maps.LatLng(filterValue.latitude, filterValue.longitude));
-          // console.log("수정 후",prevCircle);
-        }
-        return prevCircle;
-      });
-    } else {
-      // console.log(mapInstance);
-      if(mapInstance){
-        setCircle(new naver.maps.Circle({
-          map: mapInstance,
-          center: new naver.maps.LatLng(filterValue.latitude, filterValue.longitude),
-          radius: filterValue.maxDistance * 1000,
-          fillColor: 'blue',
-          fillOpacity: 0.1,
-        }));
-      }
+    if( mapInstance){
+      circle.current?.setCenter(new naver.maps.LatLng(filterValue.latitude, filterValue.longitude));
+      circle.current?.setRadius(filterValue.maxDistance * 1000);
+      mapInstance.fitBounds(circle.current.getBounds());
     }
-  }, [ filterValue.latitude, filterValue.longitude, filterValue.maxDistance]);
+  }, [filterValue]);
   
   const handleClickMarker = (e: any) => {
     if(result.data){
@@ -226,9 +208,7 @@ export const Map = (props: Props) => {
   }, [clickedStore])
 
   const removeAllMarker = () => {
-    // console.log("호출됨");
     setMarkerList((prev)=>{
-      // console.log("ㅎㅇ", prev);
       prev.map((marker)=>{
         marker.setMap(null);
         marker.setVisible(false);
@@ -248,7 +228,6 @@ export const Map = (props: Props) => {
         }))
       })
     })
-    // console.log("추가 당시 마커 리스트", arr);
     for(const m of arr){
       naver.maps.Event.addListener(m, 'click', handleClickMarker);
     }
@@ -256,6 +235,7 @@ export const Map = (props: Props) => {
   }, [result.data]);
 
   useEffect(()=>{
+    if(isRendered) return;
         // 라우터 state 있으면 ( 메인 페이지에서 대분류 눌러서 넘어온거면)
     // 해당 대분류에 포함되는 소분류 카테고리들 전부 선택된 채로 넘어감.
     if (location.state) {
@@ -293,21 +273,22 @@ export const Map = (props: Props) => {
         zoom: 18,
       })
     )
-    if(mapInstance){
-      setCircle(new naver.maps.Circle({
-        map: mapInstance,
-        center: new naver.maps.LatLng(filterValue.latitude, filterValue.longitude),
-        radius: filterValue.maxDistance * 1000,
-        fillColor: 'blue',
-        fillOpacity: 0.1,
-      }));
-    }
     setIsRendered(true);
   }, [])
 
+  useEffect(()=>{
+    if(mapInstance){
+      circle.current?.setMap(mapInstance);
+      circle.current?.setCenter(new naver.maps.LatLng(filterValue.latitude, filterValue.longitude));
+      circle.current?.setRadius(filterValue.maxDistance * 1000);
+      circle.current?.setOptions("fillColor",'blue');
+      circle.current?.setOptions("fillOpacity", 0.1);
+    }
+  }, [isRendered])
+
   return (
     <>
-      {(result.isLoading || result.isFetching) && <div className="absolute w-full h-full bg-slate-400"> 로딩중입니다... </div>}
+      {(result.isLoading || result.isFetching) && <div className="absolute w-screen h-screen bg-slate-400"> 로딩중입니다... </div>}
       {/* <AnimatePresence initial={false}> */}
       {isOpenModal && (
         <TitleBox>

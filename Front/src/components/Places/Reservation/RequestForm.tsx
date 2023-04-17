@@ -9,7 +9,6 @@ const RequestInput = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [{request}, setReservation] = useRecoilState(reservationInfo);
   const handleInputBlur = (e: FocusEvent<HTMLTextAreaElement>) => {
-    console.log(e.target.value);
     if(e.target.value.length > 255) {
       inputRef.current!.value = inputRef.current!.value.slice(0, 255);
     }

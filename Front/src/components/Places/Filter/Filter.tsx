@@ -46,7 +46,6 @@ export const Filter = ({
   const [filterValue ,setFilterValue] = useRecoilState(filterState);
   const [preparedFilterValue, setPreparedFilterValue] = useRecoilState(preparedFilterState);
   const handleApplyFilter = () => {
-    console.log(preparedFilterValue);
     setFilterValue({...preparedFilterValue});
     onClose(false);
   }

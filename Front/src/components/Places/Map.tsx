@@ -235,6 +235,7 @@ export const Map = (props: Props) => {
   }, [result.data]);
 
   useEffect(()=>{
+    if(isRendered) return;
         // 라우터 state 있으면 ( 메인 페이지에서 대분류 눌러서 넘어온거면)
     // 해당 대분류에 포함되는 소분류 카테고리들 전부 선택된 채로 넘어감.
     if (location.state) {
@@ -287,7 +288,7 @@ export const Map = (props: Props) => {
 
   return (
     <>
-      {(result.isLoading || result.isFetching) && <div className="absolute w-full h-full bg-slate-400"> 로딩중입니다... </div>}
+      {(result.isLoading || result.isFetching) && <div className="absolute w-screen h-screen bg-slate-400"> 로딩중입니다... </div>}
       {/* <AnimatePresence initial={false}> */}
       {isOpenModal && (
         <TitleBox>

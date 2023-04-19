@@ -89,8 +89,28 @@
   - 내 가게 정보 표시 및 수정
   - 가게 예약 확인 및 수락, 거절
   - 가게 리뷰 확인 및 코멘트 작성
+# 💻실제 사용 화면
+## 주변 여가장소 찾기
+### 여가장소 찾기 페이지 진입
+<img src='./readmeimg/MainToPlace.gif' width='300'>
 
-# 💻 Design
+### 필터 값 조절 및 적용
+<img src='./readmeimg/Filter.gif' width='300'>
+
+### 여가장소 목록
+<img src='./readmeimg/PlaceListLoading.gif' width='300'>
+
+### 지도 상의 마커와 상호작용
+<img src='./readmeimg/MarkerInteraction.gif' width='300'>
+
+## 여가 장소 상세
+### 여가장소 상세 페이지
+<img src='./readmeimg/placeDetail.gif' width='300'>
+
+### 여가장소 예약
+<img src='./readmeimg/reservation.gif' width='300'>
+
+# 📚 설계
 
 ### 기술스택
 
@@ -120,7 +140,7 @@
 
 ![figma](./readmeimg/figma.png)
 
-### 사용 라이브러리
+### 사용 기술스택
 
 ##### BackEnd
 
@@ -233,11 +253,10 @@
 ├──📄vite.config.ts
 ```
 
-# 구사 일생 팀
+# 팀 Convention
 
 ---
 
----
 
 ## Conventions Rule
 
